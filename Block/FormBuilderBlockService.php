@@ -103,7 +103,7 @@ class FormBuilderBlockService extends BaseBlockService
             'type'      => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE
         ));
 
-        return $formMapper->create('FormBuilderId', 'sonata_type_model', array(
+        return $formMapper->create('formBuilderId', 'sonata_type_model', array(
             'sonata_field_description' => $fieldDescription,
             'label'                    => "Form Builder",
             'class'                    => $this->getFormBuilderAdmin()->getClass(),
