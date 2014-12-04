@@ -18,9 +18,6 @@ Insert this line at the end of AppKernel.php in your symfony :
 
 ```
 Then from console run the command for build the database table :
-sonata_form_builder:
-    resource: '@PirastruFormBuilderBundle/Controller/FormBuilderController.php'
-    type:     annotation
 
 ```sh
 
