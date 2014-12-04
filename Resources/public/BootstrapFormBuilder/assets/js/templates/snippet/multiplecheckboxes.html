@@ -1,0 +1,13 @@
+<!-- Multiple Checkboxes -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="{{ name }}">{{ label }}</label>
+  <div class="col-md-4">{{ #checkboxes }}
+    <div class="checkbox">
+	    <label  for="{{ name }}-{{ index }}">
+	      <input type="checkbox" name="{{ name }}" id="{{ name }}-{{ getIndex }}" value="{{ #checkboxes }}{{ #getNthValue }}{{.}}{{/getNthValue}}{{ /checkboxes}}" >
+	      {{ . }}
+	    </label>
+	</div>{{ /checkboxes }}
+	{{ resetIndex }}
+  </div>
+</div>

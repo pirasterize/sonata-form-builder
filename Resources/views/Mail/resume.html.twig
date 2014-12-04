@@ -1,0 +1,56 @@
+
+<h2>{{ name }}</h2>
+Someone has just submit the form named : <strong>{{ name }}</strong>
+<br>
+This is a resume of what he typed :<br>
+<ul>
+{% for key, submit_value in form['form'] %}
+    {% if key != '_token' %}
+
+        <li>
+            {{ columns[key] }} :
+            {% set el_k = key|split('_') %}
+            {% if  key|slice(0, 5) == 'radio' %}
+
+                {% if submit_value != '' %}
+                    {{ form_array[el_k[1]].fields.radios.value[submit_value] }}
+                {% endif %}
+
+            {% elseif key|slice(0, 6) == 'choice' %}
+
+                {% if is_array(submit_value) %}
+                    <ul>
+                        {% for v in submit_value %}
+                            <li>{{ form_array[el_k[1]].fields.options.value[v] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {% if submit_value != '' %}
+                        {{ form_array[el_k[1]].fields.options.value[submit_value] }}
+                    {% endif %}
+                {% endif %}
+
+            {% elseif key|slice(0, 5) == 'check' %}
+
+                {% if is_array(submit_value) %}
+                    <ul>
+                        {% for v in submit_value %}
+                            <li>{{ form_array[el_k[1]].fields.checkboxes.value[v] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {{ form_array[el_k[1]].fields.checkboxes.value[submit_value] }}
+                {% endif %}
+
+            {% else %}
+                {{ submit_value }}
+            {% endif %}
+
+        </li>
+
+
+    {% endif %}
+{% endfor %}
+</ul>
+
+Best regards<br>

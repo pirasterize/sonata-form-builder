@@ -1,0 +1,71 @@
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/pirastruformbuilder/BootstrapFormBuilder/assets/css/custom.css') }}" />
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script data-main="{{ asset('bundles/pirastruformbuilder/BootstrapFormBuilder/assets/js/main.js') }}" src="{{ asset('bundles/pirastruformbuilder/BootstrapFormBuilder/assets/js/lib/require.js') }}"></script>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $("#jsonrender").val( $('#{{ admin.uniqid }}_json').val() );
+
+            $( ".btn" ).on( "click", function ( event ) {
+                var value = $("#jsonrender").val();
+                $('#{{ admin.uniqid }}_json').val(value);
+            } );
+        });
+    </script>
+
+
+{% endblock %}
+
+{% block form %}
+
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">
+                Form Builder
+            </h4>
+        </div>
+        <div class="box-body container">
+            <div class="row clearfix">
+                <!-- Building Form. -->
+                <div class="col-md-6">
+                    <div class="clearfix">
+                        <div id="build">
+                            <form id="target" class="form-horizontal">
+                                <legend>Drag fields down here..</legend>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Building Form. -->
+
+                <!-- Components -->
+                <div class="col-md-6">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs" id="formtabs">
+                            <!-- Tab nav -->
+                        </ul>
+                        <form class="form-horizontal" id="components">
+                            <fieldset>
+                                <div class="tab-content">
+                                    <!-- Tabs of snippets go here -->
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <!-- / Components -->
+
+            </div>
+        </div><!-- /container -->
+    </div>
+
+    {{ parent() }}
+{% endblock %}

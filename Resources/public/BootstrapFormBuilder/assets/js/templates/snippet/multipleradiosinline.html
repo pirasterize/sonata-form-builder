@@ -1,0 +1,11 @@
+<!-- Multiple Radios (inline) -->
+<div class="form-group">
+  <label class="col-md-6 control-label" for="{{ name }}">{{ label }}</label>
+  <div class="col-md-6">{{ #radios }}
+    <label class="radio-inline" for="{{ name }}-{{ index }}">
+      <input type="radio" name="{{ name }}" id="{{ name }}-{{ getIndex }}" value="{{ #radiosValues }}{{ #getNthValue }}{{.}}{{/getNthValue}}{{ /radiosValues }}"  {{#first}} checked="checked" {{/first}}>
+      {{ . }}
+    </label>{{ /radios }}
+	{{ resetIndex }}
+  </div>
+</div>

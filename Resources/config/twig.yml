@@ -1,0 +1,5 @@
+services:
+    pirastru_form_builder.twig.form_builder_extension:
+        class: Pirastru\FormBuilderBundle\Twig\FormBuilderExtension
+        tags:
+            - { name: twig.extension }

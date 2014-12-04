@@ -1,0 +1,48 @@
+[
+  {
+    "title": "Multiple Radios",
+    "typefield":"multipleradios",
+    "fields": {
+      "name": {
+        "label": "Group Name",
+        "type": "input",
+        "value": "radios"
+      },
+      "label": {
+        "label": "Label Text",
+        "type": "input",
+        "value": "Multiple Radios"
+      },
+      "radios": {
+        "label": "Radios",
+        "type": "textarea-split",
+        "value": [
+          "Option one",
+          "Option two"
+        ]
+      }
+    }
+  },
+  {
+    "title": "Multiple Checkboxes",
+    "typefield":"multiplecheckboxes",
+    "fields": {
+      "name": {
+        "label": "Group Name",
+        "type": "input",
+        "value": "checkboxes"
+      },
+      "label": {
+        "label": "Label Text",
+        "type": "input",
+        "value": "Multiple Checkboxes"
+      },
+      "checkboxes": {
+        "label": "Checkboxes",
+        "type": "textarea-split",
+        "value": ["Option one","Option two"]
+      }
+    }
+  }
+
+]

@@ -1,0 +1,79 @@
+<th>
+    {% block name %}
+        {{ admin.trans(field_description.label, {}, field_description.translationDomain) }}
+    {% endblock %}
+</th>
+<td>
+    Results export :
+    [<a href="{{ path('form_builder_export_submit', {'id': object.id, 'format':'xls'}) }}">format XLS</a>],
+    [<a href="{{ path('form_builder_export_submit', {'id': object.id, 'format':'csv'}) }}">format CSV</a>]<br><br>
+
+    <table class="table table-bordered">
+
+        {% set form_array = json_decode(object.json) %}
+
+            <tr>
+                {% for value in object.columns %}
+                    <th>{{ value }}</th>
+                {% endfor %}
+            </tr>
+
+            {% for submit_line in object.submit %}
+                <tr>
+                    {% for key,value in object.columns %}
+
+                        {% set el_k = key|split('_') %}
+                        {% if  key|slice(0, 5) == 'radio' %}
+                            <td>
+                                {% if submit_line[key] != '' %}
+                                    {{ form_array[el_k[1]].fields.radios.value[submit_line[key]] }}
+                                {% endif %}
+                            </td>
+                        {% elseif key|slice(0, 6) == 'choice' %}
+                            <td>
+                                {% if submit_line[key] is defined %}
+                                    {% if is_array(submit_line[key]) %}
+                                        <ul>
+                                        {% for v in submit_line[key] %}
+                                            <li>{{ form_array[el_k[1]].fields.options.value[v] }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        {%   if submit_line[key] != '' %}
+                                            {{ form_array[el_k[1]].fields.options.value[submit_line[key]] }}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        {% elseif key|slice(0, 5) == 'check' %}
+                            <td>
+
+                                {% if submit_line[key] is defined %}
+                                    {% if is_array(submit_line[key]) %}
+                                        <ul>
+                                        {% for v in submit_line[key] %}
+                                            <li>{{ form_array[el_k[1]].fields.checkboxes.value[v] }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        {{ form_array[el_k[1]].fields.checkboxes.value[submit_line[key]] }}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        {#{% elseif key|slice(0, 4) == 'date' %}#}
+                            {#<td>{{ submit_line['form']['date_'~el_k[1]] }}</td>#}
+                        {% else %}
+                            <td>
+                                {{ submit_line[key] }}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+
+                </tr>
+            {% else %}
+                Never submitted!
+            {% endfor %}
+
+    </table>
+
+</td>

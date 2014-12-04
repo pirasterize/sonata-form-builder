@@ -1,0 +1,285 @@
+[
+    {
+        "fields": {
+
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Text Input"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "help"
+            },
+            "placeholder": {
+                "type": "input",
+                "label": "Placeholder",
+                "value": "placeholder"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
+            }
+        },
+        "title": "Text Input",
+        "typefield":"textinput"
+    },
+    {
+        "fields": {
+
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Adress Email"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "A valid Email adress"
+            },
+            "placeholder": {
+                "type": "input",
+                "label": "Placeholder",
+                "value": "exemple@exemple.com"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
+            }
+        },
+        "title": "Email Input",
+        "typefield":"emailinput"
+    },
+
+    {
+        "fields": {
+
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Phone number"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "Type a valid telephone number"
+            },
+            "placeholder": {
+                "type": "input",
+                "label": "Placeholder",
+                "value": "0612345678"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
+            }
+        },
+        "title": "Telephone Input",
+        "typefield":"telephoneinput"
+    },
+    {
+        "fields": {
+
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Postal Code"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "help"
+            },
+            "placeholder": {
+                "type": "input",
+                "label": "Placeholder",
+                "value": "13006"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
+            }
+        },
+        "title": "PostalCode Input",
+        "typefield":"postalcodeinput"
+    },
+    {
+        "fields": {
+
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Date select"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "help"
+            },
+            "placeholder": {
+                "type": "input",
+                "label": "Placeholder",
+                "value": "jj/mm/aaaa"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
+            }
+        },
+        "title": "Date Input",
+        "typefield":"dateinput"
+    },
+    {
+    "fields": {
+      "inputwidth": {
+        "type": "select",
+        "label": "Input Width",
+        "value": [
+          {
+            "label": "Short",
+            "value": "col-sm-4",
+            "selected": false
+          },
+          {
+            "label": "Medium",
+            "value": "col-sm-6",
+            "selected": true
+          },
+          {
+            "label": "Long",
+            "value": "col-sm-8",
+            "selected": false
+          }
+        ]
+      },
+      "label": {
+        "type": "input",
+        "label": "Label Text",
+        "value": "Text Area"
+      },
+      "helptext": {
+        "type": "input",
+        "label": "Help Text",
+        "value": "help"
+      },
+      "textarea": {
+        "type": "textarea",
+        "label": "Starting Text",
+        "value": "default text"
+      }
+    },
+    "title": "Text Area",
+    "typefield":"textarea"
+  }
+]
