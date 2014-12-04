@@ -3,7 +3,7 @@ services:
         class: Pirastru\FormBuilderBundle\Admin\FormBuilderAdmin
         arguments: [~, Pirastru\FormBuilderBundle\Entity\FormBuilder, PirastruFormBuilderBundle:FormBuilderAdmin, @service_container]
         tags:
-            - {name: sonata.admin, manager_type: orm, group: Form, label: "Drag&Drop Form" }
+            - {name: sonata.admin, manager_type: orm, group: Form, label: "Form Builder Drag&Drop" }
 
     pirastru_form_builder.block:
         class: Pirastru\FormBuilderBundle\Block\FormBuilderBlockService
