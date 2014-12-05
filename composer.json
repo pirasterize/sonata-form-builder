@@ -1,0 +1,24 @@
+{
+    "name": "pirasterize/sonata-form-builder",
+    "type": "symfony-bundle",
+    "description": "A drag&drod form builder for sonata admin",
+    "keywords": ["drag","drop","form","builder","Symfony2", "sonata","admin","project"],
+    "homepage": "https://github.com/pirasterize/sonata-form-builder",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrea Pirastru",
+            "email": "pirasterize@gmail.com",
+            "role": "Artist"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "~2.3",
+        "twig/twig": "*",
+        "sonata-project/core-bundle": "~2.2",
+        "sonata-project/block-bundle": "~2.2,>=2.2.1"
+    },
+    "autoload": {
+        "psr-0": { "Pirastru\\FormBuilderBundle\\": "" }
+    }
+}
