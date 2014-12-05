@@ -8,7 +8,6 @@ and adapted for Sonata-Admin with bootstrap v3 and Jquery
 
 You need Bootstrap v3 and Jquery on your Javascript/CSS requirements and a recent Sonata Admin installation.
 
-This is the result:
 ![Screenshot](Resources/doc/images/Form_Builder_screenshot.png)
 
 -----------------------------------
