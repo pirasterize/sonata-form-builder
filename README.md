@@ -8,6 +8,11 @@ and adapted for Sonata-Admin with bootstrap v3 and Jquery
 
 You need Bootstrap v3 and Jquery on your Javascript/CSS requirements and a recent Sonata Admin installation.
 
+This is the result:
+![Screenshot](Resources/doc/images/Form_Builder_screenshot.png)
+
+-----------------------------------
+
 ##Install the bundle
 
 1. You can download and put on your /src directory (like this  src/Pirastru/FormBuilderBundle)
@@ -128,6 +133,6 @@ On Options choose the Form you just created, and take a look on the page.
 ##Todo
 - Fields in differents sizes
 - Translations
-- set dinamically Submit button label 
+- set dinamically Submit button label
 - tests
 
