@@ -16,6 +16,6 @@
         "sonata-project/block-bundle": "~2.2,>=2.2.1"
     },
     "autoload": {
-        "psr-0": { "Pirastru\\FormBuilderBundle\\": "" }
+        "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }
     }
 }
