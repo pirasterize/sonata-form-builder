@@ -10,7 +10,26 @@ You need Bootstrap v3 and Jquery on your Javascript/CSS requirements and a recen
 
 ##Install the bundle
 
-Insert this line at the end of AppKernel.php in your symfony :
+1. You can download and put on your /src directory (like this  src/Pirastru/FormBuilderBundle)
+or insert on your vendor directory with the follow command :
+
+```sh
+
+ php -dmemory_limit=1G ./composer.phar require  pirasterize/sonata-form-builder
+
+```
+If you have a >minimum-stability< error is because your symfony installation accept only stable packages.
+Edit composer.json file and change "minimum-stability" from "stable" to "dev" :
+
+```
+    ...
+    "minimum-stability": "dev",
+    ...
+
+```
+
+
+2. Insert the follow line on your AppKernel.php in your symfony :
 
 ```php
 
@@ -32,7 +51,7 @@ Insert this line at the end of AppKernel.php in your symfony :
 ```
 
 
-Then from console run the command for build the database table :
+3. Then on console run the command for build the database table :
 
 ```sh
 
@@ -40,7 +59,7 @@ Then from console run the command for build the database table :
 
 ```
 
-Then put on your routing.yml or better on your routing_admin.yml :
+4. Then put on your app/config/routing.yml or better to separate app/config/routing_admin.yml :
 
 ```yml
 
@@ -50,7 +69,7 @@ sonata_form_builder:
 
 ```
 
-In order to have on your list of Admin entities the Form Builder you must put on your symfony configuration (config.yml or better a separated file sonata_admin.yml), inside of the directive of 'sonata_admin' the follow code :
+5. In order to have on your list of Admin entities the Form Builder you must put on your configuration file (this case app/config/sonata/sonata_admin.yml), inside of the directive of 'sonata_admin' the follow code :
 
 ```yml
 
@@ -67,7 +86,7 @@ sonata_admin:
 
 ```
 
-In order to have on the list of blocks the Form Builder Block available on a page put on your configuration the follow line :
+6. In order to have on the list of blocks the Form Builder Block available on a page put on your configuration file (app/config/sonata/sonata_block.yml) the follow line :
 
 ``` yml
 
@@ -80,15 +99,15 @@ sonata_block:
 ```
 
 
-You must define on parameters.yml the email from
+7. You must define on parameters.yml the email from
 
 ``` yml
 
-    formbuilder_email_from:
+    formbuilder_email_from: jeanmichel@basquiat.com
 
 ```
 
-Run the follow command on your console to install assets :
+8. Run the follow command on your console to install assets :
 
 ```sh
 
@@ -97,11 +116,18 @@ Run the follow command on your console to install assets :
 ```
 
 
-Finish >>>>>
+
+##To see the result
+
+Check on your Sonata Admin Entities you should see the 'Form Builder' Menu than create a new drag&drop form.
+After that create a page from sonata page or edit an existing one and put from the list of available blocks the block called "Form Builder Drag&Drop".
+On Options choose the Form you just created, and take a look on the page.
+
+
 
 ##Todo
 - Fields in differents sizes
 - Translations
-- set Submit button label name
+- set dinamically Submit button label 
 - tests
 
