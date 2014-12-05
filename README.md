@@ -12,11 +12,26 @@ You need Bootstrap v3 and Jquery on your Javascript/CSS requirements and a recen
 
 Insert this line at the end of AppKernel.php in your symfony :
 
-``` php
+```php
 
-    new Pirastru\FormBuilderBundle\PirastruFormBuilderBundle()
+    class AppKernel extends Kernel
+    {
+        public function registerBundles()
+        {
+            $bundles = array(
+                // ...
 
+                 new Pirastru\FormBuilderBundle\PirastruFormBuilderBundle()
+            );
+
+            // ...
+        }
+
+        // ...
+    }
 ```
+
+
 Then from console run the command for build the database table :
 
 ```sh
@@ -87,4 +102,6 @@ Finish >>>>>
 ##Todo
 - Fields in differents sizes
 - Translations
+- set Submit button label name
+- tests
 
