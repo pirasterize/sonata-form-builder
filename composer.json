@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "sonata-project/block-bundle": "~2.2,>=2.2.1"
+        "sonata-project/block-bundle": "~3.2"
     },
     "autoload": {
         "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }
