@@ -5,8 +5,7 @@ namespace Pirastru\FormBuilderBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * FormBuilderRepository
- *
+ * FormBuilderRepository.
  */
 class FormBuilderRepository extends EntityRepository
 {

@@ -4,7 +4,6 @@ namespace Pirastru\FormBuilderBundle\Controller;
 
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Exporter\Writer\XlsWriter;
@@ -16,15 +15,17 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class FormBuilderController extends Controller
 {
-
     /**
      * @Route("/export_submit/{id}/{format}", name="form_builder_export_submit")
+     *
      * @param $id
      * @param $format
+     *
      * @return StreamedResponse
+     *
      * @throws \RuntimeException
      */
-    public function exportSubmitAction( $id, $format)
+    public function exportSubmitAction($id, $format)
     {
         $formBuilder = $this->getDoctrine()->getRepository('PirastruFormBuilderBundle:FormBuilder')
             ->find($id);
@@ -33,17 +34,16 @@ class FormBuilderController extends Controller
 
         switch ($format) {
             case 'xls':
-                $writer      = new XlsWriter('php://output', false);
+                $writer = new XlsWriter('php://output', false);
                 $contentType = 'application/vnd.ms-excel';
                 break;
             case 'csv':
-                $writer      = new CsvWriter('php://output', ';', '"', "", false, true);
+                $writer = new CsvWriter('php://output', ';', '"', '', false, true);
                 $contentType = 'text/csv';
                 break;
             default:
                 throw new \RuntimeException('Invalid format');
         }
-
 
         $filename = sprintf('export_%s_%s.%s',
             $formBuilder->getName(),
@@ -51,17 +51,15 @@ class FormBuilderController extends Controller
             $format
         );
 
-        $callback = function() use ($json_object, $writer, $formBuilder) {
+        $callback = function () use ($json_object, $writer, $formBuilder) {
             $this->buildContent($json_object, $writer, $formBuilder);
         };
+
         return new StreamedResponse($callback, 200, array(
-            'Content-Type'        => $contentType,
-            'Content-Disposition' => sprintf('attachment; filename=%s', $filename)
+            'Content-Type' => $contentType,
+            'Content-Disposition' => sprintf('attachment; filename=%s', $filename),
         ));
-
     }
-
-
 
     /*
      * function executed from the sonata-block in case
@@ -89,9 +87,7 @@ class FormBuilderController extends Controller
          * Send Emails to recipients
          ***************************/
         $this->sendEmailToRecipient($formBuilder, $form_submit);
-
     }
-
 
     /*
      * Send Email to all Recipients defined for this form Builder
@@ -104,35 +100,34 @@ class FormBuilderController extends Controller
          * ****************************** */
         $recipient = $formBuilder->getRecipient();
 
-        if(!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from')))
-        {
+        if (!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from'))) {
             $message = \Swift_Message::newInstance()
                 ->setSubject($formBuilder->getName())
                 ->setFrom($this->container->getParameter('formbuilder_email_from'))
                 ->setTo($recipient);
 
             $emailCc = $formBuilder->getRecipientCC();
-            if(!empty($emailCc))
+            if (!empty($emailCc)) {
                 $message->setCc($emailCc);
+            }
 
             $emailBcc = $formBuilder->getRecipientBCC();
-            if(!empty($emailBcc))
+            if (!empty($emailBcc)) {
                 $message->setBcc($emailBcc);
-
+            }
 
             $message->setBody(
                 $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig',
                     array(
-                        'columns'       => $formBuilder->getColumns(),
-                        'form'          => $form_submit,
-                        'form_array'    => json_decode($formBuilder->getJson()),
-                        'name'          => $formBuilder->getName(),
+                        'columns' => $formBuilder->getColumns(),
+                        'form' => $form_submit,
+                        'form_array' => json_decode($formBuilder->getJson()),
+                        'name' => $formBuilder->getName(),
                     )
                 ), 'text/html')
             ;
             $this->get('mailer')->send($message);
         }
-
     }
 
     /*
@@ -142,10 +137,10 @@ class FormBuilderController extends Controller
     public function generateFormFromFormBuilder($formbuild)
     {
         $formBuilder = $this->createFormBuilder(array(), array(
-                'action' => "#",
+                'action' => '#',
                 'method' => 'POST',
                 'attr' => array(
-                    "id" => "form_builder" . $formbuild->getId(),
+                    'id' => 'form_builder'.$formbuild->getId(),
                 ),
             ));
 
@@ -158,17 +153,17 @@ class FormBuilderController extends Controller
          * each element is a form field like 'Text Input'
          */
         $obj_form = json_decode($formbuild->getJson());
-        foreach($obj_form as $key=>$elem)
-        {
-            if($elem->typefield == 'formname') continue;
+        foreach ($obj_form as $key => $elem) {
+            if ($elem->typefield == 'formname') {
+                continue;
+            }
 
             /*
              * Call of a special function named setFieldXXXXXXXXXX
              * previous defined in FormBuilderFactory Class
              */
-            $field_fun = 'setField' . ucfirst($elem->typefield);
-            if(method_exists($formBuilderFactory, $field_fun))
-            {
+            $field_fun = 'setField'.ucfirst($elem->typefield);
+            if (method_exists($formBuilderFactory, $field_fun)) {
                 $field_detail = $formBuilderFactory->$field_fun($formBuilder, $key, $elem);
 
                 $title_col[$field_detail['name']] = $elem->fields->label->value;
@@ -180,7 +175,7 @@ class FormBuilderController extends Controller
          * with columns titles;
          * the field $size_col size
          * =>>> array(form, $title_col, $size_col) */
-        return array('form' => $formBuilder->getForm(), 'title_col'=>$title_col, 'size_col'=>$size_col);
+        return array('form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col);
     }
 
     /*
@@ -197,56 +192,47 @@ class FormBuilderController extends Controller
         $is_title = true;
 
         $title = array();
-        foreach ($json_object as $line)
-        {
+        foreach ($json_object as $line) {
             $response = array();
 
             /* First Line with title columns  */
-            if($is_title)
-            {
-                foreach ($columns as $value) {$title[] = $value;}
+            if ($is_title) {
+                foreach ($columns as $value) {
+                    $title[] = $value;
+                }
 
                 $is_title = false;
                 $writer->write($title);
             }
 
-
-
             /* Others Lines */
-            foreach ($columns as $key => $value)
-            {
+            foreach ($columns as $key => $value) {
                 $el_k = explode('_', $key);
-                if($el_k[0] == 'radio')
-                {
-                    if($line[$key] != ''){
+                if ($el_k[0] == 'radio') {
+                    if ($line[$key] != '') {
                         $response[] = $obj_form[$el_k[1]]->fields->radios->value[$line[$key]];
                     }
-                }
-                elseif($el_k[0] == 'choice')
-                {
-                    if(is_array($line[$key])){
+                } elseif ($el_k[0] == 'choice') {
+                    if (is_array($line[$key])) {
                         $r = array();
-                        foreach($line[$key] as $v)
+                        foreach ($line[$key] as $v) {
                             $r[] = $obj_form[$el_k[1]]->fields->options->value[$v];
-                        $response[] = implode('|',$r);
-                    }
-                    elseif($line[$key] != ''){
+                        }
+                        $response[] = implode('|', $r);
+                    } elseif ($line[$key] != '') {
                         $response[] = $obj_form[$el_k[1]]->fields->options->value[$line[$key]];
                     }
-                }
-                elseif($el_k[0] == 'checkbox')
-                {
-                    if(is_array($line[$key])){
+                } elseif ($el_k[0] == 'checkbox') {
+                    if (is_array($line[$key])) {
                         $r = array();
-                        foreach($line[$key] as $v)
+                        foreach ($line[$key] as $v) {
                             $r[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$v];
-                        $response[] = implode('|',$r);
-                    }
-                    elseif($line[$key] != ''){
+                        }
+                        $response[] = implode('|', $r);
+                    } elseif ($line[$key] != '') {
                         $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$line[$key]];
                     }
-                }
-                else{
+                } else {
                     $response[] = $line[$key];
                 }
             }
@@ -256,5 +242,4 @@ class FormBuilderController extends Controller
         }
         $writer->close();
     }
-
 }
