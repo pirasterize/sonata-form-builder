@@ -13,15 +13,14 @@
         {% set form_array = json_decode(object.json) %}
 
             <tr>
-                {% for value in object.columns %}
+                {% for key,value in object.columns if key|slice(0, 6) != 'button' %}
                     <th>{{ value }}</th>
                 {% endfor %}
             </tr>
 
             {% for submit_line in object.submit %}
                 <tr>
-                    {% for key,value in object.columns %}
-
+                    {% for key,value in object.columns if key|slice(0, 6) != 'button' %}
                         {% set el_k = key|split('_') %}
                         {% if  key|slice(0, 5) == 'radio' %}
                             <td>
@@ -60,9 +59,7 @@
                                     {% endif %}
                                 {% endif %}
                             </td>
-                        {#{% elseif key|slice(0, 4) == 'date' %}#}
-                            {#<td>{{ submit_line['form']['date_'~el_k[1]] }}</td>#}
-                        {% else %}
+                        {% elseif submit_line[key] is defined %}
                             <td>
                                 {{ submit_line[key] }}
                             </td>
