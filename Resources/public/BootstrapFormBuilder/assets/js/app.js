@@ -39,7 +39,7 @@ define([
       	});
       	
       	new TabView({
-        	title: "",
+        	title: "Buttons",
         	collection: new SnippetsCollection(JSON.parse(buttonJSON)),
       	});
       	

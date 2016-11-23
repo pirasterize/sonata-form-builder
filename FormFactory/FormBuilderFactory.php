@@ -7,17 +7,19 @@
 
 namespace Pirastru\FormBuilderBundle\FormFactory;
 
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Email;
 
-class FormBuilderFactory {
-
-
+class FormBuilderFactory
+{
     /**
      * Email Field
      */
     public function setFieldEmailinput($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('email_'.$key, 'email', array(
+        $formBuilder->add('email_'.$key, 'email', array(
             'required'  => $elem->fields->required->value,
             'label'     => $elem->fields->label->value,
             'help_block'=> $elem->fields->helptext->value,
@@ -97,7 +99,7 @@ class FormBuilderFactory {
      */
     public function setFieldTextinput($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('text_'.$key, 'text', array(
+        $formBuilder->add('text_'.$key, 'text', array(
             'required'  => $elem->fields->required->value,
             'label'     => $elem->fields->label->value,
             'help_block'=> $elem->fields->helptext->value,
@@ -116,7 +118,7 @@ class FormBuilderFactory {
      */
     public function setFieldTextarea($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('textarea_'.$key, 'textarea', array(
+        $formBuilder->add('textarea_'.$key, 'textarea', array(
             'required'  => false,
             'label'     => $elem->fields->label->value,
             'help_block'=> $elem->fields->helptext->value,
@@ -134,7 +136,7 @@ class FormBuilderFactory {
      */
     public function setFieldSelectbasic($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('choice_'.$key, 'choice', array(
+        $formBuilder->add('choice_'.$key, 'choice', array(
             'label'       => $elem->fields->label->value,
             'choices'     => $elem->fields->options->value,
             'required'    => false,
@@ -150,7 +152,7 @@ class FormBuilderFactory {
      */
     public function setFieldSelectmultiple($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('choice_'.$key, 'choice', array(
+        $formBuilder->add('choice_'.$key, 'choice', array(
             'label'    => $elem->fields->label->value,
             'choices'  => $elem->fields->options->value,
             'multiple' => true,
@@ -166,7 +168,7 @@ class FormBuilderFactory {
      */
     public function setFieldMultipleradios($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('radio_'.$key, 'choice', array(
+        $formBuilder->add('radio_'.$key, 'choice', array(
             'label'      => $elem->fields->label->value,
             'choices'    => $elem->fields->radios->value,
             'multiple'   => false,
@@ -185,7 +187,7 @@ class FormBuilderFactory {
      */
     public function setFieldMultiplecheckboxes($formBuilder, $key, $elem)
     {
-        $formBuilder ->add('checkbox_'.$key, 'choice', array(
+        $formBuilder->add('checkbox_'.$key, 'choice', array(
             'label'    => $elem->fields->label->value,
             'choices'  => $elem->fields->checkboxes->value,
             'multiple' => true,
@@ -197,7 +199,7 @@ class FormBuilderFactory {
     }
 
 
-    /*
+    /**
      * Return the selected element on a list
      */
     private function getSelectedValue($select)
@@ -208,5 +210,45 @@ class FormBuilderFactory {
         return false;
     }
 
+    public function setFieldSinglebutton($formBuilder, $key, $elem)
+    {
+        $action = $this->getSelectedValue($elem->fields->buttonaction->value);
+        $this->createButton($formBuilder, $action, $key, $elem->fields->buttonlabel->value);
 
+        return array('name'=>'button_'.$key, 'size'=>'col-sm-6');
+    }
+
+    public function setFieldDoublebutton($formBuilder, $key, $elem)
+    {
+        $action = $this->getSelectedValue($elem->fields->button1action->value);
+        $this->createButton($formBuilder, $action, $key.'1', $elem->fields->button1label->value);
+
+        $action = $this->getSelectedValue($elem->fields->button2action->value);
+        $this->createButton($formBuilder, $action, $key.'2', $elem->fields->button2label->value);
+
+        return array(
+            'name'=>'group_'.$key, 'size'=>'col-sm-6'
+        );
+    }
+
+    private function createButton($formBuilder, $action, $key, $value)
+    {
+        $buttonType = $this->getButtonType($action);
+
+        $formBuilder->add('button_'.$key, $buttonType, array(
+            'label' => $value
+        ));
+    }
+
+    private function getButtonType($action)
+    {
+        switch ($action) {
+            case 'submit':
+                return SubmitType::class;
+            case 'reset':
+                return ResetType::class;
+            default:
+                return ButtonType::class;
+        }
+    }
 }

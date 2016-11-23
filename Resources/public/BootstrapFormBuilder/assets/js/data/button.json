@@ -1,23 +1,7 @@
 [
   {
-    "title": "File Button",
-    "typefield":"filebutton",
-    "fields": {
-      "id": {
-        "label": "ID / Name",
-        "type": "input",
-        "value": "filebutton"
-      },
-      "label": {
-        "label": "Label Text",
-        "type": "input",
-        "value": "File Button"
-      }
-    }
-  },
-  {
     "title": "Single Button",
-    "typefield":"sunglebutton",
+    "typefield":"singlebutton",
     "fields": {
       "id": {
         "label": "ID / Name",
@@ -32,7 +16,7 @@
       "buttonlabel": {
         "label": "Button Label",
         "type": "input",
-        "value": "Button"
+        "value": "Submit"
       },
       "buttontype": {
         "label": "Button Type",
@@ -74,6 +58,22 @@
             "selected": false
           }
         ]
+      },
+      "buttonaction": {
+        "label": "Button Action",
+        "type": "select",
+        "value": [
+          {
+            "value": "submit",
+            "label": "Submit",
+            "selected": true
+          },
+          {
+            "value": "reset",
+            "label": "Reset",
+            "selected": false
+          }
+        ]
       }
     }
   },
@@ -94,7 +94,7 @@
       "button1label": {
         "label": "Button Label",
         "type": "input",
-        "value": "Good Button"
+        "value": "Submit"
       },
       "button1type": {
         "label": "Button Type",
@@ -108,7 +108,7 @@
           {
             "value": "btn-primary",
             "label": "Primary",
-            "selected": false
+            "selected": true
           },
           {
             "value": "btn-info",
@@ -118,7 +118,7 @@
           {
             "value": "btn-success",
             "label": "Success",
-            "selected": true
+            "selected": false
           },
           {
             "value": "btn-warning",
@@ -137,6 +137,22 @@
           }
         ]
       },
+      "button1action": {
+        "label": "Button Action",
+        "type": "select",
+        "value": [
+          {
+            "value": "submit",
+            "label": "Submit",
+            "selected": true
+          },
+          {
+            "value": "reset",
+            "label": "Reset",
+            "selected": false
+          }
+        ]
+      },
       "id2": {
         "label": "Button 2 ID / Name",
         "type": "input",
@@ -145,7 +161,7 @@
       "button2label": {
         "label": "Button Label",
         "type": "input",
-        "value": "Scary Button"
+        "value": "Reset"
       },
       "button2type": {
         "label": "Button Type",
@@ -185,6 +201,22 @@
             "value": "btn-inverse",
             "label": "Inverse",
             "selected": false
+          }
+        ]
+      },
+      "button2action": {
+        "label": "Button Action",
+        "type": "select",
+        "value": [
+          {
+            "value": "submit",
+            "label": "Submit",
+            "selected": false
+          },
+          {
+            "value": "reset",
+            "label": "Reset",
+            "selected": true
           }
         ]
       }

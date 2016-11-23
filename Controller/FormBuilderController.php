@@ -85,7 +85,6 @@ class FormBuilderController extends Controller
         $em->persist($formBuilder);
         $em->flush();
 
-
         /****************************
          * Send Emails to recipients
          ***************************/
@@ -104,7 +103,6 @@ class FormBuilderController extends Controller
          * default email_from too
          * ****************************** */
         $recipient = $formBuilder->getRecipient();
-
 
         if(!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from')))
         {
@@ -136,10 +134,6 @@ class FormBuilderController extends Controller
         }
 
     }
-
-
-
-
 
     /*
      * This function
@@ -182,16 +176,12 @@ class FormBuilderController extends Controller
             }
         }
 
-
-
         /* Return a Symfony Form Object
          * with columns titles;
          * the field $size_col size
          * =>>> array(form, $title_col, $size_col) */
         return array('form' => $formBuilder->getForm(), 'title_col'=>$title_col, 'size_col'=>$size_col);
     }
-
-
 
     /*
      *  Needed for export CSV/XSL
