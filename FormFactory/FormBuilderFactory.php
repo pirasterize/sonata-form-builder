@@ -212,10 +212,10 @@ class FormBuilderFactory
     public function setFieldDoublebutton($formBuilder, $key, $elem)
     {
         $action = $this->getSelectedValue($elem->fields->button1action->value);
-        $this->createButton($formBuilder, $action, $key.'1', $elem->fields->button1label->value);
+        $this->createButton($formBuilder, $action, '1_'.$key, $elem->fields->button1label->value);
 
         $action = $this->getSelectedValue($elem->fields->button2action->value);
-        $this->createButton($formBuilder, $action, $key.'2', $elem->fields->button2label->value);
+        $this->createButton($formBuilder, $action, '2_'.$key, $elem->fields->button2label->value);
 
         return array(
             'name' => 'group_'.$key, 'size' => 'col-sm-6',
