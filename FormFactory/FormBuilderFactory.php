@@ -218,7 +218,7 @@ class FormBuilderFactory
         $this->createButton($formBuilder, $action, '2_'.$key, $elem->fields->button2label->value);
 
         return array(
-            'name' => 'group_'.$key, 'size' => 'col-sm-6',
+            'name' => 'button_'.$key, 'size' => 'col-sm-6',
         );
     }
 
