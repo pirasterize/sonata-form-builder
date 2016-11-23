@@ -8,6 +8,7 @@
 namespace Pirastru\FormBuilderBundle\Block;
 
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Sonata\BlockBundle\Util\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -15,7 +16,6 @@ use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\BlockBundle\Block\BaseBlockService;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  *
@@ -52,7 +52,7 @@ class FormBuilderBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults ( array (
             'template' => 'PirastruFormBuilderBundle:Block:block_form_builder.html.twig',
