@@ -5,7 +5,7 @@ namespace Pirastru\FormBuilderBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Form Builder Entity
+ * Form Builder Entity.
  *
  * @ORM\Table(name="form__builder")
  * @ORM\Entity(repositoryClass="Pirastru\FormBuilderBundle\Entity\FormBuilderRepository")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FormBuilder
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -28,14 +28,12 @@ class FormBuilder
      */
     private $json;
 
-
     /**
      * @var array
      *
      * @ORM\Column(name="columns", type="array", nullable=true)
      */
     private $columns;
-
 
     /**
      * @var array
@@ -72,11 +70,10 @@ class FormBuilder
      */
     private $name;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -90,13 +87,12 @@ class FormBuilder
         $this->recipientBCC = array();
     }
 
-
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getName()?$this->getName():'Create a Form Builder';
+        return $this->getName() ? $this->getName() : 'Create a Form Builder';
     }
 
     /**
@@ -210,5 +206,4 @@ class FormBuilder
     {
         return $this->columns;
     }
-
 }

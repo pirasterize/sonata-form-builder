@@ -11,7 +11,6 @@ class FormBuilderExtension extends \Twig_Extension
      */
     protected $environment;
 
-
     /**
      * {@inheritdoc}
      */
@@ -28,6 +27,7 @@ class FormBuilderExtension extends \Twig_Extension
                     foreach ($stdClassObject as $key => $value) {
                         $response[] = array($key, $value);
                     }
+
                     return $response;
                 }),
         );
@@ -36,20 +36,20 @@ class FormBuilderExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'json_decode'   => new \Twig_Function_Method($this, 'jsonDecode'),
-            'is_array'   => new \Twig_Function_Method($this, 'isArray'),
+            'json_decode' => new \Twig_Function_Method($this, 'jsonDecode'),
+            'is_array' => new \Twig_Function_Method($this, 'isArray'),
         );
     }
 
-    public function jsonDecode($str) {
+    public function jsonDecode($str)
+    {
         return json_decode($str);
     }
 
-    public function isArray($var) {
+    public function isArray($var)
+    {
         return is_array($var);
     }
-
-
 
     /**
      * @param FieldDescriptionInterface $fieldDescription
@@ -59,7 +59,7 @@ class FormBuilderExtension extends \Twig_Extension
      */
     protected function getTemplate(FieldDescriptionInterface $fieldDescription, $defaultTemplate)
     {
-        $templateName = $fieldDescription->getTemplate() ? : $defaultTemplate;
+        $templateName = $fieldDescription->getTemplate() ?: $defaultTemplate;
 
         try {
             $template = $this->environment->loadTemplate($templateName);

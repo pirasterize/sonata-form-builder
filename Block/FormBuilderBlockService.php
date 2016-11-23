@@ -2,29 +2,27 @@
 /**
  * Created By Andrea Pirastru
  * Date: 08/01/2014
- * Time: 17:28
+ * Time: 17:28.
  */
 
 namespace Pirastru\FormBuilderBundle\Block;
 
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\BlockBundle\Block\BaseBlockService;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- *
  * @author     Andrea Pirastru
  */
 class FormBuilderBlockService extends BaseBlockService
 {
     protected $formBuilderAdmin;
-
 
     /**
      * @param string             $name
@@ -35,9 +33,8 @@ class FormBuilderBlockService extends BaseBlockService
     {
         parent::__construct($name, $templating);
 
-        $this->container    = $container;
+        $this->container = $container;
     }
-
 
     /**
      * {@inheritdoc}
@@ -47,17 +44,15 @@ class FormBuilderBlockService extends BaseBlockService
         return 'Form Builder Drag&Drop';
     }
 
-
-
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults ( array (
+        $resolver->setDefaults(array(
             'template' => 'PirastruFormBuilderBundle:Block:block_form_builder.html.twig',
             'formBuilderId' => null,
-        ) );
+        ));
     }
 
     /**
@@ -68,10 +63,9 @@ class FormBuilderBlockService extends BaseBlockService
         $formMapper->add('settings', 'sonata_type_immutable_array', array(
             'keys' => array(
                 array($this->getFieldFormBuilder($formMapper), null, array()),
-            )
+            ),
         ));
     }
-
 
     /**
      * @return mixed
@@ -84,7 +78,6 @@ class FormBuilderBlockService extends BaseBlockService
 
         return $this->formBuilderAdmin;
     }
-
 
     /**
      * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
@@ -100,14 +93,14 @@ class FormBuilderBlockService extends BaseBlockService
         $fieldDescription->setOption('edit', 'list');
         $fieldDescription->setAssociationMapping(array(
             'fieldName' => 'form_builder',
-            'type'      => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE
+            'type' => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE,
         ));
 
         return $formMapper->create('formBuilderId', 'sonata_type_model', array(
             'sonata_field_description' => $fieldDescription,
-            'label'                    => "Form Builder",
-            'class'                    => $this->getFormBuilderAdmin()->getClass(),
-            'model_manager'            => $this->getFormBuilderAdmin()->getModelManager()
+            'label' => 'Form Builder',
+            'class' => $this->getFormBuilderAdmin()->getClass(),
+            'model_manager' => $this->getFormBuilderAdmin()->getModelManager(),
         ));
     }
 
@@ -116,7 +109,6 @@ class FormBuilderBlockService extends BaseBlockService
      */
     public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
     {
-
     }
 
     /**
@@ -131,19 +123,19 @@ class FormBuilderBlockService extends BaseBlockService
 
         // In case the FormBuilder Object is not defined
         // return a empty Response
-        if($formBuilder === null)
+        if ($formBuilder === null) {
             return $this->renderResponse($blockContext->getTemplate(), array(), $response);
+        }
 
         $form_pack = $this->container->get('pirastru_form_builder.controller')
             ->generateFormFromFormBuilder($formBuilder);
 
         $form = $form_pack['form'];
-        $result= null;
+        $result = null;
         $request = $this->container->get('request');
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             /***************************************
              * operations when the form Builder is submitted
              ***************************************/
@@ -157,15 +149,13 @@ class FormBuilderBlockService extends BaseBlockService
 
         return $this->renderResponse($blockContext->getTemplate(), array(
                 'formBuilderId' => $formBuilder->getId(),
-                'block'         => $blockContext->getBlock(),
-                'settings'      => $blockContext->getSettings(),
-                'form'          => $form->createView(),
-                'title_col'     => $form_pack['title_col'],
-                'size_col'      => $form_pack['size_col'],
-                'result'        => $result
-            ),$response);
-
-
+                'block' => $blockContext->getBlock(),
+                'settings' => $blockContext->getSettings(),
+                'form' => $form->createView(),
+                'title_col' => $form_pack['title_col'],
+                'size_col' => $form_pack['size_col'],
+                'result' => $result,
+            ), $response);
     }
 
     /**
@@ -175,8 +165,7 @@ class FormBuilderBlockService extends BaseBlockService
     {
         $formBuilderId = $block->getSetting('formBuilderId');
 
-        if ($formBuilderId)
-        {
+        if ($formBuilderId) {
             $formBuilderId = $this->container->get('doctrine')
                 ->getRepository('PirastruFormBuilderBundle:FormBuilder')
                 ->findOneBy(array('id' => $formBuilderId));
@@ -184,9 +173,6 @@ class FormBuilderBlockService extends BaseBlockService
 
         $block->setSetting('formBuilderId', $formBuilderId);
     }
-
-
-
 
     /**
      * {@inheritdoc}
@@ -203,6 +189,4 @@ class FormBuilderBlockService extends BaseBlockService
     {
         $block->setSetting('formBuilderId', is_object($block->getSetting('formBuilderId')) ? $block->getSetting('formBuilderId')->getId() : null);
     }
-
-
 }

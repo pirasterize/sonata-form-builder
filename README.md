@@ -132,6 +132,5 @@ On Options choose the Form you just created, and take a look on the page.
 ##Todo
 - Fields in differents sizes
 - Translations
-- set dinamically Submit button label
 - tests
 

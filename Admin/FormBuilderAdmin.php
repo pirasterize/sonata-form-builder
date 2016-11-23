@@ -6,14 +6,11 @@ use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 
 class FormBuilderAdmin extends Admin
 {
-
     protected $container;
 
     public function __construct($code, $class, $baseControllerName, ContainerInterface $container)
@@ -21,7 +18,6 @@ class FormBuilderAdmin extends Admin
         $this->container = $container;
         parent::__construct($code, $class, $baseControllerName);
     }
-
 
     /**
      * @param DatagridMapper $datagridMapper
@@ -34,7 +30,6 @@ class FormBuilderAdmin extends Admin
         ;
     }
 
-
     /**
      * @param ListMapper $listMapper
      */
@@ -46,49 +41,47 @@ class FormBuilderAdmin extends Admin
         ;
     }
 
-
     /**
      * @param FormMapper $formMapper
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('json','hidden')
+            ->add('json', 'hidden')
             ->add('name', 'text')
             ->add('recipient', 'collection', array(
-                    'type'   => 'email',
-                    'label'  => 'Recipient(s)',
+                    'type' => 'email',
+                    'label' => 'Recipient(s)',
                     'allow_add' => true,
                     'allow_delete' => true,
-                    'options'  => array(
-                        'label'  => 'Email',
-                        'required'  => false,
+                    'options' => array(
+                        'label' => 'Email',
+                        'required' => false,
                     ),
                 )
             )
             ->add('recipientCC', 'collection', array(
-                    'type'   => 'email',
+                    'type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
-                    'options'  => array(
-                        'label'  => 'Email',
-                        'required'  => false,
+                    'options' => array(
+                        'label' => 'Email',
+                        'required' => false,
                     ),
                 )
             )
             ->add('recipientBCC', 'collection', array(
-                    'type'   => 'email',
+                    'type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
-                    'options'  => array(
-                        'label'  => 'Email',
-                        'required'  => false,
+                    'options' => array(
+                        'label' => 'Email',
+                        'required' => false,
                     ),
                 )
             )
         ;
     }
-
 
     public function getTemplate($name)
     {
@@ -113,5 +106,4 @@ class FormBuilderAdmin extends Admin
             ->add('submit', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'))
         ;
     }
-
 }
