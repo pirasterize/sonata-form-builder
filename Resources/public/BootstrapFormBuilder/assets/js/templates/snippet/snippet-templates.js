@@ -24,6 +24,7 @@ define(function(require) {
       dateinput                = require('text!templates/snippet/dateinput.html'),
       postalcodeinput          = require('text!templates/snippet/postalcodeinput.html'),
       telephoneinput           = require('text!templates/snippet/telephoneinput.html'),
+      captcha                  = require('text!templates/snippet/captcha.html'),
       privacycheckbox          = require('text!templates/snippet/privacycheckbox.html');
 
   return {
@@ -52,6 +53,7 @@ define(function(require) {
      dateinput                : dateinput,
      postalcodeinput          : postalcodeinput,
      telephoneinput           : telephoneinput,
+     captcha                  : captcha,
      privacycheckbox          : privacycheckbox
   }
 });

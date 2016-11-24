@@ -1,7 +1,6 @@
 [
     {
         "fields": {
-
             "inputwidth": {
                 "type": "select",
                 "label": "Input Width",
@@ -45,11 +44,10 @@
             }
         },
         "title": "Text Input",
-        "typefield":"textinput"
+        "typefield": "textinput"
     },
     {
         "fields": {
-
             "inputwidth": {
                 "type": "select",
                 "label": "Input Width",
@@ -93,12 +91,10 @@
             }
         },
         "title": "Email Input",
-        "typefield":"emailinput"
+        "typefield": "emailinput"
     },
-
     {
         "fields": {
-
             "inputwidth": {
                 "type": "select",
                 "label": "Input Width",
@@ -142,11 +138,10 @@
             }
         },
         "title": "Telephone Input",
-        "typefield":"telephoneinput"
+        "typefield": "telephoneinput"
     },
     {
         "fields": {
-
             "inputwidth": {
                 "type": "select",
                 "label": "Input Width",
@@ -190,11 +185,10 @@
             }
         },
         "title": "PostalCode Input",
-        "typefield":"postalcodeinput"
+        "typefield": "postalcodeinput"
     },
     {
         "fields": {
-
             "inputwidth": {
                 "type": "select",
                 "label": "Input Width",
@@ -238,48 +232,64 @@
             }
         },
         "title": "Date Input",
-        "typefield":"dateinput"
+        "typefield": "dateinput"
     },
     {
-    "fields": {
-      "inputwidth": {
-        "type": "select",
-        "label": "Input Width",
-        "value": [
-          {
-            "label": "Short",
-            "value": "col-sm-4",
-            "selected": false
-          },
-          {
-            "label": "Medium",
-            "value": "col-sm-6",
-            "selected": true
-          },
-          {
-            "label": "Long",
-            "value": "col-sm-8",
-            "selected": false
-          }
-        ]
-      },
-      "label": {
-        "type": "input",
-        "label": "Label Text",
-        "value": "Text Area"
-      },
-      "helptext": {
-        "type": "input",
-        "label": "Help Text",
-        "value": "help"
-      },
-      "textarea": {
-        "type": "textarea",
-        "label": "Starting Text",
-        "value": "default text"
-      }
+        "fields": {
+            "inputwidth": {
+                "type": "select",
+                "label": "Input Width",
+                "value": [
+                    {
+                        "label": "Short",
+                        "value": "col-sm-4",
+                        "selected": false
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "col-sm-6",
+                        "selected": true
+                    },
+                    {
+                        "label": "Long",
+                        "value": "col-sm-8",
+                        "selected": false
+                    }
+                ]
+            },
+            "label": {
+                "type": "input",
+                "label": "Label Text",
+                "value": "Text Area"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "help"
+            },
+            "textarea": {
+                "type": "textarea",
+                "label": "Starting Text",
+                "value": "default text"
+            }
+        },
+        "title": "Text Area",
+        "typefield": "textarea"
     },
-    "title": "Text Area",
-    "typefield":"textarea"
-  }
+    {
+        "fields": {
+            "label": {
+                "type": "input",
+                "label": "Captcha Text",
+                "value": "Captcha"
+            },
+            "helptext": {
+                "type": "input",
+                "label": "Help Text",
+                "value": "help"
+            }
+        },
+        "title": "Captcha",
+        "typefield": "captcha"
+    }
 ]

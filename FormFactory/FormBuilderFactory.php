@@ -7,6 +7,7 @@
 
 namespace Pirastru\FormBuilderBundle\FormFactory;
 
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
@@ -193,6 +194,9 @@ class FormBuilderFactory
         $formBuilder->add('privacy_'.$key, CheckboxType::class, [
             'label'    => $elem->fields->text->value,
             'required' => true,
+            'label_attr' => [
+                'style' => 'display:none;'
+            ]
         ]);
 
         return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
@@ -252,5 +256,19 @@ class FormBuilderFactory
             default:
                 return ButtonType::class;
         }
+    }
+
+    public function setFieldCaptcha($formBuilder, $key, $elem)
+    {
+        $formBuilder->add('captcha_'.$key, CaptchaType::class, array(
+            'width' => 200,
+            'height' => 50,
+            'length' => 6,
+            'label_attr' => [
+                'style' => 'display:none;'
+            ]
+        ));
+
+        return array('name' => 'captcha_'.$key, 'size' => 'col-sm-6');
     }
 }
