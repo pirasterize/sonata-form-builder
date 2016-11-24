@@ -190,12 +190,12 @@ class FormBuilderFactory
 
     public function setFieldPrivacycheckbox($formBuilder, $key, $elem)
     {
-        $formBuilder->add('checkbox_'.$key, CheckboxType::class, [
+        $formBuilder->add('privacy_'.$key, CheckboxType::class, [
             'label'    => $elem->fields->text->value,
             'required' => true,
         ]);
 
-        return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
+        return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
     }
 
     /**
