@@ -23,7 +23,8 @@ define(function(require) {
       emailinput               = require('text!templates/snippet/emailinput.html'),
       dateinput                = require('text!templates/snippet/dateinput.html'),
       postalcodeinput          = require('text!templates/snippet/postalcodeinput.html'),
-      telephoneinput           = require('text!templates/snippet/telephoneinput.html');
+      telephoneinput           = require('text!templates/snippet/telephoneinput.html'),
+      privacycheckbox          = require('text!templates/snippet/privacycheckbox.html');
 
   return {
      formname                 : formname,
@@ -50,6 +51,7 @@ define(function(require) {
      emailinput               : emailinput,
      dateinput                : dateinput,
      postalcodeinput          : postalcodeinput,
-     telephoneinput           : telephoneinput
+     telephoneinput           : telephoneinput,
+     privacycheckbox          : privacycheckbox
   }
 });
