@@ -43,6 +43,22 @@
         "value": ["Option one","Option two"]
       }
     }
+  },
+  {
+    "title": "Privacy check",
+    "typefield":"privacycheckbox",
+    "fields": {
+      "text": {
+        "label": "Privacy text",
+        "type": "textarea",
+        "value": "I agree to the terms of service"
+      },
+      "label": {
+        "label": "Label Text",
+        "type": "input",
+        "value": "Privacy check"
+      }
+    }
   }
 
 ]

@@ -8,6 +8,7 @@
 namespace Pirastru\FormBuilderBundle\FormFactory;
 
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Email;
@@ -185,6 +186,16 @@ class FormBuilderFactory
         ));
 
         return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
+    }
+
+    public function setFieldPrivacycheckbox($formBuilder, $key, $elem)
+    {
+        $formBuilder->add('privacy_'.$key, CheckboxType::class, [
+            'label'    => $elem->fields->text->value,
+            'required' => true,
+        ]);
+
+        return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
     }
 
     /**
