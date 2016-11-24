@@ -39,14 +39,6 @@ class FormBuilderBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'Form Builder Drag&Drop';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
