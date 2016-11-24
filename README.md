@@ -14,7 +14,9 @@ You need Bootstrap v3 and Jquery on your Javascript/CSS requirements and a recen
 
 ##Install the bundle
 
-1. You can download and put on your /src directory (like this  src/Pirastru/FormBuilderBundle)
+###Step 1: Download the bundle
+ 
+You can download and put on your /src directory (like this  src/Pirastru/FormBuilderBundle)
 or insert on your vendor directory with the follow command :
 
 ```sh
@@ -33,7 +35,9 @@ Edit composer.json file and change "minimum-stability" from "stable" to "dev" :
 ```
 
 
-2. Insert the follow line on your AppKernel.php in your symfony :
+###Step 2: Enable the bundle
+
+Insert the follow line on your AppKernel.php in your symfony :
 
 ```php
 
@@ -44,6 +48,7 @@ Edit composer.json file and change "minimum-stability" from "stable" to "dev" :
             $bundles = array(
                 // ...
 
+                 new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
                  new Pirastru\FormBuilderBundle\PirastruFormBuilderBundle()
             );
 
@@ -54,8 +59,26 @@ Edit composer.json file and change "minimum-stability" from "stable" to "dev" :
     }
 ```
 
+###Step 3: Configuration
 
-3. Then on console run the command for build the database table :
+Add the following configuration to your `app/config/config.yml`:
+
+``` yml
+
+    gregwar_captcha: ~
+
+```
+    
+
+Add the following configuration to your `app/config/parameters.yml`:
+
+``` yml
+
+    formbuilder_email_from: jeanmichel@basquiat.com
+
+```
+
+###Step 4: Setup the database schema
 
 ```sh
 
@@ -63,7 +86,9 @@ Edit composer.json file and change "minimum-stability" from "stable" to "dev" :
 
 ```
 
-4. Then put on your app/config/routing.yml or better to separate app/config/routing_admin.yml :
+###Step 5: Setup the routing
+
+Append the following code to app/config/routing.yml or better to separate app/config/routing_admin.yml :
 
 ```yml
 
@@ -73,7 +98,9 @@ sonata_form_builder:
 
 ```
 
-5. In order to have on your list of Admin entities the Form Builder you must put on your configuration file (this case app/config/sonata/sonata_admin.yml), inside of the directive of 'sonata_admin' the follow code :
+###Step 6: Sonata admin setup
+
+In order to have on your list of Admin entities the Form Builder you must put on your configuration file (this case app/config/sonata/sonata_admin.yml), inside of the directive of 'sonata_admin' the follow code :
 
 ```yml
 
@@ -90,7 +117,9 @@ sonata_admin:
 
 ```
 
-6. In order to have on the list of blocks the Form Builder Block available on a page put on your configuration file (app/config/sonata/sonata_block.yml) the follow line :
+###Step 7: Sonata blocks setup
+
+In order to have on the list of blocks the Form Builder Block available on a page put on your configuration file (app/config/sonata/sonata_block.yml) the follow line :
 
 ``` yml
 
@@ -102,16 +131,9 @@ sonata_block:
 
 ```
 
+###Step 8: Install assets
 
-7. You must define on parameters.yml the email from
-
-``` yml
-
-    formbuilder_email_from: jeanmichel@basquiat.com
-
-```
-
-8. Run the follow command on your console to install assets :
+Run the follow command on your console to install assets :
 
 ```sh
 
