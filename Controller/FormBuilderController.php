@@ -197,7 +197,11 @@ class FormBuilderController extends Controller
 
             /* First Line with title columns  */
             if ($is_title) {
-                foreach ($columns as $value) {
+                foreach ($columns as $key => $value) {
+                    $el_k = explode('_', $key);
+                    if ($el_k[0] == 'button') {
+                        continue;
+                    }
                     $title[] = $value;
                 }
 
@@ -208,6 +212,9 @@ class FormBuilderController extends Controller
             /* Others Lines */
             foreach ($columns as $key => $value) {
                 $el_k = explode('_', $key);
+                if ($el_k[0] == 'button') {
+                    continue;
+                }
                 if ($el_k[0] == 'radio') {
                     if ($line[$key] != '') {
                         $response[] = $obj_form[$el_k[1]]->fields->radios->value[$line[$key]];
@@ -232,7 +239,7 @@ class FormBuilderController extends Controller
                     } elseif ($line[$key] != '') {
                         $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$line[$key]];
                     }
-                } else {
+                } elseif (isset($line[$key])) {
                     $response[] = $line[$key];
                 }
             }

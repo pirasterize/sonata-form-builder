@@ -155,4 +155,5 @@ On Options choose the Form you just created, and take a look on the page.
 - Fields in differents sizes
 - Translations
 - tests
+- remove form fields that are not needed in export - Button/Captcha/Privacycheck
 
