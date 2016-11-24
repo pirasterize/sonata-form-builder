@@ -192,11 +192,11 @@ class FormBuilderFactory
     public function setFieldPrivacycheckbox($formBuilder, $key, $elem)
     {
         $formBuilder->add('privacy_'.$key, CheckboxType::class, [
-            'label'    => $elem->fields->text->value,
+            'label' => $elem->fields->text->value,
             'required' => true,
             'label_attr' => [
-                'style' => 'display:none;'
-            ]
+                'style' => 'display:none;',
+            ],
         ]);
 
         return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
@@ -265,8 +265,8 @@ class FormBuilderFactory
             'height' => 50,
             'length' => 6,
             'label_attr' => [
-                'style' => 'display:none;'
-            ]
+                'style' => 'display:none;',
+            ],
         ));
 
         return array('name' => 'captcha_'.$key, 'size' => 'col-sm-6');
