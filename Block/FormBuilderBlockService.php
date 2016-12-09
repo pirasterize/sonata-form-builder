@@ -181,4 +181,12 @@ class FormBuilderBlockService extends BaseBlockService
     {
         $block->setSetting('formBuilderId', is_object($block->getSetting('formBuilderId')) ? $block->getSetting('formBuilderId')->getId() : null);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'Form';
+    }
 }
