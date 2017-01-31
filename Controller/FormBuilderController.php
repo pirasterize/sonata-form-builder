@@ -2,6 +2,7 @@
 
 namespace Pirastru\FormBuilderBundle\Controller;
 
+use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -126,7 +127,12 @@ class FormBuilderController extends Controller
                     )
                 ), 'text/html')
             ;
-            $this->get('mailer')->send($message);
+
+            $dispatcher = $this->get('event_dispatcher');
+            $event = new MailEvent($message);
+            $dispatcher->dispatch('pirastru.formbuilder.event.mail', $event);
+
+            $this->get('mailer')->send($event->getMessage());
         }
     }
 
