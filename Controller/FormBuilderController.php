@@ -16,6 +16,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class FormBuilderController extends Controller
 {
+    private $blacklist = [
+        '_token',
+        'button',
+    ];
+
     /**
      * @Route("/export_submit/{id}/{format}", name="form_builder_export_submit")
      *
@@ -117,16 +122,13 @@ class FormBuilderController extends Controller
                 $message->setBcc($emailBcc);
             }
 
-            $data = array(
-                'columns' => $formBuilder->getColumns(),
-                'form' => $form_submit,
-                'form_array' => json_decode($formBuilder->getJson()),
-                'name' => $formBuilder->getName(),
-            );
+            $data = $this->buildSingleContent($formBuilder, $form_submit);
+            $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
+                'data' => $data,
+                'name' => $formBuilder->getName()
+            ]);
 
-            $message->setBody(
-                $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', $data), 'text/html')
-            ;
+            $message->setBody($html, 'text/html');
 
             $dispatcher = $this->get('event_dispatcher');
             $event = new MailEvent($message, $data);
@@ -143,12 +145,12 @@ class FormBuilderController extends Controller
     public function generateFormFromFormBuilder($formbuild)
     {
         $formBuilder = $this->createFormBuilder(array(), array(
-                'action' => '#',
-                'method' => 'POST',
-                'attr' => array(
-                    'id' => 'form_builder'.$formbuild->getId(),
-                ),
-            ));
+            'action' => '#',
+            'method' => 'POST',
+            'attr' => array(
+                'id' => 'form_builder'.$formbuild->getId(),
+            ),
+        ));
 
         $size_col = array();/* column size */
         $title_col = array();
@@ -185,6 +187,7 @@ class FormBuilderController extends Controller
     }
 
     /*
+     * TODO: Refactor this with the data from buildSingleContent
      *  Needed for export CSV/XSL
      *  permet de creer le contenu du fichier dans le format choisie (XLS,CSV)
      */
@@ -254,5 +257,66 @@ class FormBuilderController extends Controller
             $writer->write($response);
         }
         $writer->close();
+    }
+
+    private function buildSingleContent($formBuilder, $form_submit)
+    {
+        $formArray = json_decode($formBuilder->getJson());
+        $csvData = [
+            'headers' => [],
+            'data' => []
+        ];
+
+        foreach ($form_submit['form'] as $key => $submittedValue) {
+            if (!$this->validKey($key)) {
+                continue;
+            }
+
+            list($type, $position) = explode('_', $key);
+            switch ($type) {
+                case 'radio':
+                    $value = $formArray[$position]->fields->radios->value[$submittedValue];
+                    break;
+                case 'choice':
+                    $value = $this->formatMulti($submittedValue, $formArray[$position]);
+                    break;
+                case 'checkbox':
+                    $value = $this->formatMulti($submittedValue, $formArray[$position], 'checkboxes');
+                    break;
+                default:
+                    $value = $submittedValue;
+            }
+
+            $csvData['headers'][] = $formBuilder->getColumns()[$key];
+            $csvData['data'][] = $value;
+        }
+
+        return $csvData;
+    }
+
+    private function validKey($key)
+    {
+        foreach ($this->blacklist as $blacklistItem) {
+            if (strpos($key, $blacklistItem) !== FALSE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function formatMulti($submittedValue, $formData, $field = 'options')
+    {
+        $value = [];
+        if (is_array($submittedValue)) {
+            foreach ($submittedValue as $submit) {
+                $value[] = $formData->fields->$field->value[$submit];
+            }
+        } elseif ($submittedValue != '') {
+            $value[] = $formData->fields->$field->value[$submittedValue];
+        }
+        $value = implode(', ', $value);
+
+        return $value;
     }
 }
