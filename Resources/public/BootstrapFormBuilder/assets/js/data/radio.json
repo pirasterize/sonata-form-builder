@@ -62,11 +62,6 @@
         "label": "Link",
         "type": "input",
         "value": "https://www.google.com/policies/terms/"
-      },
-      "label": {
-        "label": "Label Text",
-        "type": "input",
-        "value": "Privacy check"
       }
     }
   }

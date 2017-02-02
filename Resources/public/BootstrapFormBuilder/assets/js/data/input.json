@@ -278,11 +278,6 @@
     },
     {
         "fields": {
-            "label": {
-                "type": "input",
-                "label": "Captcha Text",
-                "value": "Captcha"
-            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
