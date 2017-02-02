@@ -1,8 +1,8 @@
+{% form_theme form "PirastruFormBuilderBundle:Block:_form_theme.html.twig" %}
 
 {% if result is defined and result is not null %}
     <div class="alert alert-success" role="alert">{{ result }}</div>
 {% endif %}
-
 
 {% if formBuilderId is defined and formBuilderId is not null %}
 

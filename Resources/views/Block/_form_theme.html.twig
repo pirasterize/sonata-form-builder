@@ -1,0 +1,29 @@
+{# Overwrite checkbox widget so you can implement url from privacy check (added |raw) #}
+{% block checkbox_widget %}
+    {% spaceless %}
+        {% if label is defined and label is not same as(false) and label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+            <div class="checkbox">
+        {% endif %}
+
+        {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes and label_render is defined %}
+        <label class="{% if inline is defined and inline %}checkbox-inline{% endif %}">
+        {% endif %}
+
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked is defined and checked %} checked="checked"{% endif %}/>
+        {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+        {% if label_render is defined and widget_checkbox_label in ['both', 'widget'] %}
+        {{ label|trans({}, translation_domain)|raw }}
+        </label>
+        {% endif %}
+        {% endif %}
+        {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+            </div>
+            {% if block('form_message') is defined %}
+                {{ block('form_message') }}
+            {% endif %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock checkbox_widget %}
