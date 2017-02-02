@@ -117,19 +117,19 @@ class FormBuilderController extends Controller
                 $message->setBcc($emailBcc);
             }
 
+            $data = array(
+                'columns' => $formBuilder->getColumns(),
+                'form' => $form_submit,
+                'form_array' => json_decode($formBuilder->getJson()),
+                'name' => $formBuilder->getName(),
+            );
+
             $message->setBody(
-                $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig',
-                    array(
-                        'columns' => $formBuilder->getColumns(),
-                        'form' => $form_submit,
-                        'form_array' => json_decode($formBuilder->getJson()),
-                        'name' => $formBuilder->getName(),
-                    )
-                ), 'text/html')
+                $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', $data), 'text/html')
             ;
 
             $dispatcher = $this->get('event_dispatcher');
-            $event = new MailEvent($message);
+            $event = new MailEvent($message, $data);
             $dispatcher->dispatch('pirastru.formbuilder.event.mail', $event);
 
             $this->get('mailer')->send($event->getMessage());
