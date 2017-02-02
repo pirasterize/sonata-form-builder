@@ -20,6 +20,7 @@ class MailEvent extends Event
     public function __construct(\Swift_Message $message, array $formData)
     {
         $this->message = $message;
+        $this->formData = $formData;
     }
 
     /**
