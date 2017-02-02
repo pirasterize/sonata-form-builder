@@ -1,13 +1,11 @@
-
 {% if result is defined and result is not null %}
     <div class="alert alert-success" role="alert">{{ result }}</div>
 {% endif %}
 
-
 {% if formBuilderId is defined and formBuilderId is not null %}
 
     {% if form is defined %}
-
+        {% form_theme form "PirastruFormBuilderBundle:Block:_form_theme.html.twig" %}
         <form method="POST" class="form-horizontal" {{ form_enctype(form) }}>
 
             {{ form_widget(form) }}

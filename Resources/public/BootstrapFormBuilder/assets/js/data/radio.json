@@ -51,7 +51,17 @@
       "text": {
         "label": "Privacy text",
         "type": "textarea",
-        "value": "I agree to the terms of service"
+        "value": "I agree to the"
+      },
+      "cta": {
+        "label": "Call to action",
+        "type": "input",
+        "value": "terms of service"
+      },
+      "url": {
+        "label": "Link",
+        "type": "input",
+        "value": "https://www.google.com/policies/terms/"
       },
       "label": {
         "label": "Label Text",
