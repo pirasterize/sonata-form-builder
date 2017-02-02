@@ -10,13 +10,32 @@ class MailEvent extends Event
      */
     private $message;
 
+    /** @var array */
+    private $formData;
+
     /**
      * MailEvent constructor.
      * @param \Swift_Message $message
      */
-    public function __construct(\Swift_Message $message)
+    public function __construct(\Swift_Message $message, array $formData)
     {
         $this->message = $message;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormData()
+    {
+        return $this->formData;
+    }
+
+    /**
+     * @param array $formData
+     */
+    public function setFormData($formData)
+    {
+        $this->formData = $formData;
     }
 
     /**
