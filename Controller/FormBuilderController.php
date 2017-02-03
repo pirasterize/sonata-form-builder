@@ -123,6 +123,7 @@ class FormBuilderController extends Controller
             }
 
             $data = $this->buildSingleContent($formBuilder, $form_submit);
+
             $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
                 'data' => $data,
                 'name' => $formBuilder->getName()
@@ -287,7 +288,12 @@ class FormBuilderController extends Controller
                     $value = $submittedValue;
             }
 
-            $csvData['headers'][] = $formBuilder->getColumns()[$key];
+            $header = $formBuilder->getColumns()[$key];
+            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+                $header = $formArray[$position]->fields->key->value;
+            }
+
+            $csvData['headers'][] = $header;
             $csvData['data'][] = $value;
         }
 
