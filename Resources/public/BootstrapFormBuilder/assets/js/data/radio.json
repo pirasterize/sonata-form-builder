@@ -13,6 +13,11 @@
         "type": "input",
         "value": "Multiple Radios"
       },
+      "key": {
+        "type": "input",
+        "label": "Internal Key",
+        "value": ""
+      },
       "radios": {
         "label": "Radios",
         "type": "textarea-split",
@@ -36,6 +41,11 @@
         "label": "Label Text",
         "type": "input",
         "value": "Multiple Checkboxes"
+      },
+      "key": {
+        "type": "input",
+        "label": "Internal Key",
+        "value": ""
       },
       "checkboxes": {
         "label": "Checkboxes",

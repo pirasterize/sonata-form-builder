@@ -8,6 +8,11 @@
         "type": "input",
         "value": "Select Basic"
       },
+      "key": {
+        "type": "input",
+        "label": "Internal Key",
+        "value": ""
+      },
       "options": {
         "label": "Options",
         "type": "textarea-split",
@@ -62,6 +67,11 @@
         "label": "Label Text",
         "type": "input",
         "value": "Select Multiple"
+      },
+      "key": {
+        "type": "input",
+        "label": "Internal Key",
+        "value": ""
       },
       "options": {
         "label": "Options",

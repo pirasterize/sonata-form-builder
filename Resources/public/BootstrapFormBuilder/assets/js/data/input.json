@@ -27,6 +27,11 @@
                 "label": "Label Text",
                 "value": "Text Input"
             },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
+            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
@@ -73,6 +78,11 @@
                 "type": "input",
                 "label": "Label Text",
                 "value": "Adress Email"
+            },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
             },
             "helptext": {
                 "type": "input",
@@ -121,6 +131,11 @@
                 "label": "Label Text",
                 "value": "Phone number"
             },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
+            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
@@ -167,6 +182,11 @@
                 "type": "input",
                 "label": "Label Text",
                 "value": "Postal Code"
+            },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
             },
             "helptext": {
                 "type": "input",
@@ -215,6 +235,11 @@
                 "label": "Label Text",
                 "value": "Date select"
             },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
+            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
@@ -262,6 +287,11 @@
                 "label": "Label Text",
                 "value": "Text Area"
             },
+            "key": {
+                "type": "input",
+                "label": "Internal Key",
+                "value": ""
+            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
@@ -278,6 +308,11 @@
     },
     {
         "fields": {
+            "label": {
+                "type": "input",
+                "label": "Captcha Text",
+                "value": "Captcha"
+            },
             "helptext": {
                 "type": "input",
                 "label": "Help Text",
