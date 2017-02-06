@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FormBuilderAdmin extends Admin
@@ -49,11 +50,15 @@ class FormBuilderAdmin extends Admin
         $formMapper
             ->add('json', 'hidden')
             ->add('name', 'text')
+            ->add('subject', 'text', [
+                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;"
+            ])
             ->add('recipient', 'collection', array(
                     'type' => 'email',
                     'label' => 'Recipient(s)',
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'delete_empty' => true,
                     'options' => array(
                         'label' => 'Email',
                         'required' => false,
@@ -64,6 +69,7 @@ class FormBuilderAdmin extends Admin
                     'type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'delete_empty' => true,
                     'options' => array(
                         'label' => 'Email',
                         'required' => false,
@@ -74,6 +80,7 @@ class FormBuilderAdmin extends Admin
                     'type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'delete_empty' => true,
                     'options' => array(
                         'label' => 'Email',
                         'required' => false,
@@ -104,6 +111,22 @@ class FormBuilderAdmin extends Admin
             ->add('name')
             ->add('recipient')
             ->add('submit', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'))
+        ;
+    }
+
+    /**
+     * @param ErrorElement $errorElement
+     * @param mixed $object
+     */
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        $errorElement
+            ->with('name')
+            ->assertNotBlank()
+            ->end()
+            ->with('subject')
+            ->assertNotBlank()
+            ->end()
         ;
     }
 }

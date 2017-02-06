@@ -71,6 +71,13 @@ class FormBuilder
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="subject", type="string", length=255)
+     */
+    private $subject;
+
+    /**
      * Get id.
      *
      * @return int
@@ -173,6 +180,22 @@ class FormBuilder
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param string $subject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
     }
 
     /**
