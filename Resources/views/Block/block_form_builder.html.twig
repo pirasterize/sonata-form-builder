@@ -1,19 +1,22 @@
-{% if result is defined and result is not null %}
-    <div class="alert alert-success" role="alert">{{ result }}</div>
-{% endif %}
-
-{% if formBuilderId is defined and formBuilderId is not null %}
-
-    {% if form is defined %}
-        {% form_theme form "PirastruFormBuilderBundle:Block:_form_theme.html.twig" %}
-        <form method="POST" class="form-horizontal" {{ form_enctype(form) }}>
-
-            {{ form_widget(form) }}
-
-            <input type="hidden" name="formId" class="form-num " value="{{ formBuilderId }}">
-        </form>
-
-    {% endif %}
+{% if success is defined and success %}
+    <div class="form-success">
+        <h1>{{ 'success_title'|trans }}</h1>
+        <p>{{ 'success_message'|trans }}</p>
+    </div>
 {% else %}
-    Form not found !
+    {% if formBuilderId is defined and formBuilderId is not null %}
+
+        {% if form is defined %}
+            {% form_theme form "PirastruFormBuilderBundle:Block:_form_theme.html.twig" %}
+            <form method="POST" class="form-horizontal" {{ form_enctype(form) }}>
+
+                {{ form_widget(form) }}
+
+                <input type="hidden" name="formId" class="form-num " value="{{ formBuilderId }}">
+            </form>
+
+        {% endif %}
+    {% else %}
+        Form not found !
+    {% endif %}
 {% endif %}

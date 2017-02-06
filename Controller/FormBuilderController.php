@@ -108,7 +108,6 @@ class FormBuilderController extends Controller
 
         if (!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from'))) {
             $message = \Swift_Message::newInstance()
-                ->setSubject($formBuilder->getName())
                 ->setFrom($this->container->getParameter('formbuilder_email_from'))
                 ->setTo($recipient);
 
@@ -123,6 +122,11 @@ class FormBuilderController extends Controller
             }
 
             $data = $this->buildSingleContent($formBuilder, $form_submit);
+
+            $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
+            $subject = preg_replace($patterns, array_values($data['data']), $formBuilder->getSubject());
+
+            $message->setSubject($subject);
 
             $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
                 'data' => $data,
@@ -175,7 +179,11 @@ class FormBuilderController extends Controller
             if (method_exists($formBuilderFactory, $field_fun)) {
                 $field_detail = $formBuilderFactory->$field_fun($formBuilder, $key, $elem);
 
-                $title_col[$field_detail['name']] = $elem->fields->label->value;
+                if (isset($elem->fields->label)) {
+                    $title_col[$field_detail['name']] = $elem->fields->label->value;
+                } else {
+                    $title_col[$field_detail['name']] = $elem->title;
+                }
                 $size_col[$field_detail['name']] = $field_detail['size'];
             }
         }
