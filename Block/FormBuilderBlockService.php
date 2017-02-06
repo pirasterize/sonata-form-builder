@@ -123,7 +123,7 @@ class FormBuilderBlockService extends BaseBlockService
             ->generateFormFromFormBuilder($formBuilder);
 
         $form = $form_pack['form'];
-        $result = null;
+        $success = false;
         $request = $this->container->get('request');
         $form->handleRequest($request);
 
@@ -136,18 +136,18 @@ class FormBuilderBlockService extends BaseBlockService
             $this->container->get('pirastru_form_builder.controller')
                 ->submitOperations($formBuilder, $form_pack['title_col']);
 
-            $result = 'The form has been sent correctly!';
+            $success = true;
         }
 
         return $this->renderResponse($blockContext->getTemplate(), array(
-                'formBuilderId' => $formBuilder->getId(),
-                'block' => $blockContext->getBlock(),
-                'settings' => $blockContext->getSettings(),
-                'form' => $form->createView(),
-                'title_col' => $form_pack['title_col'],
-                'size_col' => $form_pack['size_col'],
-                'result' => $result,
-            ), $response);
+            'formBuilderId' => $formBuilder->getId(),
+            'block' => $blockContext->getBlock(),
+            'settings' => $blockContext->getSettings(),
+            'form' => $form->createView(),
+            'title_col' => $form_pack['title_col'],
+            'size_col' => $form_pack['size_col'],
+            'success' => $success,
+        ), $response);
     }
 
     /**
