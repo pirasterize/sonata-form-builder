@@ -18,7 +18,9 @@ class FormBuilderController extends Controller
 {
     private $blacklist = [
         '_token',
-        'button',
+        'button_',
+        'privacy_',
+        'captcha_'
     ];
 
     /**

@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\EqualTo;
 
 class FormBuilderFactory
 {
@@ -196,12 +197,16 @@ class FormBuilderFactory
             $elem->fields->url->value,
             $elem->fields->cta->value
         );
+
         $formBuilder->add('privacy_'.$key, CheckboxType::class, [
             'label' => $label,
             'required' => true,
             'label_attr' => [
                 'style' => 'display:none;',
             ],
+            'constraints' => array(
+                new EqualTo(['value' => 1])
+            ),
         ]);
 
         return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
