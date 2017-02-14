@@ -48,7 +48,7 @@ class FormBuilderFactory
             'widget' => 'single_text',
             'label' => $elem->fields->label->value,
             'input' => 'datetime',
-            'help_block' => $elem->fields->helptext->value,
+            'help_label' => $elem->fields->helptext->value,
             'attr' => array(
                 'class' => 'date ',
                 'placeholder' => $elem->fields->placeholder->value,
