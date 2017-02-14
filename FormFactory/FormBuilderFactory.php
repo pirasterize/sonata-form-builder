@@ -12,9 +12,11 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class FormBuilderFactory
 {
@@ -43,19 +45,19 @@ class FormBuilderFactory
      */
     public function setFieldDateinput($formBuilder, $key, $elem)
     {
-        $formBuilder->add('date_'.$key, 'date', array(
+        $formBuilder->add('date_'.$key, 'text', array(
             'required' => $elem->fields->required->value,
-            'widget' => 'single_text',
-            'format' => 'dd-MM-yyyy',
             'label' => $elem->fields->label->value,
-            'input' => 'datetime',
             'help_label' => $elem->fields->helptext->value,
             'attr' => array(
                 'class' => 'date js-datepicker',
                 'placeholder' => $elem->fields->placeholder->value,
             ),
             'constraints' => array(
-                new DateTime(),
+                new Regex([
+                    'pattern' =>  "/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/",
+                    'message' => 'Invalid format: dd-mm-yyyy'
+                ]),
             ),
         ));
 
