@@ -46,11 +46,12 @@ class FormBuilderFactory
         $formBuilder->add('date_'.$key, 'date', array(
             'required' => $elem->fields->required->value,
             'widget' => 'single_text',
+            'format' => 'dd-MM-yyyy',
             'label' => $elem->fields->label->value,
             'input' => 'datetime',
             'help_label' => $elem->fields->helptext->value,
             'attr' => array(
-                'class' => 'date ',
+                'class' => 'date js-datepicker',
                 'placeholder' => $elem->fields->placeholder->value,
             ),
             'constraints' => array(
