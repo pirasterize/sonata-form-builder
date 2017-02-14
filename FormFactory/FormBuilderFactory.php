@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 
@@ -51,6 +52,9 @@ class FormBuilderFactory
             'attr' => array(
                 'class' => 'date ',
                 'placeholder' => $elem->fields->placeholder->value,
+            ),
+            'constraints' => array(
+                new DateTime(),
             ),
         ));
 
