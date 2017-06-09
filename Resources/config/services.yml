@@ -1,5 +1,6 @@
 parameters:
     pirastru_form_builder.label: "Form Builder Drag&Drop"
+    pirastru_form_builder.save_data: true
 services:
     pirastru_form_builder.admin:
         class: Pirastru\FormBuilderBundle\Admin\FormBuilderAdmin
