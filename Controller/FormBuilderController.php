@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Exporter\Writer\XlsWriter;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 /**
  * FormBuilder controller.
@@ -132,6 +133,23 @@ class FormBuilderController extends Controller
             $subject = preg_replace($patterns, array_values($data['data']), $formBuilder->getSubject());
 
             $message->setSubject($subject);
+
+            if ($formBuilder->getReplyTo() !== NULL){
+                $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
+                $replyTo = preg_replace($patterns, array_values($data['data']), $formBuilder->getReplyTo());
+
+                $errors = $this->get('validator')->validateValue(
+                    $replyTo,
+                    array(
+                        new NotBlank(),
+                        new EmailConstraint(),
+                    )
+                );
+
+                if (count($errors) === 0){
+                    $message->setReplyTo($replyTo);
+                }
+            }
 
             $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
                 'data' => $data,

@@ -53,6 +53,10 @@ class FormBuilderAdmin extends Admin
             ->add('subject', 'text', [
                 'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;"
             ])
+            ->add('reply_to', 'text',[
+                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
+                'required' => false,
+            ])
             ->add('recipient', 'collection', array(
                     'type' => 'email',
                     'label' => 'Recipient(s)',

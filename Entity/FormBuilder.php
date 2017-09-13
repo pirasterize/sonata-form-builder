@@ -78,6 +78,13 @@ class FormBuilder
     private $subject;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="reply_to", type="string", length=255)
+     */
+    private $replyTo;
+
+    /**
      * Get id.
      *
      * @return int
@@ -228,5 +235,21 @@ class FormBuilder
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReplyTo()
+    {
+        return $this->replyTo;
+    }
+
+    /**
+     * @param string $replyTo
+     */
+    public function setReplyTo($replyTo)
+    {
+        $this->replyTo = $replyTo;
     }
 }
