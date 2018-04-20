@@ -78,7 +78,7 @@ class FormBuilderController extends Controller
     public function submitOperations($formBuilder, $columns)
     {
         $em = $this->getDoctrine()->getManager();
-        $form_submit = $this->container->get('request')->request->all();
+        $form_submit = $this->container->get('request_stack')->getCurrentRequest()->request->all();
 
         /*******************************
          * Submits JSON Object from DB with all previous form builder submits
@@ -139,7 +139,7 @@ class FormBuilderController extends Controller
                 $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
                 $replyTo = preg_replace($patterns, array_values($data['data']), $formBuilder->getReplyTo());
 
-                $errors = $this->get('validator')->validateValue(
+                $errors = $this->get('validator')->validate(
                     $replyTo,
                     array(
                         new NotBlank(),

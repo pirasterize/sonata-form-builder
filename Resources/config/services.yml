@@ -20,4 +20,4 @@ services:
     pirastru_form_builder.controller:
         class: Pirastru\FormBuilderBundle\Controller\FormBuilderController
         calls:
-            - [setContainer, [@service_container]]
+            - [setContainer, ["@service_container"]]

@@ -58,34 +58,34 @@ class FormBuilderAdmin extends Admin
                 'required' => false,
             ])
             ->add('recipient', 'collection', array(
-                    'type' => 'email',
+                    'entry_type' => 'email',
                     'label' => 'Recipient(s)',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
-                    'options' => array(
+                    'entry_options' => array(
                         'label' => 'Email',
                         'required' => false,
                     ),
                 )
             )
             ->add('recipientCC', 'collection', array(
-                    'type' => 'email',
+                    'entry_type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
-                    'options' => array(
+                    'entry_options' => array(
                         'label' => 'Email',
                         'required' => false,
                     ),
                 )
             )
             ->add('recipientBCC', 'collection', array(
-                    'type' => 'email',
+                    'entry_type' => 'email',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
-                    'options' => array(
+                    'entry_options' => array(
                         'label' => 'Email',
                         'required' => false,
                     ),
