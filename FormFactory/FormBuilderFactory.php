@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email;
@@ -69,15 +71,21 @@ class FormBuilderFactory
      */
     public function setFieldTelephoneinput($formBuilder, $key, $elem)
     {
-        $formBuilder->add('telephone_'.$key, 'number', array(
+        $formBuilder->add('telephone_'.$key, class_exists(TelType::class) ? TelType::class : TextType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'class' => 'telephone ',
                 'placeholder' => $elem->fields->placeholder->value,
-            ),
-        ));
+            ],
+            'constraints' => [
+                new Regex([
+                    'pattern' => '/[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/',
+                    'message' => 'Invalid telephone number.',
+                ])
+            ],
+        ]);
 
         return array('name' => 'telephone_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
     }
