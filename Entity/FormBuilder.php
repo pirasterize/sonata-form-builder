@@ -80,7 +80,7 @@ class FormBuilder
     /**
      * @var string
      *
-     * @ORM\Column(name="reply_to", type="string", length=255)
+     * @ORM\Column(name="reply_to", type="string", length=255, nullable=true)
      */
     private $replyTo;
 

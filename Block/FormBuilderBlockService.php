@@ -7,6 +7,7 @@
 
 namespace Pirastru\FormBuilderBundle\Block;
 
+use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,17 +83,17 @@ class FormBuilderBlockService extends BaseBlockService
         $fieldDescription = $this->getFormBuilderAdmin()->getModelManager()->getNewFieldDescriptionInstance($this->formBuilderAdmin->getClass(), 'form_builder');
         $fieldDescription->setAssociationAdmin($this->getFormBuilderAdmin());
         $fieldDescription->setAdmin($formMapper->getAdmin());
-        $fieldDescription->setOption('edit', 'list');
         $fieldDescription->setAssociationMapping(array(
             'fieldName' => 'form_builder',
             'type' => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE,
         ));
 
-        return $formMapper->create('formBuilderId', 'sonata_type_model', array(
+        return $formMapper->create('formBuilderId', ModelListType::class, array(
             'sonata_field_description' => $fieldDescription,
             'label' => 'Form Builder',
             'class' => $this->getFormBuilderAdmin()->getClass(),
             'model_manager' => $this->getFormBuilderAdmin()->getModelManager(),
+            'btn_add' => false,
         ));
     }
 
@@ -124,7 +125,7 @@ class FormBuilderBlockService extends BaseBlockService
 
         $form = $form_pack['form'];
         $success = false;
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

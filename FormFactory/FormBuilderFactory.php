@@ -141,9 +141,9 @@ class FormBuilderFactory
     {
         $formBuilder->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
-            'choices' => $elem->fields->options->value,
+            'choices' => array_flip($elem->fields->options->value),
             'required' => false,
-            'empty_value' => false,
+            'placeholder' => false,
         ));
 
         return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
@@ -156,7 +156,7 @@ class FormBuilderFactory
     {
         $formBuilder->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
-            'choices' => $elem->fields->options->value,
+            'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
             'required' => false,
         ));
@@ -171,9 +171,9 @@ class FormBuilderFactory
     {
         $formBuilder->add('radio_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
-            'choices' => $elem->fields->radios->value,
+            'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
-            'empty_value' => false,
+            'placeholder' => false,
             'required' => false,
             'expanded' => true,
         ));
@@ -188,7 +188,7 @@ class FormBuilderFactory
     {
         $formBuilder->add('checkbox_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
-            'choices' => $elem->fields->checkboxes->value,
+            'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,
             'expanded' => true,
             'required' => false,
