@@ -20,7 +20,8 @@
         "doctrine/orm": "^2.6",
         "sensio/framework-extra-bundle": "^5.3",
         "sonata-project/exporter": "^1.11",
-        "gedmo/doctrine-extensions": "^2.4"
+        "gedmo/doctrine-extensions": "^2.4",
+        "swiftmailer/swiftmailer": "^6.2"
     },
     "autoload": {
         "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }
