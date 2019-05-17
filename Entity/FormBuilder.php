@@ -2,6 +2,8 @@
 
 namespace Pirastru\FormBuilderBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -85,6 +87,13 @@ class FormBuilder
     private $replyTo;
 
     /**
+     * @var Submission[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission", mappedBy="form")
+     */
+    private $submissions;
+
+    /**
      * Get id.
      *
      * @return int
@@ -99,6 +108,7 @@ class FormBuilder
         $this->recipient = array();
         $this->recipientCC = array();
         $this->recipientBCC = array();
+        $this->submissions = new ArrayCollection();
     }
 
     /**
@@ -251,5 +261,50 @@ class FormBuilder
     public function setReplyTo($replyTo)
     {
         $this->replyTo = $replyTo;
+    }
+
+    /**
+     * @return ArrayCollection|FormBuilderSubmission[]
+     */
+    public function getSubmissions()
+    {
+        return $this->submissions;
+    }
+
+    /**
+     * @param $submissions
+     * @return self
+     */
+    public function setSubmissions($submissions): self
+    {
+        $this->submissions = $submissions;
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderSubmission $submission
+     * @return self
+     */
+    public function addSubmission(Submission $submission): self
+    {
+        if (!$this->submissions->contains($submission)) {
+            $this->submissions->add($submission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderSubmission $submission
+     * @return self
+     */
+    public function removeSubmission(Submission $submission): self
+    {
+        if ($this->submissions->contains($submission)) {
+            $this->submissions->removeElement($submission);
+        }
+
+        return $this;
     }
 }
