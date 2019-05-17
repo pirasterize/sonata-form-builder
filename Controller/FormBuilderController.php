@@ -2,10 +2,13 @@
 
 namespace Pirastru\FormBuilderBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
+use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Exporter\Writer\XlsWriter;
 use Exporter\Writer\CsvWriter;
@@ -16,7 +19,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * FormBuilder controller.
  */
-class FormBuilderController extends Controller
+class FormBuilderController extends AbstractController
 {
     private $blacklist = [
         '_token',
@@ -26,21 +29,19 @@ class FormBuilderController extends Controller
     ];
 
     /**
-     * @Route("/export_submit/{id}/{format}", name="form_builder_export_submit")
+     * @Route("/export_submit/{$form}/{format}", name="form_builder_export_submit")
      *
-     * @param $id
+     * @param Form $form
      * @param $format
      *
      * @return StreamedResponse
      *
      * @throws \RuntimeException
      */
-    public function exportSubmitAction($id, $format)
+    public function exportSubmitAction(Form $form, $format)
     {
-        $formBuilder = $this->getDoctrine()->getRepository('PirastruFormBuilderBundle:FormBuilder')
-            ->find($id);
-
-        $json_object = $formBuilder->getSubmit();
+        //TODO export
+        $submissions = $form->getSubmissions();
 
         switch ($format) {
             case 'xls':
@@ -56,13 +57,13 @@ class FormBuilderController extends Controller
         }
 
         $filename = sprintf('export_%s_%s.%s',
-            $formBuilder->getName(),
+            $form->getName(),
             date('Y_m_d_H_i_s', strtotime('now')),
             $format
         );
 
-        $callback = function () use ($json_object, $writer, $formBuilder) {
-            $this->buildContent($json_object, $writer, $formBuilder);
+        $callback = function () use ($json_object, $writer, $form) {
+            $this->buildContent($json_object, $writer, $form);
         };
 
         return new StreamedResponse($callback, 200, array(
@@ -71,73 +72,73 @@ class FormBuilderController extends Controller
         ));
     }
 
-    /*
+    /**
      * function executed from the sonata-block in case
      * of submission of a front-end form Builder
+     *
+     * @param Form $form
+     * @param $columns
      */
-    public function submitOperations($formBuilder, $columns)
+    public function submitOperations(Form $form, $columns)
     {
         $em = $this->getDoctrine()->getManager();
         $form_submit = $this->container->get('request_stack')->getCurrentRequest()->request->all();
 
-        /*******************************
-         * Submits JSON Object from DB with all previous form builder submits
-         * then append the new submit json to collect
-         *******************************/
-        $submits = $formBuilder->getSubmit();
-        $formBuilder->setColumns($columns);
+        $form->setColumns($columns);
 
-        if ($this->getParameter('pirastru_form_builder.save_data')) {
-            /* append the new submit on tail of the previous Submits JSON */
-            $submits[] = $form_submit['form'];
-            $formBuilder->setSubmit($submits);
+        if ($form->isPersistable()) {
+            $submission = new Submission($form_submit['form'], $form);
+            $form->addSubmission($submission);
+            $em->persist($submission);
         }
 
-        $em->persist($formBuilder);
+        $em->persist($form);
         $em->flush();
 
         /****************************
          * Send Emails to recipients
          ***************************/
-        $this->sendEmailToRecipient($formBuilder, $form_submit);
+        if ($form->isMailable()) {
+            $this->sendEmailToRecipient($form, $form_submit);
+        }
     }
 
     /*
      * Send Email to all Recipients defined for this form Builder
      */
-    private function sendEmailToRecipient($formBuilder, $form_submit)
+    private function sendEmailToRecipient(Form $form, $form_submit)
     {
         /* ******************************
          * Check if Recipient is not Empty and
          * default email_from too
          * ****************************** */
-        $recipient = $formBuilder->getRecipient();
+        $recipient = $form->getRecipient();
 
-        if (!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from'))) {
-            $message = \Swift_Message::newInstance()
+        if (!empty($recipient) && $this->container->getParameter('formbuilder_email_from') !== null) {
+            $message = (new \Swift_Message())
                 ->setFrom($this->container->getParameter('formbuilder_email_from'))
                 ->setTo($recipient);
 
-            $emailCc = $formBuilder->getRecipientCC();
+            $emailCc = $form->getRecipientCC();
             if (!empty($emailCc)) {
                 $message->setCc($emailCc);
             }
 
-            $emailBcc = $formBuilder->getRecipientBCC();
+            $emailBcc = $form->getRecipientBCC();
             if (!empty($emailBcc)) {
                 $message->setBcc($emailBcc);
             }
 
-            $data = $this->buildSingleContent($formBuilder, $form_submit);
+            $data = $this->buildSingleContent($form, $form_submit);
 
             $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
-            $subject = preg_replace($patterns, array_values($data['data']), $formBuilder->getSubject());
+            $subject = preg_replace($patterns, array_values($data['data']), $form->getSubject());
 
             $message->setSubject($subject);
 
-            if ($formBuilder->getReplyTo() !== NULL){
+            if ($form->getReplyTo() !== NULL){
                 $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
-                $replyTo = preg_replace($patterns, array_values($data['data']), $formBuilder->getReplyTo());
+                $replyTo = preg_replace($patterns, array_values($data['data']), $form->getReplyTo());
 
                 $errors = $this->get('validator')->validate(
                     $replyTo,
@@ -154,7 +155,7 @@ class FormBuilderController extends Controller
 
             $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
                 'data' => $data,
-                'name' => $formBuilder->getName()
+                'name' => $form->getName()
             ]);
 
             $message->setBody($html, 'text/html');
