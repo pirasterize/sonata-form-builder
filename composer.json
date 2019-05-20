@@ -1,5 +1,5 @@
 {
-    "name": "pirasterize/sonata-form-builder",
+    "name": "didierlmn/sonata-form-builder",
     "type": "symfony-bundle",
     "description": "A drag&drod form builder for sonata admin",
     "keywords": ["drag","drop","form","builder","Symfony2", "sonata","admin","project"],
@@ -20,8 +20,9 @@
         "doctrine/orm": "^2.6",
         "sensio/framework-extra-bundle": "^5.3",
         "sonata-project/exporter": "^1.11",
-        "gedmo/doctrine-extensions": "^2.4",
-        "swiftmailer/swiftmailer": "^6.2"
+        "gedmo/doctrine-extensions": "^2.3",
+        "swiftmailer/swiftmailer": "^6.2",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }
