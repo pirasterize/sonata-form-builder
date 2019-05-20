@@ -1,5 +1,5 @@
 {
-    "name": "didierlmn/sonata-form-builder",
+    "name": "pirasterize/sonata-form-builder",
     "type": "symfony-bundle",
     "description": "A drag&drod form builder for sonata admin",
     "keywords": ["drag","drop","form","builder","Symfony2", "sonata","admin","project"],
