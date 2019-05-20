@@ -9,20 +9,23 @@ namespace Pirastru\FormBuilderBundle\Block;
 
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\BlockBundle\Block\BaseBlockService;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 
 /**
  * @author     Andrea Pirastru
  */
-class FormBuilderBlockService extends BaseBlockService
+class FormBuilderBlockService extends AbstractBlockService
 {
+    private $container;
+
     protected $formBuilderAdmin;
 
     /**
@@ -73,9 +76,9 @@ class FormBuilderBlockService extends BaseBlockService
     }
 
     /**
-     * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
+     * @param FormMapper $formMapper
      *
-     * @return \Symfony\Component\Form\FormBuilder
+     * @return FormBuilderInterface
      */
     protected function getFieldFormBuilder(FormMapper $formMapper)
     {

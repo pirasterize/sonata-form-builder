@@ -2,15 +2,16 @@
 
 namespace Pirastru\FormBuilderBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FormBuilderAdmin extends Admin
+class FormBuilderAdmin extends AbstractAdmin
 {
     protected $container;
 
@@ -94,7 +95,7 @@ class FormBuilderAdmin extends Admin
         ;
     }
 
-    public function getTemplate($name)
+    /*public function getTemplate($name)
     {
         switch ($name) {
             case 'edit':
@@ -104,7 +105,7 @@ class FormBuilderAdmin extends Admin
                 return parent::getTemplate($name);
                 break;
         }
-    }
+    }*/
 
     /**
      * @param ShowMapper $showMapper
@@ -126,10 +127,10 @@ class FormBuilderAdmin extends Admin
     {
         $errorElement
             ->with('name')
-            ->assertNotBlank()
+            ->addConstraint(new NotBlank())
             ->end()
             ->with('subject')
-            ->assertNotBlank()
+            ->addConstraint(new NotBlank())
             ->end()
         ;
     }

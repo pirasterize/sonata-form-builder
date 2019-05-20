@@ -3,8 +3,13 @@
 namespace Pirastru\FormBuilderBundle\Twig;
 
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
-class FormBuilderExtension extends \Twig_Extension
+class FormBuilderExtension extends AbstractExtension
 {
     /**
      * @var \Twig_Environment
@@ -14,7 +19,7 @@ class FormBuilderExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(\Twig_Environment $environment)
+    public function initRuntime(Environment $environment)
     {
         $this->environment = $environment;
     }
@@ -22,7 +27,7 @@ class FormBuilderExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'cast_to_array' => new \Twig_SimpleFilter('cast_to_array', function ($stdClassObject) {
+            'cast_to_array' => new TwigFilter('cast_to_array', function ($stdClassObject) {
                     $response = array();
                     foreach ($stdClassObject as $key => $value) {
                         $response[] = array($key, $value);
@@ -36,8 +41,8 @@ class FormBuilderExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'json_decode' => new \Twig_SimpleFunction('json_decode', array($this, 'jsonDecode')),
-            'is_array' => new \Twig_SimpleFunction('is_array', array($this, 'isArray')),
+            'json_decode' => new TwigFunction('json_decode', array($this, 'jsonDecode')),
+            'is_array' => new TwigFunction('is_array', array($this, 'isArray')),
         );
     }
 
@@ -53,18 +58,20 @@ class FormBuilderExtension extends \Twig_Extension
 
     /**
      * @param FieldDescriptionInterface $fieldDescription
-     * @param string                    $defaultTemplate
-     *
-     * @return \Twig_TemplateInterface
+     * @param $defaultTemplate
+     * @return \Twig\TemplateWrapper
+     * @throws LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     protected function getTemplate(FieldDescriptionInterface $fieldDescription, $defaultTemplate)
     {
         $templateName = $fieldDescription->getTemplate() ?: $defaultTemplate;
 
         try {
-            $template = $this->environment->loadTemplate($templateName);
-        } catch (\Twig_Error_Loader $e) {
-            $template = $this->environment->loadTemplate($defaultTemplate);
+            $template = $this->environment->load($templateName);
+        } catch (LoaderError $e) {
+            $template = $this->environment->load($defaultTemplate);
         }
 
         return $template;

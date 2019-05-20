@@ -1,10 +1,12 @@
 parameters:
     pirastru_form_builder.label: "Form Builder Drag&Drop"
-    pirastru_form_builder.save_data: true
+
 services:
     pirastru_form_builder.admin:
         class: Pirastru\FormBuilderBundle\Admin\FormBuilderAdmin
         arguments: [~, Pirastru\FormBuilderBundle\Entity\FormBuilder, PirastruFormBuilderBundle:FormBuilderAdmin, "@service_container"]
+        calls:
+            - [setTemplate, ['edit', 'PirastruFormBuilderBundle:CRUD:formbuilder.html.twig']]
         tags:
             - {name: sonata.admin, manager_type: orm, group: Form, label: "%pirastru_form_builder.label%" }
 
@@ -12,7 +14,7 @@ services:
         class: Pirastru\FormBuilderBundle\Block\FormBuilderBlockService
         arguments:
             - "pirastru_form_builder.block"
-            - "@templating"
+            - "@templating.engine.twig"
             - "@service_container"
         tags:
             - {name: "sonata.block"}

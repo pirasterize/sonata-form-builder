@@ -2,14 +2,12 @@
 
 namespace Pirastru\FormBuilderBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Writer\XlsWriter;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
