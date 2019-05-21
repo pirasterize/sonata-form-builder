@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Form Builder Entity.
  *
  * @ORM\Table(name="form__builder__submission")
+ * @ORM\Entity
  */
 class FormBuilderSubmission
 {
