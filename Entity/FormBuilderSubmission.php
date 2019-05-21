@@ -2,7 +2,6 @@
 
 namespace Pirastru\FormBuilderBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="form__builder__submission")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class FormBuilderSubmission
 {
@@ -33,7 +33,6 @@ class FormBuilderSubmission
     /**
      * @var \DateTime $createdAt
      *
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt;
@@ -87,6 +86,17 @@ class FormBuilderSubmission
     {
         $this->value = $value;
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt()
+    {
+        if ($this->createdAt !== null) {
+            return;
+        }
+        $this->createdAt = new \DateTime();
     }
 
     /**

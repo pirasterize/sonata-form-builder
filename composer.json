@@ -20,7 +20,6 @@
         "doctrine/orm": "^2.6",
         "sensio/framework-extra-bundle": "^5.3",
         "sonata-project/exporter": "^1.11",
-        "gedmo/doctrine-extensions": "^2.3",
         "symfony/swiftmailer-bundle": "^2.6.4",
       "ext-json": "*"
     },

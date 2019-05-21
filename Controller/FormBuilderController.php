@@ -60,8 +60,8 @@ class FormBuilderController extends AbstractController
             $format
         );
 
-        $callback = function () use ($json_object, $writer, $form) {
-            $this->buildContent($json_object, $writer, $form);
+        $callback = function () use ($submissions, $writer, $form) {
+            $this->buildContent($submissions, $writer, $form);
         };
 
         return new StreamedResponse($callback, 200, array(
@@ -223,7 +223,7 @@ class FormBuilderController extends AbstractController
      *  Needed for export CSV/XSL
      *  permet de creer le contenu du fichier dans le format choisie (XLS,CSV)
      */
-    private function buildContent($json_object, $writer, $formBuilder)
+    private function buildContent($submissions, $writer, $formBuilder)
     {
         $columns = $formBuilder->getColumns();
         $obj_form = json_decode($formBuilder->getJson());// needed for get field labels
@@ -233,7 +233,7 @@ class FormBuilderController extends AbstractController
         $is_title = true;
 
         $title = array();
-        foreach ($json_object as $line) {
+        foreach ($submissions as $submission) {
             $response = array();
 
             /* First Line with title columns  */
@@ -257,31 +257,31 @@ class FormBuilderController extends AbstractController
                     continue;
                 }
                 if ($el_k[0] == 'radio') {
-                    if ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->radios->value[$line[$key]];
+                    if ($submission[$key] != '') {
+                        $response[] = $obj_form[$el_k[1]]->fields->radios->value[$submission[$key]];
                     }
                 } elseif ($el_k[0] == 'choice') {
-                    if (is_array($line[$key])) {
+                    if (is_array($submission[$key])) {
                         $r = array();
-                        foreach ($line[$key] as $v) {
+                        foreach ($submission[$key] as $v) {
                             $r[] = $obj_form[$el_k[1]]->fields->options->value[$v];
                         }
                         $response[] = implode('|', $r);
-                    } elseif ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->options->value[$line[$key]];
+                    } elseif ($submission[$key] != '') {
+                        $response[] = $obj_form[$el_k[1]]->fields->options->value[$submission[$key]];
                     }
                 } elseif ($el_k[0] == 'checkbox') {
-                    if (is_array($line[$key])) {
+                    if (is_array($submission[$key])) {
                         $r = array();
-                        foreach ($line[$key] as $v) {
+                        foreach ($submission[$key] as $v) {
                             $r[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$v];
                         }
                         $response[] = implode('|', $r);
-                    } elseif ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$line[$key]];
+                    } elseif ($submission[$key] != '') {
+                        $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$submission[$key]];
                     }
-                } elseif (isset($line[$key])) {
-                    $response[] = $line[$key];
+                } elseif (isset($submission[$key])) {
+                    $response[] = $submission[$key];
                 }
             }
 
