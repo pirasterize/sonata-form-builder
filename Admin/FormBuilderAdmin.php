@@ -2,6 +2,7 @@
 
 namespace Pirastru\FormBuilderBundle\Admin;
 
+use Pirastru\FormBuilderBundle\Entity\FormBuilder;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -9,6 +10,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormBuilderAdmin extends AbstractAdmin
@@ -28,8 +30,7 @@ class FormBuilderAdmin extends AbstractAdmin
     {
         $datagridMapper
             ->add('recipient')
-            ->add('name')
-        ;
+            ->add('name');
     }
 
     /**
@@ -39,8 +40,7 @@ class FormBuilderAdmin extends AbstractAdmin
     {
         $listMapper
             ->addIdentifier('name')
-            ->add('recipient')
-        ;
+            ->add('recipient');
     }
 
     /**
@@ -51,10 +51,17 @@ class FormBuilderAdmin extends AbstractAdmin
         $formMapper
             ->add('json', 'hidden')
             ->add('name', 'text')
-            ->add('subject', 'text', [
-                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;"
+            ->add('persistable', 'checkbox', [
+                'required' => false,
             ])
-            ->add('reply_to', 'text',[
+            ->add('mailable', 'checkbox', [
+                'required' => false,
+            ])
+            ->add('subject', 'text', [
+                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
+                'required' => false,
+            ])
+            ->add('reply_to', 'text', [
                 'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
                 'required' => false,
             ])
@@ -64,6 +71,7 @@ class FormBuilderAdmin extends AbstractAdmin
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
+                    'required' => false,
                     'entry_options' => array(
                         'label' => 'Email',
                         'required' => false,
@@ -91,8 +99,7 @@ class FormBuilderAdmin extends AbstractAdmin
                         'required' => false,
                     ),
                 )
-            )
-        ;
+            );
     }
 
     /*public function getTemplate($name)
@@ -115,23 +122,38 @@ class FormBuilderAdmin extends AbstractAdmin
         $showMapper
             ->add('name')
             ->add('recipient')
-            ->add('submit', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'))
-        ;
+            ->add('submit', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'));
     }
 
     /**
      * @param ErrorElement $errorElement
-     * @param mixed $object
+     * @param FormBuilder $object
      */
     public function validate(ErrorElement $errorElement, $object)
     {
         $errorElement
             ->with('name')
             ->addConstraint(new NotBlank())
-            ->end()
-            ->with('subject')
-            ->addConstraint(new NotBlank())
-            ->end()
-        ;
+            ->end();
+
+        if ($object->isMailable()) {
+            $errorElement
+                ->with('subject')
+                ->addConstraint(new NotBlank())
+                ->end()
+                ->with('recipient')
+                ->addConstraint(new NotBlank())
+                ->end();
+        }
+
+    }
+
+    public function getNewInstance()
+    {
+        $instance = parent::getNewInstance();
+
+        $instance->setPersistable(true);
+
+        return $instance;
     }
 }
