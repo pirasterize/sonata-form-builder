@@ -233,8 +233,12 @@ class FormBuilderController extends AbstractController
         $is_title = true;
 
         $title = array();
+        $response = [];
+
+        /** @var Submission $submission */
         foreach ($submissions as $submission) {
-            $response = array();
+            $response[] = $this->buildSingleContent($formBuilder, $submission->getValue());
+            continue;
 
             /* First Line with title columns  */
             if ($is_title) {
@@ -288,6 +292,7 @@ class FormBuilderController extends AbstractController
             /* write one line */
             $writer->write($response);
         }
+        $writer->write($response);
         $writer->close();
     }
 

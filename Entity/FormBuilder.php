@@ -86,6 +86,8 @@ class FormBuilder
      */
     private $submissions;
 
+    private $submit;
+
     /**
      * @var bool
      *

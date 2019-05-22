@@ -18,7 +18,8 @@
                 {% endfor %}
             </tr>
 
-            {% for submit_line in object.submit %}
+            {% for submit_line in object.submissions %}
+                {% set submit_line = submit_line.value %}
                 <tr>
                     {% for key,value in object.columns if key|slice(0, 6) != 'button' %}
                         {% set el_k = key|split('_') %}
