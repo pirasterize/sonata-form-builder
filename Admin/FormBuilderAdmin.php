@@ -8,7 +8,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\Form\Validator\ErrorElement;
+use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -80,6 +80,7 @@ class FormBuilderAdmin extends AbstractAdmin
             )
             ->add('recipientCC', 'collection', array(
                     'entry_type' => 'email',
+                    'required' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
@@ -91,6 +92,7 @@ class FormBuilderAdmin extends AbstractAdmin
             )
             ->add('recipientBCC', 'collection', array(
                     'entry_type' => 'email',
+                    'required' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'delete_empty' => true,
@@ -102,7 +104,7 @@ class FormBuilderAdmin extends AbstractAdmin
             );
     }
 
-    /*public function getTemplate($name)
+    public function getTemplate($name)
     {
         switch ($name) {
             case 'edit':
@@ -112,7 +114,7 @@ class FormBuilderAdmin extends AbstractAdmin
                 return parent::getTemplate($name);
                 break;
         }
-    }*/
+    }
 
     /**
      * @param ShowMapper $showMapper

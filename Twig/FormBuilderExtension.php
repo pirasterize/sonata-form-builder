@@ -3,7 +3,7 @@
 namespace Pirastru\FormBuilderBundle\Twig;
 
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Twig\Environment;
+
 use Twig\Error\LoaderError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -19,7 +19,7 @@ class FormBuilderExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(Environment $environment)
+    public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
     }
