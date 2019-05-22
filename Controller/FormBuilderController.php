@@ -27,7 +27,7 @@ class FormBuilderController extends AbstractController
     ];
 
     /**
-     * @Route("/export_submit/{$form}/{format}", name="form_builder_export_submit")
+     * @Route("/export_submit/{form}/{format}", name="form_builder_export_submit")
      *
      * @param Form $form
      * @param $format
@@ -237,7 +237,8 @@ class FormBuilderController extends AbstractController
 
         /** @var Submission $submission */
         foreach ($submissions as $submission) {
-            $response[] = $this->buildSingleContent($formBuilder, $submission->getValue());
+            $response = $this->buildSingleContent($formBuilder, $submission->getValue());
+            $writer->write($response);
             continue;
 
             /* First Line with title columns  */
@@ -292,7 +293,7 @@ class FormBuilderController extends AbstractController
             /* write one line */
             $writer->write($response);
         }
-        $writer->write($response);
+
         $writer->close();
     }
 
