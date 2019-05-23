@@ -17,15 +17,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
+use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 
 class FormBuilderFactory
 {
     /**
      * Email Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldEmailinput($formBuilder, $key, $elem)
+    public function setFieldEmailinput(Form $form, $key, $elem): array
     {
-        $formBuilder->add('email_'.$key, 'email', array(
+        $form->add('email_'.$key, 'email', array(
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
@@ -42,10 +48,15 @@ class FormBuilderFactory
 
     /**
      * Date Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldDateinput($formBuilder, $key, $elem)
+    public function setFieldDateinput(Form $form, $key, $elem): array
     {
-        $formBuilder->add('date_'.$key, 'text', array(
+        $form->add('date_'.$key, 'text', array(
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_label' => $elem->fields->helptext->value,
@@ -66,10 +77,15 @@ class FormBuilderFactory
 
     /**
      * Telephone Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldTelephoneinput($formBuilder, $key, $elem)
+    public function setFieldTelephoneinput(Form $form, $key, $elem): array
     {
-        $formBuilder->add('telephone_'.$key, class_exists(TelType::class) ? TelType::class : TextType::class, [
+        $form->add('telephone_'.$key, class_exists(TelType::class) ? TelType::class : TextType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
@@ -90,10 +106,15 @@ class FormBuilderFactory
 
     /**
      * Postalcode Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldPostalcodeinput($formBuilder, $key, $elem)
+    public function setFieldPostalcodeinput(Form $form, $key, $elem): array
     {
-        $formBuilder->add('postalcode_'.$key, 'number', array(
+        $form->add('postalcode_'.$key, 'number', array(
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
@@ -108,10 +129,15 @@ class FormBuilderFactory
 
     /**
      * Text Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldTextinput($formBuilder, $key, $elem)
+    public function setFieldTextinput(Form $form, $key, $elem): array
     {
-        $formBuilder->add('text_'.$key, 'text', array(
+        $form->add('text_'.$key, 'text', array(
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
@@ -125,10 +151,15 @@ class FormBuilderFactory
 
     /**
      * Textarea Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldTextarea($formBuilder, $key, $elem)
+    public function setFieldTextarea(Form $form, $key, $elem): array
     {
-        $formBuilder->add('textarea_'.$key, 'textarea', array(
+        $form->add('textarea_'.$key, 'textarea', array(
             'required' => false,
             'label' => $elem->fields->label->value,
             'help_block' => $elem->fields->helptext->value,
@@ -142,10 +173,15 @@ class FormBuilderFactory
 
     /**
      * Select basic Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldSelectbasic($formBuilder, $key, $elem)
+    public function setFieldSelectbasic(Form $form, $key, $elem): array
     {
-        $formBuilder->add('choice_'.$key, 'choice', array(
+        $form->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'required' => false,
@@ -157,10 +193,15 @@ class FormBuilderFactory
 
     /**
      * Select multiple Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldSelectmultiple($formBuilder, $key, $elem)
+    public function setFieldSelectmultiple(Form $form, $key, $elem): array
     {
-        $formBuilder->add('choice_'.$key, 'choice', array(
+        $form->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
@@ -172,10 +213,15 @@ class FormBuilderFactory
 
     /**
      * Multiple Radio Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldMultipleradios($formBuilder, $key, $elem)
+    public function setFieldMultipleradios(Form $form, $key, $elem): array
     {
-        $formBuilder->add('radio_'.$key, 'choice', array(
+        $form->add('radio_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
@@ -189,10 +235,15 @@ class FormBuilderFactory
 
     /**
      * Multiple Checkbox Field.
+     * 
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
      */
-    public function setFieldMultiplecheckboxes($formBuilder, $key, $elem)
+    public function setFieldMultiplecheckboxes(Form $form, $key, $elem): array
     {
-        $formBuilder->add('checkbox_'.$key, 'choice', array(
+        $form->add('checkbox_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,
@@ -203,7 +254,13 @@ class FormBuilderFactory
         return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
     }
 
-    public function setFieldPrivacycheckbox($formBuilder, $key, $elem)
+    /**
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
+     */
+    public function setFieldPrivacycheckbox(Form $form, $key, $elem): array
     {
         $label = sprintf("%s <a href='%s'>%s</a>",
             $elem->fields->text->value,
@@ -211,7 +268,7 @@ class FormBuilderFactory
             $elem->fields->cta->value
         );
 
-        $formBuilder->add('privacy_'.$key, CheckboxType::class, [
+        $form->add('privacy_'.$key, CheckboxType::class, [
             'label' => $label,
             'required' => true,
             'label_attr' => [
@@ -227,8 +284,11 @@ class FormBuilderFactory
 
     /**
      * Return the selected element on a list.
+     * 
+     * @param $select
+     * @return bool
      */
-    private function getSelectedValue($select)
+    private function getSelectedValue($select): bool
     {
         foreach ($select as $elem) {
             if ($elem->selected) {
@@ -239,37 +299,59 @@ class FormBuilderFactory
         return false;
     }
 
-    public function setFieldSinglebutton($formBuilder, $key, $elem)
+    /**
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
+     */
+    public function setFieldSinglebutton(Form $form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->buttonaction->value);
-        $this->createButton($formBuilder, $action, $key, $elem->fields->buttonlabel->value);
+        $this->createButton($form, $action, $key, $elem->fields->buttonlabel->value);
 
         return array('name' => 'button_'.$key, 'size' => 'col-sm-6');
     }
 
-    public function setFieldDoublebutton($formBuilder, $key, $elem)
+    /**
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
+     */
+    public function setFieldDoublebutton(Form $form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->button1action->value);
-        $this->createButton($formBuilder, $action, '1_'.$key, $elem->fields->button1label->value);
+        $this->createButton($form, $action, '1_'.$key, $elem->fields->button1label->value);
 
         $action = $this->getSelectedValue($elem->fields->button2action->value);
-        $this->createButton($formBuilder, $action, '2_'.$key, $elem->fields->button2label->value);
+        $this->createButton($form, $action, '2_'.$key, $elem->fields->button2label->value);
 
         return array(
             'name' => 'button_'.$key, 'size' => 'col-sm-6',
         );
     }
 
-    private function createButton($formBuilder, $action, $key, $value)
+    /**
+     * @param Form $form
+     * @param $action
+     * @param $key
+     * @param $value
+     */
+    private function createButton(Form $form, $action, $key, $value): void
     {
         $buttonType = $this->getButtonType($action);
 
-        $formBuilder->add('button_'.$key, $buttonType, array(
+        $form->add('button_'.$key, $buttonType, array(
             'label' => $value,
         ));
     }
 
-    private function getButtonType($action)
+    /**
+     * @param $action
+     * @return string
+     */
+    private function getButtonType($action): string
     {
         switch ($action) {
             case 'submit':
@@ -281,9 +363,15 @@ class FormBuilderFactory
         }
     }
 
-    public function setFieldCaptcha($formBuilder, $key, $elem)
+    /**
+     * @param Form $form
+     * @param $key
+     * @param $elem
+     * @return array
+     */
+    public function setFieldCaptcha(Form $form, $key, $elem): array
     {
-        $formBuilder->add('captcha_'.$key, CaptchaType::class, array(
+        $form->add('captcha_'.$key, CaptchaType::class, array(
             'width' => 200,
             'height' => 50,
             'length' => 6,

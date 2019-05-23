@@ -24,7 +24,10 @@ class FormBuilderExtension extends AbstractExtension
         $this->environment = $environment;
     }
 
-    public function getFilters()
+    /**
+     * @return array
+     */
+    public function getFilters(): array
     {
         return array(
             'cast_to_array' => new TwigFilter('cast_to_array', function ($stdClassObject) {
@@ -38,7 +41,10 @@ class FormBuilderExtension extends AbstractExtension
         );
     }
 
-    public function getFunctions()
+    /**
+     * @return array
+     */
+    public function getFunctions(): array
     {
         return array(
             'json_decode' => new TwigFunction('json_decode', array($this, 'jsonDecode')),
@@ -46,12 +52,20 @@ class FormBuilderExtension extends AbstractExtension
         );
     }
 
+    /**
+     * @param $str
+     * @return mixed
+     */
     public function jsonDecode($str)
     {
-        return json_decode($str);
+        return json_decode($str, false);
     }
 
-    public function isArray($var)
+    /**
+     * @param $var
+     * @return bool
+     */
+    public function isArray($var): bool
     {
         return is_array($var);
     }
@@ -77,7 +91,10 @@ class FormBuilderExtension extends AbstractExtension
         return $template;
     }
 
-    public function getName()
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return 'form_builder_extension';
     }

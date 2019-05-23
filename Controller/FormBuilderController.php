@@ -11,7 +11,6 @@ use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Exporter\Writer\XlsWriter;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
@@ -39,7 +38,7 @@ class FormBuilderController extends AbstractController
      *
      * @throws \RuntimeException
      */
-    public function exportSubmitAction(Form $form, $format)
+    public function exportSubmitAction(Form $form, $format): StreamedResponse
     {
         //TODO export
         $submissions = $form->getSubmissions();
@@ -85,7 +84,7 @@ class FormBuilderController extends AbstractController
      * @param Form $form
      * @param $columns
      */
-    public function submitOperations(Form $form, $columns)
+    public function submitOperations(Form $form, $columns): void
     {
         $em = $this->getDoctrine()->getManager();
         $form_submit = $this->container->get('request_stack')->getCurrentRequest()->request->all();
@@ -109,10 +108,13 @@ class FormBuilderController extends AbstractController
         }
     }
 
-    /*
+    /**
      * Send Email to all Recipients defined for this form Builder
+     *
+     * @param Form $form
+     * @param $form_submit
      */
-    private function sendEmailToRecipient(Form $form, $form_submit)
+    private function sendEmailToRecipient(Form $form, $form_submit): void
     {
         /* ******************************
          * Check if Recipient is not Empty and
@@ -174,11 +176,14 @@ class FormBuilderController extends AbstractController
         }
     }
 
-    /*
+    /**
      * This function
      * Translate a json_form object to a symfony form
+     *
+     * @param $formbuild
+     * @return array
      */
-    public function generateFormFromFormBuilder($formbuild)
+    public function generateFormFromFormBuilder($formbuild): array
     {
         $formBuilder = $this->createFormBuilder(array(), array(
             'action' => '#',
@@ -228,28 +233,16 @@ class FormBuilderController extends AbstractController
 
     /**
      * @param Submission[]|ArrayCollection $submissions
-     * @param CsvWriter|XlsWriter $writer
-     * @param Form $formBuilder
-     * @return array
+     * @param CsvWriter|XmlExcelWriter $writer
+     * @param Form $form
+     * @return void
      */
-    private function buildContent($submissions, $writer, $formBuilder)
+    private function buildContent($submissions, $writer, Form $form): void
     {
         $writer->open();
-        $formArray = json_decode($formBuilder->getJson());
+        $formArray = json_decode($form->getJson());
         $headers = [];
         $data = [];
-
-        /*foreach ($formArray as $key => $item) {
-            $header = $formBuilder->getColumns()[$key];
-            list($type, $position) = explode('_', $key);
-            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
-                $header = $formArray[$position]->fields->key->value;
-            }
-
-            $headers[] = $header;
-        }
-
-        $writer->write($headers);*/
 
         $index = 0;
         foreach ($submissions as $submission) {
@@ -277,7 +270,7 @@ class FormBuilderController extends AbstractController
                 }
 
                 if ($index === 0) {
-                    $header = $formBuilder->getColumns()[$key];
+                    $header = $form->getColumns()[$key];
                     if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
                         $header = $formArray[$position]->fields->key->value;
                     }
@@ -299,9 +292,14 @@ class FormBuilderController extends AbstractController
         $writer->close();
     }
 
-    private function buildSingleContent($formBuilder, $form_submit)
+    /**
+     * @param Form $form
+     * @param array $form_submit
+     * @return array
+     */
+    private function buildSingleContent(Form $form, array $form_submit): array
     {
-        $formArray = json_decode($formBuilder->getJson());
+        $formArray = json_decode($form->getJson());
         $csvData = [
             'headers' => [],
             'data' => []
@@ -327,7 +325,7 @@ class FormBuilderController extends AbstractController
                     $value = $submittedValue;
             }
 
-            $header = $formBuilder->getColumns()[$key];
+            $header = $form->getColumns()[$key];
             if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
                 $header = $formArray[$position]->fields->key->value;
             }
@@ -339,7 +337,11 @@ class FormBuilderController extends AbstractController
         return $csvData;
     }
 
-    private function validKey($key)
+    /**
+     * @param string $key
+     * @return bool
+     */
+    private function validKey(string $key): bool
     {
         foreach ($this->blacklist as $blacklistItem) {
             if (strpos($key, $blacklistItem) !== FALSE) {
@@ -350,6 +352,12 @@ class FormBuilderController extends AbstractController
         return true;
     }
 
+    /**
+     * @param $submittedValue
+     * @param $formData
+     * @param string $field
+     * @return array|string
+     */
     private function formatMulti($submittedValue, $formData, $field = 'options')
     {
         $value = [];
