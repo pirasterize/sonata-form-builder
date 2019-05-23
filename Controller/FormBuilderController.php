@@ -3,6 +3,8 @@
 namespace Pirastru\FormBuilderBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Exporter\Writer\XmlExcelWriter;
+use Exporter\Writer\XmlWriter;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
@@ -43,9 +45,9 @@ class FormBuilderController extends AbstractController
         $submissions = $form->getSubmissions();
 
         switch ($format) {
-            case 'xls':
-                $writer = new XlsWriter('php://output', false);
-                $contentType = 'application/vnd.ms-excel';
+            case 'xlsx':
+                $writer = new XmlExcelWriter('php://output', false);
+                $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 break;
             case 'csv':
                 $writer = new CsvWriter('php://output', ';', '"', '', false, true);
@@ -253,7 +255,7 @@ class FormBuilderController extends AbstractController
         foreach ($submissions as $submission) {
 
             $data = [];
-            foreach ($submission as $key => $submittedValue) {
+            foreach ($submission->getValue() as $key => $submittedValue) {
                 if (!$this->validKey($key)) {
                     continue;
                 }
@@ -292,81 +294,6 @@ class FormBuilderController extends AbstractController
             $index++;
 
             $writer->write($data);
-
-        }
-
-        $writer->close();
-        return;
-        return $data;
-
-
-        $columns = $formBuilder->getColumns();
-        $obj_form = json_decode($formBuilder->getJson());// needed for get field labels
-
-        $writer->open();
-
-        $is_title = true;
-
-        $title = array();
-        $response = [];
-
-        /** @var Submission $submission */
-        foreach ($submissions as $submission) {
-            $response = $this->buildSingleContent($formBuilder, $submission->getValue());
-            $writer->write($response);
-            continue;
-
-            /* First Line with title columns  */
-            if ($is_title) {
-                foreach ($columns as $key => $value) {
-                    $el_k = explode('_', $key);
-                    if ($el_k[0] == 'button') {
-                        continue;
-                    }
-                    $title[] = $value;
-                }
-
-                $is_title = false;
-                $writer->write($title);
-            }
-
-            /* Others Lines */
-            foreach ($columns as $key => $value) {
-                $el_k = explode('_', $key);
-                if ($el_k[0] == 'button') {
-                    continue;
-                }
-                if ($el_k[0] == 'radio') {
-                    if ($submission[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->radios->value[$submission[$key]];
-                    }
-                } elseif ($el_k[0] == 'choice') {
-                    if (is_array($submission[$key])) {
-                        $r = array();
-                        foreach ($submission[$key] as $v) {
-                            $r[] = $obj_form[$el_k[1]]->fields->options->value[$v];
-                        }
-                        $response[] = implode('|', $r);
-                    } elseif ($submission[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->options->value[$submission[$key]];
-                    }
-                } elseif ($el_k[0] == 'checkbox') {
-                    if (is_array($submission[$key])) {
-                        $r = array();
-                        foreach ($submission[$key] as $v) {
-                            $r[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$v];
-                        }
-                        $response[] = implode('|', $r);
-                    } elseif ($submission[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$submission[$key]];
-                    }
-                } elseif (isset($submission[$key])) {
-                    $response[] = $submission[$key];
-                }
-            }
-
-            /* write one line */
-            $writer->write($response);
         }
 
         $writer->close();
@@ -380,7 +307,7 @@ class FormBuilderController extends AbstractController
             'data' => []
         ];
 
-        foreach ($form_submit as $key => $submittedValue) {
+        foreach ($form_submit['form'] as $key => $submittedValue) {
             if (!$this->validKey($key)) {
                 continue;
             }
