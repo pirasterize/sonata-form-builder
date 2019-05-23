@@ -40,7 +40,18 @@ class FormBuilderAdmin extends AbstractAdmin
     {
         $listMapper
             ->addIdentifier('name')
-            ->add('recipient');
+            ->add('persistable', 'boolean', [
+                'label' => 'Save to database?'
+            ])
+            ->add('mailable', 'boolean', [
+                'label' => 'Email responses?'
+            ])
+            ->add('_action', null, [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                ]
+            ]);
     }
 
     /**
@@ -53,9 +64,11 @@ class FormBuilderAdmin extends AbstractAdmin
             ->add('name', 'text')
             ->add('persistable', 'checkbox', [
                 'required' => false,
+                'label' => 'Save to database?'
             ])
             ->add('mailable', 'checkbox', [
                 'required' => false,
+                'label' => 'Email responses?',
             ])
             ->add('subject', 'text', [
                 'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
@@ -124,7 +137,7 @@ class FormBuilderAdmin extends AbstractAdmin
         $showMapper
             ->add('name')
             ->add('recipient')
-            ->add('export', null, ['template' => 'PirastruFormBuilderBundle:CRUD:table_export_form.html.twig' ])
+            ->add('export', null, ['template' => 'PirastruFormBuilderBundle:CRUD:table_export_form.html.twig'])
             ->add('submissions', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'));
     }
 
