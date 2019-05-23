@@ -2,6 +2,7 @@
 
 namespace Pirastru\FormBuilderBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
@@ -60,8 +61,13 @@ class FormBuilderController extends AbstractController
             $format
         );
 
+        /*$content = [];
+        foreach ($submissions as $submission) {
+            $content[] = $this->buildSingleContent($form, $submission->getValue());
+        }*/
         $callback = function () use ($submissions, $writer, $form) {
             $this->buildContent($submissions, $writer, $form);
+
         };
 
         return new StreamedResponse($callback, 200, array(
@@ -218,13 +224,82 @@ class FormBuilderController extends AbstractController
         return array('form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col);
     }
 
-    /*
-     * TODO: Refactor this with the data from buildSingleContent
-     *  Needed for export CSV/XSL
-     *  permet de creer le contenu du fichier dans le format choisie (XLS,CSV)
+    /**
+     * @param Submission[]|ArrayCollection $submissions
+     * @param CsvWriter|XlsWriter $writer
+     * @param Form $formBuilder
+     * @return array
      */
     private function buildContent($submissions, $writer, $formBuilder)
     {
+        $writer->open();
+        $formArray = json_decode($formBuilder->getJson());
+        $headers = [];
+        $data = [];
+
+        /*foreach ($formArray as $key => $item) {
+            $header = $formBuilder->getColumns()[$key];
+            list($type, $position) = explode('_', $key);
+            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+                $header = $formArray[$position]->fields->key->value;
+            }
+
+            $headers[] = $header;
+        }
+
+        $writer->write($headers);*/
+
+        $index = 0;
+        foreach ($submissions as $submission) {
+
+            $data = [];
+            foreach ($submission as $key => $submittedValue) {
+                if (!$this->validKey($key)) {
+                    continue;
+                }
+
+                list($type, $position) = explode('_', $key);
+
+                switch ($type) {
+                    case 'radio':
+                        $value = $formArray[$position]->fields->radios->value[$submittedValue];
+                        break;
+                    case 'choice':
+                        $value = $this->formatMulti($submittedValue, $formArray[$position]);
+                        break;
+                    case 'checkbox':
+                        $value = $this->formatMulti($submittedValue, $formArray[$position], 'checkboxes');
+                        break;
+                    default:
+                        $value = $submittedValue;
+                }
+
+                if ($index === 0) {
+                    $header = $formBuilder->getColumns()[$key];
+                    if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+                        $header = $formArray[$position]->fields->key->value;
+                    }
+                    $headers[] = $header;
+                }
+
+                $data[] = $value;
+            }
+
+            if ($index === 0) {
+                $writer->write($headers);
+            }
+
+            $index++;
+
+            $writer->write($data);
+
+        }
+
+        $writer->close();
+        return;
+        return $data;
+
+
         $columns = $formBuilder->getColumns();
         $obj_form = json_decode($formBuilder->getJson());// needed for get field labels
 
@@ -305,7 +380,7 @@ class FormBuilderController extends AbstractController
             'data' => []
         ];
 
-        foreach ($form_submit['form'] as $key => $submittedValue) {
+        foreach ($form_submit as $key => $submittedValue) {
             if (!$this->validKey($key)) {
                 continue;
             }
