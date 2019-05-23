@@ -10,6 +10,7 @@ use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -29,19 +30,19 @@ class FormBuilderController extends AbstractController
     ];
 
     /**
-     * @Route("/export_submit/{form}/{format}", name="form_builder_export_submit")
+     * @Route("/export_submit/{form}", name="form_builder_export_submit", methods={"POST"})
      *
+     * @param Request $request
      * @param Form $form
-     * @param $format
      *
      * @return StreamedResponse
      *
      * @throws \RuntimeException
      */
-    public function exportSubmitAction(Form $form, $format): StreamedResponse
+    public function exportSubmitAction(Request $request, Form $form): StreamedResponse
     {
-        //TODO export
-        $submissions = $form->getSubmissions();
+        $format = $request->get('format');
+        $range = $request->get('range');
 
         switch ($format) {
             case 'xlsx':
@@ -56,16 +57,27 @@ class FormBuilderController extends AbstractController
                 throw new \RuntimeException('Invalid format');
         }
 
+        switch ($range) {
+            case 'all':
+                $submissions = $form->getSubmissions();
+                break;
+            case 'new':
+                $em = $this->get('doctrine.orm.entity_manager');
+                $submissionRepo = $em->getRepository(Submission::class);
+                $submissions = $submissionRepo->getNewSubmissions($form);
+                break;
+            default:
+                throw new \RuntimeException('Invalid export range');
+        }
+
         $filename = sprintf('export_%s_%s.%s',
             $form->getName(),
-            date('Y_m_d_H_i_s', strtotime('now')),
+            date('Y_m_d_H_i_s'),
             $format
         );
 
-        /*$content = [];
-        foreach ($submissions as $submission) {
-            $content[] = $this->buildSingleContent($form, $submission->getValue());
-        }*/
+
+
         $callback = function () use ($submissions, $writer, $form) {
             $this->buildContent($submissions, $writer, $form);
 
@@ -201,9 +213,9 @@ class FormBuilderController extends AbstractController
          * start processing each json object elements
          * each element is a form field like 'Text Input'
          */
-        $obj_form = json_decode($formbuild->getJson());
+        $obj_form = json_decode($formbuild->getJson(), false);
         foreach ($obj_form as $key => $elem) {
-            if ($elem->typefield == 'formname') {
+            if ($elem->typefield === 'formname') {
                 continue;
             }
 
@@ -239,12 +251,17 @@ class FormBuilderController extends AbstractController
      */
     private function buildContent($submissions, $writer, Form $form): void
     {
+        $em = $this->get('doctrine.orm.entity_manager');
         $writer->open();
-        $formArray = json_decode($form->getJson());
+        $formArray = json_decode($form->getJson(), true);
         $headers = [];
-        $data = [];
 
         $index = 0;
+
+        if (count($submissions) === 0) {
+            $writer->write(['no new submissions since last export']);
+        }
+
         foreach ($submissions as $submission) {
 
             $data = [];
@@ -271,7 +288,7 @@ class FormBuilderController extends AbstractController
 
                 if ($index === 0) {
                     $header = $form->getColumns()[$key];
-                    if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+                    if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
                         $header = $formArray[$position]->fields->key->value;
                     }
                     $headers[] = $header;
@@ -287,7 +304,11 @@ class FormBuilderController extends AbstractController
             $index++;
 
             $writer->write($data);
+
+            $submission->export();
         }
+
+        $em->flush();
 
         $writer->close();
     }
@@ -299,7 +320,7 @@ class FormBuilderController extends AbstractController
      */
     private function buildSingleContent(Form $form, array $form_submit): array
     {
-        $formArray = json_decode($form->getJson());
+        $formArray = json_decode($form->getJson(), true);
         $csvData = [
             'headers' => [],
             'data' => []
@@ -310,7 +331,8 @@ class FormBuilderController extends AbstractController
                 continue;
             }
 
-            list($type, $position) = explode('_', $key);
+            [$type, $position] = explode('_', $key);
+
             switch ($type) {
                 case 'radio':
                     $value = $formArray[$position]->fields->radios->value[$submittedValue];
@@ -326,7 +348,7 @@ class FormBuilderController extends AbstractController
             }
 
             $header = $form->getColumns()[$key];
-            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
                 $header = $formArray[$position]->fields->key->value;
             }
 
@@ -365,7 +387,7 @@ class FormBuilderController extends AbstractController
             foreach ($submittedValue as $submit) {
                 $value[] = $formData->fields->$field->value[$submit];
             }
-        } elseif ($submittedValue != '') {
+        } elseif ($submittedValue !== '') {
             $value[] = $formData->fields->$field->value[$submittedValue];
         }
         $value = implode(', ', $value);

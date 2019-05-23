@@ -1,0 +1,45 @@
+<th>
+    {% block name %}
+        {{ admin.trans(field_description.label, {}, field_description.translationDomain) }}
+    {% endblock %}
+</th>
+<td>
+    <form method="post" action="{{ path('form_builder_export_submit',{'form': object.id}) }}">
+
+        <fieldset>
+            <legend>What do you want to export?</legend>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="range" id="all_submissions" value="all" required>
+                    All submissions
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="range" id="new_submissions" value="new">
+                    New submissions
+                </label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>What format do you want to export to?</legend>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="format" id="xlsx_format" value="xlsx" required>
+                    XLSX
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="format" id="csv_format" value="csv">
+                    CSV
+                </label>
+            </div>
+        </fieldset>
+
+        <input class="btn btn-primary" type="submit" value="Export">
+    </form>
+
+</td>

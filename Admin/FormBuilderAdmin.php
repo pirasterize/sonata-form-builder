@@ -124,7 +124,8 @@ class FormBuilderAdmin extends AbstractAdmin
         $showMapper
             ->add('name')
             ->add('recipient')
-            ->add('submit', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'));
+            ->add('export', null, ['template' => 'PirastruFormBuilderBundle:CRUD:table_export_form.html.twig' ])
+            ->add('submissions', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'));
     }
 
     /**

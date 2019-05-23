@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Form Builder Entity.
  *
  * @ORM\Table(name="form__builder__submission")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Pirastru\FormBuilderBundle\Entity\FormBuilderSubmissionRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class FormBuilderSubmission
