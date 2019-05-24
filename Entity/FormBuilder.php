@@ -86,19 +86,17 @@ class FormBuilder
      */
     private $submissions;
 
-    private $submit;
-
     /**
      * @var bool
      *
-     * @ORM\Column(name="persistable", type="boolean", nullable=false)
+     * @ORM\Column(name="persistable", type="boolean", nullable=false, options={"default": true})
      */
     private $persistable = true;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="exportable", type="boolean", nullable=false)
+     * @ORM\Column(name="exportable", type="boolean", nullable=false, options={"default": true})
      */
     private $exportable = true;
 
