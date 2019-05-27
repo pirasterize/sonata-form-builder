@@ -18,18 +18,19 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
+use Symfony\Component\Form\FormBuilder as SymfonyFormBuilder;
 
 class FormBuilderFactory
 {
     /**
      * Email Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldEmailinput(Form $form, $key, $elem): array
+    public function setFieldEmailinput($form, $key, $elem): array
     {
         $form->add('email_'.$key, 'email', array(
             'required' => $elem->fields->required->value,
@@ -49,12 +50,12 @@ class FormBuilderFactory
     /**
      * Date Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldDateinput(Form $form, $key, $elem): array
+    public function setFieldDateinput(SymfonyFormBuilder $form, $key, $elem): array
     {
         $form->add('date_'.$key, 'text', array(
             'required' => $elem->fields->required->value,
@@ -78,12 +79,12 @@ class FormBuilderFactory
     /**
      * Telephone Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldTelephoneinput(Form $form, $key, $elem): array
+    public function setFieldTelephoneinput($form, $key, $elem): array
     {
         $form->add('telephone_'.$key, class_exists(TelType::class) ? TelType::class : TextType::class, [
             'required' => $elem->fields->required->value,
@@ -107,12 +108,12 @@ class FormBuilderFactory
     /**
      * Postalcode Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldPostalcodeinput(Form $form, $key, $elem): array
+    public function setFieldPostalcodeinput($form, $key, $elem): array
     {
         $form->add('postalcode_'.$key, 'number', array(
             'required' => $elem->fields->required->value,
@@ -130,12 +131,12 @@ class FormBuilderFactory
     /**
      * Text Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldTextinput(Form $form, $key, $elem): array
+    public function setFieldTextinput($form, $key, $elem): array
     {
         $form->add('text_'.$key, 'text', array(
             'required' => $elem->fields->required->value,
@@ -152,12 +153,12 @@ class FormBuilderFactory
     /**
      * Textarea Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldTextarea(Form $form, $key, $elem): array
+    public function setFieldTextarea($form, $key, $elem): array
     {
         $form->add('textarea_'.$key, 'textarea', array(
             'required' => false,
@@ -174,12 +175,12 @@ class FormBuilderFactory
     /**
      * Select basic Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldSelectbasic(Form $form, $key, $elem): array
+    public function setFieldSelectbasic($form, $key, $elem): array
     {
         $form->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
@@ -194,12 +195,12 @@ class FormBuilderFactory
     /**
      * Select multiple Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldSelectmultiple(Form $form, $key, $elem): array
+    public function setFieldSelectmultiple($form, $key, $elem): array
     {
         $form->add('choice_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
@@ -214,12 +215,12 @@ class FormBuilderFactory
     /**
      * Multiple Radio Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldMultipleradios(Form $form, $key, $elem): array
+    public function setFieldMultipleradios($form, $key, $elem): array
     {
         $form->add('radio_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
@@ -236,12 +237,12 @@ class FormBuilderFactory
     /**
      * Multiple Checkbox Field.
      * 
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldMultiplecheckboxes(Form $form, $key, $elem): array
+    public function setFieldMultiplecheckboxes($form, $key, $elem): array
     {
         $form->add('checkbox_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
@@ -255,12 +256,12 @@ class FormBuilderFactory
     }
 
     /**
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldPrivacycheckbox(Form $form, $key, $elem): array
+    public function setFieldPrivacycheckbox($form, $key, $elem): array
     {
         $label = sprintf("%s <a href='%s'>%s</a>",
             $elem->fields->text->value,
@@ -300,12 +301,12 @@ class FormBuilderFactory
     }
 
     /**
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldSinglebutton(Form $form, $key, $elem): array
+    public function setFieldSinglebutton($form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->buttonaction->value);
         $this->createButton($form, $action, $key, $elem->fields->buttonlabel->value);
@@ -314,12 +315,12 @@ class FormBuilderFactory
     }
 
     /**
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldDoublebutton(Form $form, $key, $elem): array
+    public function setFieldDoublebutton($form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->button1action->value);
         $this->createButton($form, $action, '1_'.$key, $elem->fields->button1label->value);
@@ -333,12 +334,12 @@ class FormBuilderFactory
     }
 
     /**
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $action
      * @param $key
      * @param $value
      */
-    private function createButton(Form $form, $action, $key, $value): void
+    private function createButton(SymfonyFormBuilder $form, $action, $key, $value): void
     {
         $buttonType = $this->getButtonType($action);
 
@@ -364,12 +365,12 @@ class FormBuilderFactory
     }
 
     /**
-     * @param Form $form
+     * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
      * @return array
      */
-    public function setFieldCaptcha(Form $form, $key, $elem): array
+    public function setFieldCaptcha($form, $key, $elem): array
     {
         $form->add('captcha_'.$key, CaptchaType::class, array(
             'width' => 200,
