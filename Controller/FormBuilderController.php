@@ -2,12 +2,16 @@
 
 namespace Pirastru\FormBuilderBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Exporter\Writer\XmlExcelWriter;
+use Exporter\Writer\XmlWriter;
+use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
+use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Exporter\Writer\XlsWriter;
+use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
@@ -16,7 +20,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * FormBuilder controller.
  */
-class FormBuilderController extends Controller
+class FormBuilderController extends AbstractController
 {
     private $blacklist = [
         '_token',
@@ -26,26 +30,24 @@ class FormBuilderController extends Controller
     ];
 
     /**
-     * @Route("/export_submit/{id}/{format}", name="form_builder_export_submit")
+     * @Route("/export_submit/{form}", name="form_builder_export_submit", methods={"POST"})
      *
-     * @param $id
-     * @param $format
+     * @param Request $request
+     * @param Form $form
      *
      * @return StreamedResponse
      *
      * @throws \RuntimeException
      */
-    public function exportSubmitAction($id, $format)
+    public function exportSubmitAction(Request $request, Form $form): StreamedResponse
     {
-        $formBuilder = $this->getDoctrine()->getRepository('PirastruFormBuilderBundle:FormBuilder')
-            ->find($id);
-
-        $json_object = $formBuilder->getSubmit();
+        $format = $request->get('format');
+        $range = $request->get('range');
 
         switch ($format) {
-            case 'xls':
-                $writer = new XlsWriter('php://output', false);
-                $contentType = 'application/vnd.ms-excel';
+            case 'xlsx':
+                $writer = new XmlExcelWriter('php://output', false);
+                $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 break;
             case 'csv':
                 $writer = new CsvWriter('php://output', ';', '"', '', false, true);
@@ -55,14 +57,30 @@ class FormBuilderController extends Controller
                 throw new \RuntimeException('Invalid format');
         }
 
+        switch ($range) {
+            case 'all':
+                $submissions = $form->getSubmissions();
+                break;
+            case 'new':
+                $em = $this->get('doctrine.orm.entity_manager');
+                $submissionRepo = $em->getRepository(Submission::class);
+                $submissions = $submissionRepo->getNewSubmissions($form);
+                break;
+            default:
+                throw new \RuntimeException('Invalid export range');
+        }
+
         $filename = sprintf('export_%s_%s.%s',
-            $formBuilder->getName(),
-            date('Y_m_d_H_i_s', strtotime('now')),
+            $form->getName(),
+            date('Y_m_d_H_i_s'),
             $format
         );
 
-        $callback = function () use ($json_object, $writer, $formBuilder) {
-            $this->buildContent($json_object, $writer, $formBuilder);
+
+
+        $callback = function () use ($submissions, $writer, $form) {
+            $this->buildContent($submissions, $writer, $form);
+
         };
 
         return new StreamedResponse($callback, 200, array(
@@ -71,73 +89,76 @@ class FormBuilderController extends Controller
         ));
     }
 
-    /*
+    /**
      * function executed from the sonata-block in case
      * of submission of a front-end form Builder
+     *
+     * @param Form $form
+     * @param $columns
      */
-    public function submitOperations($formBuilder, $columns)
+    public function submitOperations(Form $form, $columns): void
     {
         $em = $this->getDoctrine()->getManager();
         $form_submit = $this->container->get('request_stack')->getCurrentRequest()->request->all();
 
-        /*******************************
-         * Submits JSON Object from DB with all previous form builder submits
-         * then append the new submit json to collect
-         *******************************/
-        $submits = $formBuilder->getSubmit();
-        $formBuilder->setColumns($columns);
+        $form->setColumns($columns);
 
-        if ($this->getParameter('pirastru_form_builder.save_data')) {
-            /* append the new submit on tail of the previous Submits JSON */
-            $submits[] = $form_submit['form'];
-            $formBuilder->setSubmit($submits);
+        if ($form->isPersistable()) {
+            $submission = new Submission($form_submit['form'], $form);
+            $form->addSubmission($submission);
+            $em->persist($submission);
         }
 
-        $em->persist($formBuilder);
+        $em->persist($form);
         $em->flush();
 
         /****************************
          * Send Emails to recipients
          ***************************/
-        $this->sendEmailToRecipient($formBuilder, $form_submit);
+        if ($form->isMailable()) {
+            $this->sendEmailToRecipient($form, $form_submit);
+        }
     }
 
-    /*
+    /**
      * Send Email to all Recipients defined for this form Builder
+     *
+     * @param Form $form
+     * @param $form_submit
      */
-    private function sendEmailToRecipient($formBuilder, $form_submit)
+    private function sendEmailToRecipient(Form $form, $form_submit): void
     {
         /* ******************************
          * Check if Recipient is not Empty and
          * default email_from too
          * ****************************** */
-        $recipient = $formBuilder->getRecipient();
+        $recipient = $form->getRecipient();
 
-        if (!empty($recipient) && !is_null($this->container->getParameter('formbuilder_email_from'))) {
-            $message = \Swift_Message::newInstance()
+        if (!empty($recipient) && $this->container->getParameter('formbuilder_email_from') !== null) {
+            $message = (new \Swift_Message())
                 ->setFrom($this->container->getParameter('formbuilder_email_from'))
                 ->setTo($recipient);
 
-            $emailCc = $formBuilder->getRecipientCC();
+            $emailCc = $form->getRecipientCC();
             if (!empty($emailCc)) {
                 $message->setCc($emailCc);
             }
 
-            $emailBcc = $formBuilder->getRecipientBCC();
+            $emailBcc = $form->getRecipientBCC();
             if (!empty($emailBcc)) {
                 $message->setBcc($emailBcc);
             }
 
-            $data = $this->buildSingleContent($formBuilder, $form_submit);
+            $data = $this->buildSingleContent($form, $form_submit);
 
             $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
-            $subject = preg_replace($patterns, array_values($data['data']), $formBuilder->getSubject());
+            $subject = preg_replace($patterns, array_values($data['data']), $form->getSubject());
 
             $message->setSubject($subject);
 
-            if ($formBuilder->getReplyTo() !== NULL){
+            if ($form->getReplyTo() !== NULL){
                 $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
-                $replyTo = preg_replace($patterns, array_values($data['data']), $formBuilder->getReplyTo());
+                $replyTo = preg_replace($patterns, array_values($data['data']), $form->getReplyTo());
 
                 $errors = $this->get('validator')->validate(
                     $replyTo,
@@ -154,7 +175,7 @@ class FormBuilderController extends Controller
 
             $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
                 'data' => $data,
-                'name' => $formBuilder->getName()
+                'name' => $form->getName()
             ]);
 
             $message->setBody($html, 'text/html');
@@ -167,11 +188,14 @@ class FormBuilderController extends Controller
         }
     }
 
-    /*
+    /**
      * This function
      * Translate a json_form object to a symfony form
+     *
+     * @param $formbuild
+     * @return array
      */
-    public function generateFormFromFormBuilder($formbuild)
+    public function generateFormFromFormBuilder($formbuild): array
     {
         $formBuilder = $this->createFormBuilder(array(), array(
             'action' => '#',
@@ -189,9 +213,9 @@ class FormBuilderController extends Controller
          * start processing each json object elements
          * each element is a form field like 'Text Input'
          */
-        $obj_form = json_decode($formbuild->getJson());
+        $obj_form = json_decode($formbuild->getJson(), false);
         foreach ($obj_form as $key => $elem) {
-            if ($elem->typefield == 'formname') {
+            if ($elem->typefield === 'formname') {
                 continue;
             }
 
@@ -219,82 +243,84 @@ class FormBuilderController extends Controller
         return array('form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col);
     }
 
-    /*
-     * TODO: Refactor this with the data from buildSingleContent
-     *  Needed for export CSV/XSL
-     *  permet de creer le contenu du fichier dans le format choisie (XLS,CSV)
+    /**
+     * @param Submission[]|ArrayCollection $submissions
+     * @param CsvWriter|XmlExcelWriter $writer
+     * @param Form $form
+     * @return void
      */
-    private function buildContent($json_object, $writer, $formBuilder)
+    private function buildContent($submissions, $writer, Form $form): void
     {
-        $columns = $formBuilder->getColumns();
-        $obj_form = json_decode($formBuilder->getJson());// needed for get field labels
-
+        $em = $this->get('doctrine.orm.entity_manager');
         $writer->open();
+        $formArray = json_decode($form->getJson(), true);
+        $headers = [];
 
-        $is_title = true;
+        $index = 0;
 
-        $title = array();
-        foreach ($json_object as $line) {
-            $response = array();
+        if (count($submissions) === 0) {
+            $writer->write(['no new submissions since last export']);
+        }
 
-            /* First Line with title columns  */
-            if ($is_title) {
-                foreach ($columns as $key => $value) {
-                    $el_k = explode('_', $key);
-                    if ($el_k[0] == 'button') {
-                        continue;
-                    }
-                    $title[] = $value;
-                }
+        foreach ($submissions as $submission) {
 
-                $is_title = false;
-                $writer->write($title);
-            }
-
-            /* Others Lines */
-            foreach ($columns as $key => $value) {
-                $el_k = explode('_', $key);
-                if ($el_k[0] == 'button') {
+            $data = [];
+            foreach ($submission->getValue() as $key => $submittedValue) {
+                if (!$this->validKey($key)) {
                     continue;
                 }
-                if ($el_k[0] == 'radio') {
-                    if ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->radios->value[$line[$key]];
-                    }
-                } elseif ($el_k[0] == 'choice') {
-                    if (is_array($line[$key])) {
-                        $r = array();
-                        foreach ($line[$key] as $v) {
-                            $r[] = $obj_form[$el_k[1]]->fields->options->value[$v];
-                        }
-                        $response[] = implode('|', $r);
-                    } elseif ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->options->value[$line[$key]];
-                    }
-                } elseif ($el_k[0] == 'checkbox') {
-                    if (is_array($line[$key])) {
-                        $r = array();
-                        foreach ($line[$key] as $v) {
-                            $r[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$v];
-                        }
-                        $response[] = implode('|', $r);
-                    } elseif ($line[$key] != '') {
-                        $response[] = $obj_form[$el_k[1]]->fields->checkboxes->value[$line[$key]];
-                    }
-                } elseif (isset($line[$key])) {
-                    $response[] = $line[$key];
+
+                list($type, $position) = explode('_', $key);
+
+                switch ($type) {
+                    case 'radio':
+                        $value = $formArray[$position]->fields->radios->value[$submittedValue];
+                        break;
+                    case 'choice':
+                        $value = $this->formatMulti($submittedValue, $formArray[$position]);
+                        break;
+                    case 'checkbox':
+                        $value = $this->formatMulti($submittedValue, $formArray[$position], 'checkboxes');
+                        break;
+                    default:
+                        $value = $submittedValue;
                 }
+
+                if ($index === 0) {
+                    $header = $form->getColumns()[$key];
+                    if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
+                        $header = $formArray[$position]->fields->key->value;
+                    }
+                    $headers[] = $header;
+                }
+
+                $data[] = $value;
             }
 
-            /* write one line */
-            $writer->write($response);
+            if ($index === 0) {
+                $writer->write($headers);
+            }
+
+            $index++;
+
+            $writer->write($data);
+
+            $submission->export();
         }
+
+        $em->flush();
+
         $writer->close();
     }
 
-    private function buildSingleContent($formBuilder, $form_submit)
+    /**
+     * @param Form $form
+     * @param array $form_submit
+     * @return array
+     */
+    private function buildSingleContent(Form $form, array $form_submit): array
     {
-        $formArray = json_decode($formBuilder->getJson());
+        $formArray = json_decode($form->getJson(), true);
         $csvData = [
             'headers' => [],
             'data' => []
@@ -305,7 +331,8 @@ class FormBuilderController extends Controller
                 continue;
             }
 
-            list($type, $position) = explode('_', $key);
+            [$type, $position] = explode('_', $key);
+
             switch ($type) {
                 case 'radio':
                     $value = $formArray[$position]->fields->radios->value[$submittedValue];
@@ -320,8 +347,8 @@ class FormBuilderController extends Controller
                     $value = $submittedValue;
             }
 
-            $header = $formBuilder->getColumns()[$key];
-            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value != '') {
+            $header = $form->getColumns()[$key];
+            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
                 $header = $formArray[$position]->fields->key->value;
             }
 
@@ -332,7 +359,11 @@ class FormBuilderController extends Controller
         return $csvData;
     }
 
-    private function validKey($key)
+    /**
+     * @param string $key
+     * @return bool
+     */
+    private function validKey(string $key): bool
     {
         foreach ($this->blacklist as $blacklistItem) {
             if (strpos($key, $blacklistItem) !== FALSE) {
@@ -343,6 +374,12 @@ class FormBuilderController extends Controller
         return true;
     }
 
+    /**
+     * @param $submittedValue
+     * @param $formData
+     * @param string $field
+     * @return array|string
+     */
     private function formatMulti($submittedValue, $formData, $field = 'options')
     {
         $value = [];
@@ -350,7 +387,7 @@ class FormBuilderController extends Controller
             foreach ($submittedValue as $submit) {
                 $value[] = $formData->fields->$field->value[$submit];
             }
-        } elseif ($submittedValue != '') {
+        } elseif ($submittedValue !== '') {
             $value[] = $formData->fields->$field->value[$submittedValue];
         }
         $value = implode(', ', $value);

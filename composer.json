@@ -13,8 +13,15 @@
         }
     ],
     "require": {
+        "php": "^7.1",
         "sonata-project/block-bundle": "~3.2",
-        "gregwar/captcha-bundle": "^2.0"
+        "gregwar/captcha-bundle": "^2.0",
+        "sonata-project/admin-bundle": "^3.48",
+        "doctrine/orm": "^2.6",
+        "sensio/framework-extra-bundle": "^5.3",
+        "sonata-project/exporter": "^1.11",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }

@@ -27,7 +27,7 @@
      {#Turn off confirm exit if turned on since it fails with JS library#}
     {% if sonata_admin.adminPool.getOption('confirm_exit') %}
         <script>
-            window.SONATA_CONFIG = {CONFIRM_EXIT: false};
+            window.SONATA_CONFIG = {CONFIRM_EXIT: false, USE_ICHECK: true};
         </script>
     {% endif %}
 {% endblock %}

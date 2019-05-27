@@ -2,6 +2,8 @@
 
 namespace Pirastru\FormBuilderBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,13 +59,6 @@ class FormBuilder
     private $recipientBCC;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="submit", type="array", nullable=true)
-     */
-    private $submit;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -85,20 +80,39 @@ class FormBuilder
     private $replyTo;
 
     /**
-     * Get id.
+     * @var Submission[]|ArrayCollection
      *
-     * @return int
+     * @ORM\OneToMany(targetEntity="Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission", mappedBy="form")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $submissions;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="persistable", type="boolean", nullable=false, options={"default": false})
+     */
+    private $persistable = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="exportable", type="boolean", nullable=false, options={"default": true})
+     */
+    private $exportable = true;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="mailable", type="boolean", nullable=false)
+     */
+    private $mailable = true;
 
     public function __construct()
     {
         $this->recipient = array();
         $this->recipientCC = array();
         $this->recipientBCC = array();
+        $this->submissions = new ArrayCollection();
     }
 
     /**
@@ -106,23 +120,17 @@ class FormBuilder
      */
     public function __toString()
     {
-        return $this->getName() ? $this->getName() : 'Create a Form Builder';
+        return $this->getName() ?: 'Create a Form Builder';
     }
 
     /**
-     * @param array $submit
+     * Get id.
+     *
+     * @return int
      */
-    public function setSubmit($submit)
+    public function getId(): int
     {
-        $this->submit = $submit;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSubmit()
-    {
-        return $this->submit;
+        return $this->id;
     }
 
     /**
@@ -251,5 +259,104 @@ class FormBuilder
     public function setReplyTo($replyTo)
     {
         $this->replyTo = $replyTo;
+    }
+
+    /**
+     * @return ArrayCollection|FormBuilderSubmission[]
+     */
+    public function getSubmissions()
+    {
+        return $this->submissions;
+    }
+
+    /**
+     * @param $submissions
+     * @return self
+     */
+    public function setSubmissions($submissions): self
+    {
+        $this->submissions = $submissions;
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderSubmission $submission
+     * @return self
+     */
+    public function addSubmission(Submission $submission): self
+    {
+        if (!$this->submissions->contains($submission)) {
+            $this->submissions->add($submission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderSubmission $submission
+     * @return self
+     */
+    public function removeSubmission(Submission $submission): self
+    {
+        if ($this->submissions->contains($submission)) {
+            $this->submissions->removeElement($submission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPersistable(): bool
+    {
+        return $this->persistable;
+    }
+
+    /**
+     * @param bool $persistable
+     * @return self
+     */
+    public function setPersistable(bool $persistable): self
+    {
+        $this->persistable = $persistable;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExportable(): bool
+    {
+        return $this->exportable;
+    }
+
+    /**
+     * @param bool $exportable
+     * @return self
+     */
+    public function setExportable(bool $exportable): self
+    {
+        $this->exportable = $exportable;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMailable(): bool
+    {
+        return $this->mailable;
+    }
+
+    /**
+     * @param bool $mailable
+     * @return self
+     */
+    public function setMailable(bool $mailable): self
+    {
+        $this->mailable = $mailable;
+        return $this;
     }
 }
