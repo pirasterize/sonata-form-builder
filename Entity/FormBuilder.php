@@ -89,9 +89,9 @@ class FormBuilder
     /**
      * @var bool
      *
-     * @ORM\Column(name="persistable", type="boolean", nullable=false, options={"default": true})
+     * @ORM\Column(name="persistable", type="boolean", nullable=false, options={"default": false})
      */
-    private $persistable = true;
+    private $persistable = false;
 
     /**
      * @var bool
