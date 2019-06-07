@@ -23,21 +23,7 @@
             </div>
         </fieldset>
 
-        <fieldset>
-            <legend>What format do you want to export to?</legend>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="format" id="xls_format" value="xls" required>
-                    XLS
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="format" id="csv_format" value="csv">
-                    CSV
-                </label>
-            </div>
-        </fieldset>
+        <input type="hidden" name="format" id="csv_format" value="csv">
 
         <input class="btn btn-primary" type="submit" value="Export">
     </form>

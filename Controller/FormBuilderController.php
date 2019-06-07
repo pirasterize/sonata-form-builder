@@ -3,7 +3,6 @@
 namespace Pirastru\FormBuilderBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Exporter\Writer\XlsWriter;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
@@ -43,18 +42,13 @@ class FormBuilderController extends AbstractController
         $format = $request->get('format');
         $range = $request->get('range');
 
-        switch ($format) {
-            case 'xls':
-                $writer = new XlsWriter('php://output', false);
-                $contentType = 'application/vnd.ms-excel';
-                break;
-            case 'csv':
-                $writer = new CsvWriter('php://output', ';', '"', '', false, true);
-                $contentType = 'text/csv';
-                break;
-            default:
-                throw new \RuntimeException('Invalid format');
+        if ($format !== 'csv') {
+            throw new \RuntimeException('Invalid format');
         }
+
+        $writer = new CsvWriter('php://output', ';', '"', '', false, true);
+        $contentType = 'text/csv';
+
 
         switch ($range) {
             case 'all':
@@ -74,7 +68,6 @@ class FormBuilderController extends AbstractController
             date('Y_m_d_H_i_s'),
             $format
         );
-
 
 
         $callback = function () use ($submissions, $writer, $form) {
@@ -150,13 +143,17 @@ class FormBuilderController extends AbstractController
 
             $data = $this->buildSingleContent($form, $form_submit);
 
-            $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
+            $patterns = array_map(function ($key) {
+                return '#<' . $key . '>#';
+            }, array_values($data['headers']));
             $subject = preg_replace($patterns, array_values($data['data']), $form->getSubject());
 
             $message->setSubject($subject);
 
-            if ($form->getReplyTo() !== NULL){
-                $patterns = array_map(function($key) { return '#<' . $key . '>#';}, array_values($data['headers']));
+            if ($form->getReplyTo() !== NULL) {
+                $patterns = array_map(function ($key) {
+                    return '#<' . $key . '>#';
+                }, array_values($data['headers']));
                 $replyTo = preg_replace($patterns, array_values($data['data']), $form->getReplyTo());
 
                 $errors = $this->get('validator')->validate(
@@ -167,7 +164,7 @@ class FormBuilderController extends AbstractController
                     )
                 );
 
-                if (count($errors) === 0){
+                if (count($errors) === 0) {
                     $message->setReplyTo($replyTo);
                 }
             }
@@ -200,7 +197,7 @@ class FormBuilderController extends AbstractController
             'action' => '#',
             'method' => 'POST',
             'attr' => array(
-                'id' => 'form_builder'.$formbuild->getId(),
+                'id' => 'form_builder' . $formbuild->getId(),
             ),
         ));
 
@@ -222,7 +219,7 @@ class FormBuilderController extends AbstractController
              * Call of a special function named setFieldXXXXXXXXXX
              * previous defined in FormBuilderFactory Class
              */
-            $field_fun = 'setField'.ucfirst($elem->typefield);
+            $field_fun = 'setField' . ucfirst($elem->typefield);
             if (method_exists($formBuilderFactory, $field_fun)) {
                 $field_detail = $formBuilderFactory->$field_fun($formBuilder, $key, $elem);
 
