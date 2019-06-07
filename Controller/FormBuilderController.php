@@ -61,7 +61,7 @@ class FormBuilderController extends AbstractController
         $filename = sprintf('export_%s_%s.%s',
             $form->getName(),
             date('Y_m_d_H_i_s'),
-            'xls'
+            'csv'
         );
 
 
