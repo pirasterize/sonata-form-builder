@@ -3,8 +3,7 @@
 namespace Pirastru\FormBuilderBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Exporter\Writer\XmlExcelWriter;
-use Exporter\Writer\XmlWriter;
+use Exporter\Writer\XlsWriter;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
@@ -45,9 +44,9 @@ class FormBuilderController extends AbstractController
         $range = $request->get('range');
 
         switch ($format) {
-            case 'xlsx':
-                $writer = new XmlExcelWriter('php://output', false);
-                $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            case 'xls':
+                $writer = new XlsWriter('php://output', false);
+                $contentType = 'application/vnd.ms-excel';
                 break;
             case 'csv':
                 $writer = new CsvWriter('php://output', ';', '"', '', false, true);
