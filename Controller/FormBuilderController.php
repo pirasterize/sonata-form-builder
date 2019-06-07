@@ -39,12 +39,7 @@ class FormBuilderController extends AbstractController
      */
     public function exportSubmitAction(Request $request, Form $form): StreamedResponse
     {
-        $format = $request->get('format');
         $range = $request->get('range');
-
-        if ($format !== 'csv') {
-            throw new \RuntimeException('Invalid format');
-        }
 
         $writer = new CsvWriter('php://output', ';', '"', '', false, true);
         $contentType = 'text/csv';
@@ -66,7 +61,7 @@ class FormBuilderController extends AbstractController
         $filename = sprintf('export_%s_%s.%s',
             $form->getName(),
             date('Y_m_d_H_i_s'),
-            $format
+            'xls'
         );
 
 
