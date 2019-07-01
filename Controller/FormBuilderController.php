@@ -339,8 +339,8 @@ class FormBuilderController extends AbstractController
             }
 
             $header = $form->getColumns()[$key];
-            if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
-                $header = $formArray[$position]->fields->key->value;
+            if (isset($formArray[$position]['fields']['key']) && $formArray[$position]['fields']['key']['value'] !== '') {
+                $header = $formArray[$position]['fields']['key']['value'];
             }
 
             $csvData['headers'][] = $header;
