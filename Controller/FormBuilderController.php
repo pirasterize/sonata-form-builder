@@ -265,7 +265,7 @@ class FormBuilderController extends AbstractController
 
                 switch ($type) {
                     case 'radio':
-                        $value = $formArray[$position]->fields->radios->value[$submittedValue];
+                        $value = $formArray[$position]['fields']['radios']['value'][$submittedValue];
                         break;
                     case 'choice':
                         $value = $this->formatMulti($submittedValue, $formArray[$position]);
@@ -279,8 +279,8 @@ class FormBuilderController extends AbstractController
 
                 if ($index === 0) {
                     $header = $form->getColumns()[$key];
-                    if (isset($formArray[$position]->fields->key) && $formArray[$position]->fields->key->value !== '') {
-                        $header = $formArray[$position]->fields->key->value;
+                    if (isset($formArray[$position]['fields']['key']) && $formArray[$position]['fields']['key']['value'] !== '') {
+                        $header = $formArray[$position]['fields']['key']['value'];
                     }
                     $headers[] = $header;
                 }
@@ -326,7 +326,7 @@ class FormBuilderController extends AbstractController
 
             switch ($type) {
                 case 'radio':
-                    $value = $formArray[$position]->fields->radios->value[$submittedValue];
+                    $value = $formArray[$position]['fields']['radios']['value'][$submittedValue];
                     break;
                 case 'choice':
                     $value = $this->formatMulti($submittedValue, $formArray[$position]);
@@ -376,10 +376,10 @@ class FormBuilderController extends AbstractController
         $value = [];
         if (is_array($submittedValue)) {
             foreach ($submittedValue as $submit) {
-                $value[] = $formData->fields->$field->value[$submit];
+                $value[] = $formData['fields'][$field]['value'][$submit];
             }
         } elseif ($submittedValue !== '') {
-            $value[] = $formData->fields->$field->value[$submittedValue];
+            $value[] = $formData['fields'][$field]['value'][$submittedValue];
         }
         $value = implode(', ', $value);
 

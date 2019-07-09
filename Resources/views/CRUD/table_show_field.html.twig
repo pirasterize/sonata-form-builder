@@ -21,7 +21,7 @@
                     {% set el_k = key|split('_') %}
                     {% if  key|slice(0, 5) == 'radio' %}
                         <td>
-                            {% if submit_line[key] != '' %}
+                            {% if submit_line[key] is defined and submit_line[key] != '' %}
                                 {{ form_array[el_k[1]].fields.radios.value[submit_line[key]] }}
                             {% endif %}
                         </td>
