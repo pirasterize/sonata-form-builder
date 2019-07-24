@@ -9,6 +9,7 @@ namespace Pirastru\FormBuilderBundle\Block;
 
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
+use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +18,11 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 
 /**
  * @author     Andrea Pirastru
  */
-class FormBuilderBlockService extends AbstractBlockService
+class FormBuilderBlockService extends AbstractAdminBlockService
 {
     private $container;
 
