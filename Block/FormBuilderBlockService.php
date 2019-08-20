@@ -7,9 +7,11 @@
 
 namespace Pirastru\FormBuilderBundle\Block;
 
+use Pirastru\FormBuilderBundle\Entity\FormBuilder;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,6 +115,8 @@ class FormBuilderBlockService extends AbstractAdminBlockService
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
         $formBuilderId = $blockContext->getBlock()->getSetting('formBuilderId');
+
+        /** @var FormBuilder $formBuilder */
         $formBuilder = $this->container->get('doctrine')
             ->getRepository('PirastruFormBuilderBundle:FormBuilder')
             ->findOneBy(array('id' => $formBuilderId));
@@ -126,6 +130,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
         $form_pack = $this->container->get('pirastru_form_builder.controller')
             ->generateFormFromFormBuilder($formBuilder);
 
+        /** @var Form $form */
         $form = $form_pack['form'];
         $success = false;
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -148,6 +153,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
             'block' => $blockContext->getBlock(),
             'settings' => $blockContext->getSettings(),
             'form' => $form->createView(),
+            'formBuilder' => $formBuilder,
             'title_col' => $form_pack['title_col'],
             'size_col' => $form_pack['size_col'],
             'success' => $success,
