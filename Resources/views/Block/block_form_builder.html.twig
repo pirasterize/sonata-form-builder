@@ -1,7 +1,7 @@
 {% if success is defined and success %}
     <div class="form-success">
-        <h1>{{ 'success_title'|trans }}</h1>
-        <p>{{ 'success_message'|trans }}</p>
+        <h1>{{ formBuilder.getSubmissionTitle|default('success_title'|trans) }}</h1>
+        <p>{{ formBuilder.getSubmissionText|default('success_message'|trans) }}</p>
     </div>
 {% else %}
     {% if formBuilderId is defined and formBuilderId is not null %}

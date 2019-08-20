@@ -107,6 +107,20 @@ class FormBuilder
      */
     private $mailable = true;
 
+    /**
+     * @var null|string
+     *
+     * @ORM\Column(name="submission_title", type="string", nullable=true)
+     */
+    private $submissionTitle;
+
+    /**
+     * @var null|string
+     *
+     * @ORM\Column(name="submission_text", type="string", nullable=true)
+     */
+    private $submissionText;
+
     public function __construct()
     {
         $this->recipient = array();
@@ -357,6 +371,42 @@ class FormBuilder
     public function setMailable(bool $mailable): self
     {
         $this->mailable = $mailable;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSubmissionTitle(): ?string
+    {
+        return $this->submissionTitle;
+    }
+
+    /**
+     * @param string|null $submissionTitle
+     * @return FormBuilder
+     */
+    public function setSubmissionTitle(?string $submissionTitle): FormBuilder
+    {
+        $this->submissionTitle = $submissionTitle;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSubmissionText(): ?string
+    {
+        return $this->submissionText;
+    }
+
+    /**
+     * @param string|null $submissionText
+     * @return FormBuilder
+     */
+    public function setSubmissionText(?string $submissionText): FormBuilder
+    {
+        $this->submissionText = $submissionText;
         return $this;
     }
 }

@@ -8,9 +8,8 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormBuilderAdmin extends AbstractAdmin
@@ -114,7 +113,17 @@ class FormBuilderAdmin extends AbstractAdmin
                         'required' => false,
                     ),
                 )
-            );
+            )
+            ->add('submissionTitle', 'text', [
+                'required' => false,
+                'label' => 'Custom submit title',
+                'sonata_help' => 'Customize thank you title after successful form submission',
+            ])
+            ->add('submissionText', 'textarea', [
+                'required' => false,
+                'label' => 'Custom submit text',
+                'sonata_help' => 'Customize thank you text after successful form submission',
+            ]);
     }
 
     public function getTemplate($name)

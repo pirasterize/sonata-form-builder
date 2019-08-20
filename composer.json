@@ -14,10 +14,10 @@
     ],
     "require": {
         "php": "^7.1",
-        "sonata-project/block-bundle": "~3.2",
+        "sonata-project/block-bundle": "^3.14",
         "gregwar/captcha-bundle": "^2.0",
         "sonata-project/admin-bundle": "^3.38.0",
-        "doctrine/orm": "^2.4",
+        "doctrine/orm": "^2.5",
         "sensio/framework-extra-bundle": "^5.1.0",
         "sonata-project/exporter": "^1.8",
         "symfony/swiftmailer-bundle": "^2.6.4",
