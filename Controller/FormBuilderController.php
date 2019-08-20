@@ -139,16 +139,26 @@ class FormBuilderController extends AbstractController
             $data = $this->buildSingleContent($form, $form_submit);
 
             $patterns = array_map(function ($key) {
-                return '#<' . $key . '>#';
+                return '#<' . quotemeta($key) . '>#';
             }, array_values($data['headers']));
+
+            foreach ($data['data'] as $item) {
+                quotemeta($item);
+            }
+
             $subject = preg_replace($patterns, array_values($data['data']), $form->getSubject());
 
             $message->setSubject($subject);
 
             if ($form->getReplyTo() !== NULL) {
                 $patterns = array_map(function ($key) {
-                    return '#<' . $key . '>#';
+                    return '#<' . quotemeta($key) . '>#';
                 }, array_values($data['headers']));
+
+                foreach ($data['data'] as $item) {
+                    quotemeta($item);
+                }
+
                 $replyTo = preg_replace($patterns, array_values($data['data']), $form->getReplyTo());
 
                 $errors = $this->get('validator')->validate(
