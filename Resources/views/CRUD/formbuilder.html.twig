@@ -19,17 +19,14 @@
                 $('#{{ admin.uniqid }}_json').val(value);
             } );
         });
-    </script>
-{% endblock %}
 
-{% block sonata_javascript_config %}
-    {{ parent() }}
-     {#Turn off confirm exit if turned on since it fails with JS library#}
-    {% if sonata_admin.adminPool.getOption('confirm_exit') %}
-        <script>
-            window.SONATA_CONFIG = {CONFIRM_EXIT: false, USE_ICHECK: true};
-        </script>
-    {% endif %}
+        {% if sonata_admin.adminPool.getOption('confirm_exit') %}
+        if (typeof Admin !== "undefined") {
+            Admin.read_config();
+            Admin.config['CONFIRM_EXIT'] = false;
+        }
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block form %}
