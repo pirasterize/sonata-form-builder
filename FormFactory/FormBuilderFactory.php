@@ -227,7 +227,7 @@ class FormBuilderFactory
             'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
             'placeholder' => false,
-            'required' => false,
+            'required' => $elem->fields->required->value,
             'expanded' => true,
         ));
 
@@ -249,7 +249,7 @@ class FormBuilderFactory
             'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,
             'expanded' => true,
-            'required' => false,
+            'required' => $elem->fields->required->value,
         ));
 
         return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
