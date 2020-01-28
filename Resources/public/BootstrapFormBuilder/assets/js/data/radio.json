@@ -18,11 +18,6 @@
         "label": "Internal Key",
         "value": ""
       },
-      "required": {
-        "type": "checkbox",
-        "label": "Required",
-        "value": false
-      },
       "radios": {
         "label": "Radios",
         "type": "textarea-split",
@@ -30,6 +25,11 @@
           "Option one",
           "Option two"
         ]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   },
@@ -52,15 +52,15 @@
         "label": "Internal Key",
         "value": ""
       },
-      "required": {
-        "type": "checkbox",
-        "label": "Required",
-        "value": false
-      },
       "checkboxes": {
         "label": "Checkboxes",
         "type": "textarea-split",
         "value": ["Option one","Option two"]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   },
