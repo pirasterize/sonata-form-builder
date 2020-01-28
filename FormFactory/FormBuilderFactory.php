@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Count;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Symfony\Component\Form\FormBuilder as SymfonyFormBuilder;
 
@@ -250,6 +251,9 @@ class FormBuilderFactory
             'multiple' => true,
             'expanded' => true,
             'required' => $elem->fields->required->value,
+            'constraints' => [
+                new Count(['min' => 1])
+            ]
         ));
 
         return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
