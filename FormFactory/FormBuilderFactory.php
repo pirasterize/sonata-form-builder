@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Symfony\Component\Form\FormBuilder as SymfonyFormBuilder;
 
@@ -228,6 +229,10 @@ class FormBuilderFactory
      */
     public function setFieldMultipleradios($form, $key, $elem): array
     {
+        $constraints = [];
+        if ($elem->fields->required->value) {
+            $constraints[] = new NotBlank();
+        }
         $form->add('radio_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->radios->value),
@@ -235,12 +240,7 @@ class FormBuilderFactory
             'placeholder' => false,
             'required' => $elem->fields->required->value,
             'expanded' => true,
-            'constraints' => [
-                new Count([
-                    'min' => count($elem->fields->radios->value),
-                    'max' => count($elem->fields->radios->value),
-                ])
-            ],
+            'constraints' => $constraints,
         ));
 
         return array('name' => 'radio_'.$key, 'size' => 'col-sm-6');
