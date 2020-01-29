@@ -81,11 +81,6 @@
           "Option two"
         ]
       },
-      "required": {
-        "type": "checkbox",
-        "label": "Required",
-        "value": false
-      },
       "inputsize": {
         "label": "Input Size",
         "type": "select",
@@ -121,6 +116,11 @@
             "selected": false
           }
         ]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   }
