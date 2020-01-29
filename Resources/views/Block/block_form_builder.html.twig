@@ -26,71 +26,7 @@
             <script>
                 $(function () {
                     $(".js-datepicker").datepicker({dateFormat: 'dd-mm-yy'});
-
-                    $("*[id*=form_builder]").submit(function (e) {
-                        e.preventDefault();
-                        validateCheckboxes(this);
-                    });
-
                 });
-
-                var validateCheckboxes = function(formEl) {
-                    var checkboxes = {},
-                        checkbox,
-                        errors = 0;
-
-                    $(formEl).find(".form-group label[class*=required]").each(function(i, el){
-
-                        var formGroup = $(el).parent();
-
-                        $(formGroup).find("input[type=checkbox]").each(function(i, el2) {
-                            checkbox = $(el2).attr("name");
-                            if (checkboxes.hasOwnProperty(checkbox)) {
-                                checkboxes[checkbox].push($(el2));
-                            }
-                            else {
-                                checkboxes[checkbox] = [$(el2)];
-                            }
-                        });
-                    });
-
-                    var errorMessage = "{{ 'This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.'|transchoice(1, {limit: '1'}, 'validators') }}";
-                    var errorMessage = errorMessage.replace(/({|})/g, '');
-                    for (var checkboxGroup in checkboxes) {
-                        if (!checkboxes.hasOwnProperty(checkboxGroup)) {
-                            continue;
-                        }
-                        if (checkboxes[checkboxGroup].length <= 1) {
-                            delete checkboxes[checkboxGroup];
-                            continue;
-                        }
-
-                        var groupRequiredCheckboxes = $(checkboxes[checkboxGroup][0]).closest('.form-group');
-
-                        var amountChecked = $(groupRequiredCheckboxes).find('input[type=checkbox]:checked').length;
-
-                        if (amountChecked <= 0) {
-
-                            if ($(groupRequiredCheckboxes).find('.help-block').length > 0) {
-                                continue;
-                            }
-                            errors++;
-                            var lastCheckbox = $(groupRequiredCheckboxes).find("[class*=checkbox]").last();
-
-                            $("<span class=\"help-block\" style=\"color:red;padding: 5px 0;\">"+
-                                errorMessage
-                                +"<br></span>")
-                                .insertAfter(lastCheckbox);
-                        }
-                    }
-
-                    if (errors === 0) {
-                        // Remove custom event handler
-                        $(formEl).off('submit');
-                        // Perform default submit
-                        $(formEl).submit();
-                    }
-                }
             </script>
         {% endif %}
     {% else %}
