@@ -207,7 +207,7 @@ class FormBuilderFactory
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
-            'required' => false,
+            'required' => $elem->fields->options->required,
         ));
 
         return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
