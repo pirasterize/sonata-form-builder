@@ -237,8 +237,8 @@ class FormBuilderFactory
             'expanded' => true,
             'constraints' => [
                 new Count([
-                    'min' => count($elem->fields->checkboxes->value),
-                    'max' => count($elem->fields->checkboxes->value),
+                    'min' => count($elem->fields->radios->value),
+                    'max' => count($elem->fields->radios->value),
                 ])
             ],
         ));
