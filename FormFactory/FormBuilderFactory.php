@@ -208,6 +208,11 @@ class FormBuilderFactory
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
             'required' => $elem->fields->required->value,
+            'constraints' => [
+                new Count([
+                    'min' => 1,
+                ])
+            ],
         ));
 
         return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
@@ -230,6 +235,12 @@ class FormBuilderFactory
             'placeholder' => false,
             'required' => $elem->fields->required->value,
             'expanded' => true,
+            'constraints' => [
+                new Count([
+                    'min' => count($elem->fields->checkboxes->value),
+                    'max' => count($elem->fields->checkboxes->value),
+                ])
+            ],
         ));
 
         return array('name' => 'radio_'.$key, 'size' => 'col-sm-6');
