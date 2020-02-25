@@ -33,3 +33,20 @@
 {%- block radio_widget -%}
     <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}  {% if required -%} required="required" {%- endif -%}/>
 {%- endblock radio_widget -%}
+
+
+{% block form_label %}
+    {{ parent() }}
+
+    {% if label is not same as(false) and required %}
+        <span class="required" title="This field is required">*</span>
+    {% endif %}
+{% endblock %}
+
+{% block form_widget_simple %}
+    {{ parent() }}
+
+    {% if sonata_help is defined and sonata_help is not same as ('') %}
+        <span class="help-block">{{ sonata_help }}</span>
+    {% endif %}
+{% endblock %}
