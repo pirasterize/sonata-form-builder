@@ -47,7 +47,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'email_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -79,7 +78,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'date_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -111,7 +109,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'telephone_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -137,7 +134,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'postalcode_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -162,7 +158,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'text_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -187,7 +182,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'textarea_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
         ];
     }
 
@@ -210,7 +204,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'choice_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputsize->value),
         ];
     }
 
@@ -238,7 +231,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'choice_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputsize->value),
         ];
     }
 
@@ -268,7 +260,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'radio_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 
@@ -302,7 +293,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'checkbox_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 
@@ -333,7 +323,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'privacy_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 
@@ -367,7 +356,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'button_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 
@@ -387,7 +375,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'button_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 
@@ -442,7 +429,6 @@ class FormBuilderFactory
 
         return [
             'name' => 'captcha_' . $key,
-            'size' => 'col-sm-6',
         ];
     }
 }

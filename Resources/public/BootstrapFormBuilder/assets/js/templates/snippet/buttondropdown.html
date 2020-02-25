@@ -1,9 +1,9 @@
 <!-- Button Drop Down -->
 <div class="form-group">
   <label class="col-sm-4 control-label" for="{{ id }}">{{ label }}</label>
-  <div class="{{ inputwidth }}">
+  <div>
     <div class="input-group">
-      <input id="{{ id }}" name="{{ id }}" class="form-control {{ inputsize }}" placeholder="{{ placeholder }}" type="text" {{#required}} required {{/required}} />
+      <input id="{{ id }}" name="{{ id }}" class="form-control" placeholder="{{ placeholder }}" type="text" {{#required}} required {{/required}} />
       <div class="input-group-btn">
         <button class="btn dropdown-toggle" data-toggle="dropdown">
           {{ buttontext }}
