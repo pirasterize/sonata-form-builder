@@ -1,3 +1,5 @@
+{% extends 'bootstrap_4_layout.html.twig' %}
+
 {# Overwrite checkbox widget so you can implement url from privacy check (added |raw) #}
 {%- block checkbox_widget -%}
     {% if label is defined and label is not same as(false) and label is empty %}
