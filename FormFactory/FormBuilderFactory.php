@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Symfony\Component\Form\FormBuilder as SymfonyFormBuilder;
 
@@ -206,7 +208,12 @@ class FormBuilderFactory
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
-            'required' => false,
+            'required' => $elem->fields->required->value,
+            'constraints' => [
+                new Count([
+                    'min' => 1,
+                ])
+            ],
         ));
 
         return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
@@ -222,13 +229,18 @@ class FormBuilderFactory
      */
     public function setFieldMultipleradios($form, $key, $elem): array
     {
+        $constraints = [];
+        if ($elem->fields->required->value) {
+            $constraints[] = new NotBlank();
+        }
         $form->add('radio_'.$key, 'choice', array(
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
             'placeholder' => false,
-            'required' => false,
+            'required' => $elem->fields->required->value,
             'expanded' => true,
+            'constraints' => $constraints,
         ));
 
         return array('name' => 'radio_'.$key, 'size' => 'col-sm-6');
@@ -249,7 +261,17 @@ class FormBuilderFactory
             'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,
             'expanded' => true,
-            'required' => false,
+            'required' => $elem->fields->required->value,
+            'constraints' => [
+                new Count([
+                    'min' => count($elem->fields->checkboxes->value),
+                    'max' => count($elem->fields->checkboxes->value),
+                ])
+            ],
+            'choice_attr' => function() use ($elem) {
+                // adds a class like attending_yes, attending_no, etc
+                return ['required' => $elem->fields->required->value];
+            },
         ));
 
         return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');

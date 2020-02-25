@@ -116,6 +116,11 @@
             "selected": false
           }
         ]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   }

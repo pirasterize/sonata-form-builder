@@ -25,6 +25,11 @@
           "Option one",
           "Option two"
         ]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   },
@@ -51,6 +56,11 @@
         "label": "Checkboxes",
         "type": "textarea-split",
         "value": ["Option one","Option two"]
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   },
