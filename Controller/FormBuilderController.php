@@ -206,7 +206,6 @@ class FormBuilderController extends AbstractController
             ),
         ));
 
-        $size_col = array();/* column size */
         $title_col = array();
         $formBuilderFactory = new FormBuilderFactory();
 
@@ -233,15 +232,14 @@ class FormBuilderController extends AbstractController
                 } else {
                     $title_col[$field_detail['name']] = $elem->title;
                 }
-                $size_col[$field_detail['name']] = $field_detail['size'];
             }
         }
 
         /* Return a Symfony Form Object
          * with columns titles;
-         * the field $size_col size
-         * =>>> array(form, $title_col, $size_col) */
-        return array('form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col);
+         *
+         * =>>> array(form, $title_col) */
+        return array('form' => $formBuilder->getForm(), 'title_col' => $title_col);
     }
 
     /**
