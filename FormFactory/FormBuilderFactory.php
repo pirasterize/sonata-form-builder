@@ -19,14 +19,13 @@ use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Symfony\Component\Form\FormBuilder as SymfonyFormBuilder;
 
 class FormBuilderFactory
 {
     /**
      * Email Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -34,24 +33,27 @@ class FormBuilderFactory
      */
     public function setFieldEmailinput($form, $key, $elem): array
     {
-        $form->add('email_'.$key, 'email', array(
+        $form->add('email_' . $key, 'email', [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
-            'help_block' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'placeholder' => $elem->fields->placeholder->value,
-            ),
-            'constraints' => array(
+            ],
+            'constraints' => [
                 new Email(),
-            ),
-        ));
+            ],
+            'sonata_help' => $elem->fields->helptext->value,
+        ]);
 
-        return array('name' => 'email_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'email_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Date Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -59,28 +61,31 @@ class FormBuilderFactory
      */
     public function setFieldDateinput(SymfonyFormBuilder $form, $key, $elem): array
     {
-        $form->add('date_'.$key, 'text', array(
+        $form->add('date_' . $key, 'text', [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
-            'help_label' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'class' => 'date js-datepicker',
                 'placeholder' => $elem->fields->placeholder->value,
-            ),
-            'constraints' => array(
+            ],
+            'constraints' => [
                 new Regex([
-                    'pattern' =>  "/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/",
+                    'pattern' => "/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/",
                     'message' => 'Invalid format: dd-mm-yyyy'
                 ]),
-            ),
-        ));
+            ],
+            'sonata_help' => $elem->fields->helptext->value,
+        ]);
 
-        return array('name' => 'date_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'date_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Telephone Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -88,10 +93,9 @@ class FormBuilderFactory
      */
     public function setFieldTelephoneinput($form, $key, $elem): array
     {
-        $form->add('telephone_'.$key, class_exists(TelType::class) ? TelType::class : TextType::class, [
+        $form->add('telephone_' . $key, class_exists(TelType::class) ? TelType::class : TextType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
-            'help_block' => $elem->fields->helptext->value,
             'attr' => [
                 'class' => 'telephone ',
                 'placeholder' => $elem->fields->placeholder->value,
@@ -102,14 +106,18 @@ class FormBuilderFactory
                     'message' => 'Invalid telephone number.',
                 ])
             ],
+            'sonata_help' => $elem->fields->helptext->value,
         ]);
 
-        return array('name' => 'telephone_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'telephone_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Postalcode Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -117,22 +125,25 @@ class FormBuilderFactory
      */
     public function setFieldPostalcodeinput($form, $key, $elem): array
     {
-        $form->add('postalcode_'.$key, 'number', array(
+        $form->add('postalcode_' . $key, 'number', [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
-            'help_block' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'class' => 'postalcode ',
                 'placeholder' => $elem->fields->placeholder->value,
-            ),
-        ));
+            ],
+            'sonata_help' => $elem->fields->helptext->value,
+        ]);
 
-        return array('name' => 'postalcode_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'postalcode_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Text Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -140,21 +151,24 @@ class FormBuilderFactory
      */
     public function setFieldTextinput($form, $key, $elem): array
     {
-        $form->add('text_'.$key, 'text', array(
+        $form->add('text_' . $key, 'text', [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
-            'help_block' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'placeholder' => $elem->fields->placeholder->value,
-            ),
-        ));
+            ],
+            'sonata_help' => $elem->fields->helptext->value,
+        ]);
 
-        return array('name' => 'text_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'text_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Textarea Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -162,21 +176,24 @@ class FormBuilderFactory
      */
     public function setFieldTextarea($form, $key, $elem): array
     {
-        $form->add('textarea_'.$key, 'textarea', array(
+        $form->add('textarea_' . $key, 'textarea', [
             'required' => false,
             'label' => $elem->fields->label->value,
-            'help_block' => $elem->fields->helptext->value,
-            'attr' => array(
+            'attr' => [
                 'placeholder' => $elem->fields->textarea->value,
-            ),
-        ));
+            ],
+            'sonata_help' => $elem->fields->helptext->value,
+        ]);
 
-        return array('name' => 'textarea_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputwidth->value));
+        return [
+            'name' => 'textarea_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
+        ];
     }
 
     /**
      * Select basic Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -184,19 +201,22 @@ class FormBuilderFactory
      */
     public function setFieldSelectbasic($form, $key, $elem): array
     {
-        $form->add('choice_'.$key, 'choice', array(
+        $form->add('choice_' . $key, 'choice', [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'required' => false,
             'placeholder' => false,
-        ));
+        ]);
 
-        return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
+        return [
+            'name' => 'choice_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputsize->value),
+        ];
     }
 
     /**
      * Select multiple Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -204,7 +224,7 @@ class FormBuilderFactory
      */
     public function setFieldSelectmultiple($form, $key, $elem): array
     {
-        $form->add('choice_'.$key, 'choice', array(
+        $form->add('choice_' . $key, 'choice', [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
@@ -214,14 +234,17 @@ class FormBuilderFactory
                     'min' => 1,
                 ])
             ],
-        ));
+        ]);
 
-        return array('name' => 'choice_'.$key, 'size' => $this->getSelectedValue($elem->fields->inputsize->value));
+        return [
+            'name' => 'choice_' . $key,
+            'size' => $this->getSelectedValue($elem->fields->inputsize->value),
+        ];
     }
 
     /**
      * Multiple Radio Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -233,7 +256,7 @@ class FormBuilderFactory
         if ($elem->fields->required->value) {
             $constraints[] = new NotBlank();
         }
-        $form->add('radio_'.$key, 'choice', array(
+        $form->add('radio_' . $key, 'choice', [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
@@ -241,14 +264,17 @@ class FormBuilderFactory
             'required' => $elem->fields->required->value,
             'expanded' => true,
             'constraints' => $constraints,
-        ));
+        ]);
 
-        return array('name' => 'radio_'.$key, 'size' => 'col-sm-6');
+        return [
+            'name' => 'radio_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 
     /**
      * Multiple Checkbox Field.
-     * 
+     *
      * @param SymfonyFormBuilder $form
      * @param $key
      * @param $elem
@@ -256,7 +282,7 @@ class FormBuilderFactory
      */
     public function setFieldMultiplecheckboxes($form, $key, $elem): array
     {
-        $form->add('checkbox_'.$key, 'choice', array(
+        $form->add('checkbox_' . $key, 'choice', [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,
@@ -268,13 +294,16 @@ class FormBuilderFactory
                     'max' => count($elem->fields->checkboxes->value),
                 ])
             ],
-            'choice_attr' => function() use ($elem) {
+            'choice_attr' => function () use ($elem) {
                 // adds a class like attending_yes, attending_no, etc
                 return ['required' => $elem->fields->required->value];
             },
-        ));
+        ]);
 
-        return array('name' => 'checkbox_'.$key, 'size' => 'col-sm-6');
+        return [
+            'name' => 'checkbox_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 
     /**
@@ -291,27 +320,30 @@ class FormBuilderFactory
             $elem->fields->cta->value
         );
 
-        $form->add('privacy_'.$key, CheckboxType::class, [
+        $form->add('privacy_' . $key, CheckboxType::class, [
             'label' => $label,
             'required' => true,
             'label_attr' => [
                 'style' => 'display:none;',
             ],
-            'constraints' => array(
+            'constraints' => [
                 new EqualTo(['value' => 1])
-            ),
+            ],
         ]);
 
-        return array('name' => 'privacy_'.$key, 'size' => 'col-sm-6');
+        return [
+            'name' => 'privacy_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 
     /**
      * Return the selected element on a list.
-     * 
+     *
      * @param $select
-     * @return bool
+     * @return bool|string
      */
-    private function getSelectedValue($select): bool
+    private function getSelectedValue($select)
     {
         foreach ($select as $elem) {
             if ($elem->selected) {
@@ -333,7 +365,10 @@ class FormBuilderFactory
         $action = $this->getSelectedValue($elem->fields->buttonaction->value);
         $this->createButton($form, $action, $key, $elem->fields->buttonlabel->value);
 
-        return array('name' => 'button_'.$key, 'size' => 'col-sm-6');
+        return [
+            'name' => 'button_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 
     /**
@@ -345,14 +380,15 @@ class FormBuilderFactory
     public function setFieldDoublebutton($form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->button1action->value);
-        $this->createButton($form, $action, '1_'.$key, $elem->fields->button1label->value);
+        $this->createButton($form, $action, '1_' . $key, $elem->fields->button1label->value);
 
         $action = $this->getSelectedValue($elem->fields->button2action->value);
-        $this->createButton($form, $action, '2_'.$key, $elem->fields->button2label->value);
+        $this->createButton($form, $action, '2_' . $key, $elem->fields->button2label->value);
 
-        return array(
-            'name' => 'button_'.$key, 'size' => 'col-sm-6',
-        );
+        return [
+            'name' => 'button_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 
     /**
@@ -365,9 +401,9 @@ class FormBuilderFactory
     {
         $buttonType = $this->getButtonType($action);
 
-        $form->add('button_'.$key, $buttonType, array(
+        $form->add('button_' . $key, $buttonType, [
             'label' => $value,
-        ));
+        ]);
     }
 
     /**
@@ -394,16 +430,19 @@ class FormBuilderFactory
      */
     public function setFieldCaptcha($form, $key, $elem): array
     {
-        $form->add('captcha_'.$key, CaptchaType::class, array(
+        $form->add('captcha_' . $key, CaptchaType::class, array(
             'width' => 200,
             'height' => 50,
             'length' => 6,
             'label_attr' => [
                 'style' => 'display:none;',
             ],
-            'help_block' => $elem->fields->helptext->value,
+            'sonata_help' => $elem->fields->helptext->value,
         ));
 
-        return array('name' => 'captcha_'.$key, 'size' => 'col-sm-6');
+        return [
+            'name' => 'captcha_' . $key,
+            'size' => 'col-sm-6',
+        ];
     }
 }
