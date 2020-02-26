@@ -324,9 +324,6 @@ class FormBuilderFactory
         $form->add('privacy_' . $key, CheckboxType::class, [
             'label' => $label,
             'required' => true,
-            'label_attr' => [
-                'style' => 'display:none;',
-            ],
             'constraints' => [
                 new EqualTo(['value' => 1])
             ],

@@ -1,49 +1,72 @@
 {% extends 'bootstrap_4_layout.html.twig' %}
 
 {# Overwrite checkbox widget so you can implement url from privacy check (added |raw) #}
-{%- block checkbox_widget -%}
-    {% if label is defined and label is not same as(false) and label is empty %}
-        {% set label = name|humanize %}
-    {% endif %}
-    {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
-        <div class="checkbox">
-    {% endif %}
+{% block checkbox_radio_label -%}
+    {#- Do not display the label if widget is not defined in order to prevent double label rendering -#}
+    {%- if widget is defined -%}
 
-    {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes and label_render is defined %}
-    <label class="{% if inline is defined and inline %}checkbox-inline{% endif %}">
-    {% endif %}
+        {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' form-check-label')|trim}) -%}
 
-    <input type="checkbox" {{ block('widget_attributes') }}
-            {% if value is defined %} value="{{ value }}"{% endif %}
-            {% if checked is defined and checked %} checked="checked"{% endif %}
-            {% if required -%} required="required" {%- endif -%}
-    />
-    {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
-    {% if label_render is defined and widget_checkbox_label in ['both', 'widget'] %}
-    {{ label|trans({}, translation_domain)|raw }}
-    </label>
-    {% endif %}
-    {% endif %}
-    {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
-        </div>
-        {% if block('form_message') is defined %}
-            {{ block('form_message') }}
-        {% endif %}
-    {% endif %}
-{%- endblock checkbox_widget -%}
+        {%- if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        {%- if required -%}
+            {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) -%}
+        {%- endif -%}
+        {%- if parent_label_class is defined -%}
+            {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': ''})|trim}) -%}
+        {%- endif -%}
+        {%- if label is not same as(false) and label is empty -%}
+            {%- if label_format is not empty -%}
+                {%- set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) -%}
+            {%- else -%}
+                {%- set label = name|humanize -%}
+            {%- endif -%}
+        {%- endif -%}
 
-{%- block radio_widget -%}
-    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}  {% if required -%} required="required" {%- endif -%}/>
-{%- endblock radio_widget -%}
+        {{ widget|raw }}
+        <label{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
+            {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|trans({}, translation_domain)|raw) -}}
+            {{- form_errors(form) -}}
+        </label>
+    {%- endif -%}
+{%- endblock checkbox_radio_label %}
 
 
-{% block form_label %}
-    {{ parent() }}
 
-    {% if label is not same as(false) and required %}
-        <span class="required" title="This field is required">*</span>
-    {% endif %}
-{% endblock %}
+{% block form_label -%}
+    {% if label is not same as(false) -%}
+        {%- set label_attr = label_attr|merge({for: id}) -%}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
+        {%- endif -%}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <label {% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
+            {{ translation_domain is same as(false) ? label|raw : label|trans({}, translation_domain)|raw }}{% block form_label_errors %}{{- form_errors(form) -}}{% endblock form_label_errors %}
+            {% if label is not same as(false) and required %}
+                <span class="required" title="This field is required">*</span>
+            {% endif %}
+        </label>
+    {%- else -%}
+        {%- if errors|length > 0 -%}
+            <div id="{{ id }}_errors" class="mb-2">
+                {{- form_errors(form) -}}
+            </div>
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_label %}
 
 {% block form_widget_simple %}
     {{ parent() }}
