@@ -155,6 +155,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
             'form' => $form->createView(),
             'formBuilder' => $formBuilder,
             'title_col' => $form_pack['title_col'],
+            'size_col' => $form_pack['size_col'],
             'success' => $success,
         ), $response);
     }
