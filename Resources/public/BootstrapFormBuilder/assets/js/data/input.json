@@ -1,27 +1,6 @@
 [
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",
@@ -53,27 +32,6 @@
     },
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",
@@ -105,27 +63,6 @@
     },
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",
@@ -157,27 +94,6 @@
     },
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",
@@ -209,27 +125,6 @@
     },
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",
@@ -261,27 +156,6 @@
     },
     {
         "fields": {
-            "inputwidth": {
-                "type": "select",
-                "label": "Input Width",
-                "value": [
-                    {
-                        "label": "Short",
-                        "value": "col-sm-4",
-                        "selected": false
-                    },
-                    {
-                        "label": "Medium",
-                        "value": "col-sm-6",
-                        "selected": true
-                    },
-                    {
-                        "label": "Long",
-                        "value": "col-sm-8",
-                        "selected": false
-                    }
-                ]
-            },
             "label": {
                 "type": "input",
                 "label": "Label Text",

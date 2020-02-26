@@ -1,9 +1,9 @@
 <!-- Appended checkbox -->
 <div class="form-group">
   <label class="col-sm-4 control-label" for="{{ id }}">{{ label }}</label>
-  <div class="{{ inputwidth }}">
+  <div>
     <div class="input-group">
-      <input id="{{ id }}" name="{{ id }}" class="form-control {{ inputsize }}" type="text" placeholder="{{ placeholder }}" {{#required}} required {{/required}} />
+      <input id="{{ id }}" name="{{ id }}" class="form-control" type="text" placeholder="{{ placeholder }}" {{#required}} required {{/required}} />
       <span class="input-group-addon">
         <input type="checkbox" {{#checked}}checked="checked"{{/checked}} />
       </span>
