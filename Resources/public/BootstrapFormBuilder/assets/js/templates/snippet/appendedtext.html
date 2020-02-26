@@ -1,9 +1,9 @@
 <!-- Appended Input-->
 <div class="form-group">
   <label class="col-sm-4 control-label" for="{{ id }}">{{ label }}</label>
-  <div>
+  <div class="{{ inputwidth }}">
     <div class="input-group">
-      <input id="{{ id }}" name="{{ id }}" class="form-control" placeholder="{{ placeholder }}" type="text" {{#required}} required {{/required}} />
+      <input id="{{ id }}" name="{{ id }}" class="form-control {{ inputsize }}" placeholder="{{ placeholder }}" type="text" {{#required}} required {{/required}} />
       <span class="input-group-addon">{{ append }}</span>
     </div>
     {{#helptext.length}} <span class="help-block">{{ helptext }}</span> {{/helptext.length}}
