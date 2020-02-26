@@ -52,3 +52,13 @@
         <span class="help-block">{{ sonata_help }}</span>
     {% endif %}
 {% endblock %}
+
+{% block double_button_row %}
+    <div class="form-group">
+        {%- for child in form %}
+            <span class="mr-2">
+                {{- form_widget(child) -}}
+            </span>
+        {% endfor -%}
+    </div>
+{% endblock %}
