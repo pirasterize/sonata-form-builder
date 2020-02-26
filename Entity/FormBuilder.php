@@ -66,14 +66,14 @@ class FormBuilder
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(name="subject", type="string", length=255)
+     * @ORM\Column(name="subject", type="string", length=255, nullable=true)
      */
     private $subject;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="reply_to", type="string", length=255, nullable=true)
      */
@@ -212,7 +212,7 @@ class FormBuilder
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getSubject()
     {
@@ -220,7 +220,7 @@ class FormBuilder
     }
 
     /**
-     * @param string $subject
+     * @param string|null $subject
      */
     public function setSubject($subject)
     {
@@ -260,7 +260,7 @@ class FormBuilder
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getReplyTo()
     {
@@ -268,7 +268,7 @@ class FormBuilder
     }
 
     /**
-     * @param string $replyTo
+     * @param string|null $replyTo
      */
     public function setReplyTo($replyTo)
     {
