@@ -8,6 +8,7 @@
 namespace Pirastru\FormBuilderBundle\FormFactory;
 
 use Gregwar\CaptchaBundle\Type\CaptchaType;
+use Pirastru\FormBuilderBundle\Form\Type\DoubleButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
@@ -367,11 +368,26 @@ class FormBuilderFactory
      */
     public function setFieldDoublebutton($form, $key, $elem): array
     {
-        $action = $this->getSelectedValue($elem->fields->button1action->value);
-        $this->createButton($form, $action, '1_' . $key, $elem->fields->button1label->value);
+        $action1 = $this->getSelectedValue($elem->fields->button1action->value);
+        $buttonType1 = $this->getButtonType($action1);
 
-        $action = $this->getSelectedValue($elem->fields->button2action->value);
-        $this->createButton($form, $action, '2_' . $key, $elem->fields->button2label->value);
+        $action2 = $this->getSelectedValue($elem->fields->button2action->value);
+        $buttonType2 = $this->getButtonType($action2);
+
+        $form->add('double_button_' . $key, DoubleButtonType::class, [
+            'entry_options' => [
+                [
+                    'button_type' => $buttonType1,
+                    'key' => '1_' . $key,
+                    'label' => $elem->fields->button1label->value,
+                ],
+                [
+                    'button_type' => $buttonType2,
+                    'key' => '2_' . $key,
+                    'label' => $elem->fields->button2label->value,
+                ]
+            ]
+        ]);
 
         return [
             'name' => 'button_' . $key,
