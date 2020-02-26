@@ -70,10 +70,10 @@ class FormBuilderController extends AbstractController
 
         };
 
-        return new StreamedResponse($callback, 200, array(
+        return new StreamedResponse($callback, 200, [
             'Content-Type' => $contentType,
             'Content-Disposition' => sprintf('attachment; filename=%s', $filename),
-        ));
+        ]);
     }
 
     /**
@@ -163,10 +163,10 @@ class FormBuilderController extends AbstractController
 
                 $errors = $this->get('validator')->validate(
                     $replyTo,
-                    array(
+                    [
                         new NotBlank(),
                         new EmailConstraint(),
-                    )
+                    ]
                 );
 
                 if (count($errors) === 0) {
@@ -198,15 +198,16 @@ class FormBuilderController extends AbstractController
      */
     public function generateFormFromFormBuilder($formbuild): array
     {
-        $formBuilder = $this->createFormBuilder(array(), array(
+        $formBuilder = $this->createFormBuilder([], [
             'action' => '#',
             'method' => 'POST',
-            'attr' => array(
+            'attr' => [
                 'id' => 'form_builder' . $formbuild->getId(),
-            ),
-        ));
+            ],
+        ]);
 
-        $title_col = array();
+        $size_col = [];/* column size */
+        $title_col = [];
         $formBuilderFactory = new FormBuilderFactory();
 
         /*
@@ -232,14 +233,17 @@ class FormBuilderController extends AbstractController
                 } else {
                     $title_col[$field_detail['name']] = $elem->title;
                 }
+                $size_col[$field_detail['name']] = $field_detail['size'];
             }
         }
 
         /* Return a Symfony Form Object
          * with columns titles;
          *
-         * =>>> array(form, $title_col) */
-        return array('form' => $formBuilder->getForm(), 'title_col' => $title_col);
+         * =>>> [form, $title_col, $size_col] */
+        return [
+            'form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col
+        ];
     }
 
     /**

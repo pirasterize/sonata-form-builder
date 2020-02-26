@@ -1,10 +1,10 @@
 <!-- Search input-->
 <div class="form-group">
   <label class="col-sm-4 control-label" for="{{ id }}">{{ label }}</label>
-  <div>
+  <div class="{{ inputwidth }}">
   	<div class="input-group">
 	    <input id="{{ id }}" name="{{ id }}" data-i-search-input="true" data-autocomplete="true" data-autocomplete-url="" 
-	         type="text" placeholder="{{ placeholder }}" class="form-control search-query" {{#required}} required {{/required}} />
+	         type="text" placeholder="{{ placeholder }}" class="form-control search-query {{ inputsize }}" {{#required}} required {{/required}} />
 	    <span class="input-group-btn"><button class="btn btn-primary" type="submit">Search</button></span>
   	</div>
   	{{#helptext.length}} <span class="help-block">{{ helptext }}</span> {{/helptext.length}}
