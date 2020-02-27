@@ -15,6 +15,9 @@ class DoubleButtonType extends AbstractType
             $builder
                 ->add('button_'.$option['key'], $buttonType, [
                     'label' => $option['label'],
+                    'attr' => [
+                        'class' => $option['class']
+                    ]
                 ]);
         }
     }

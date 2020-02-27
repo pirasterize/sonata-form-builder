@@ -361,7 +361,8 @@ class FormBuilderFactory
     public function setFieldSinglebutton($form, $key, $elem): array
     {
         $action = $this->getSelectedValue($elem->fields->buttonaction->value);
-        $this->createButton($form, $action, $key, $elem->fields->buttonlabel->value);
+        $style = $this->getSelectedValue($elem->fields->buttontype->value);
+        $this->createButton($form, $action, $key, $elem->fields->buttonlabel->value, $style);
 
         return [
             'name' => 'button_' . $key,
@@ -378,9 +379,11 @@ class FormBuilderFactory
     public function setFieldDoublebutton($form, $key, $elem): array
     {
         $action1 = $this->getSelectedValue($elem->fields->button1action->value);
+        $style1 = $this->getSelectedValue($elem->fields->button1type->value);
         $buttonType1 = $this->getButtonType($action1);
 
         $action2 = $this->getSelectedValue($elem->fields->button2action->value);
+        $style2 = $this->getSelectedValue($elem->fields->button2type->value);
         $buttonType2 = $this->getButtonType($action2);
 
         $form->add('double_button_' . $key, DoubleButtonType::class, [
@@ -389,11 +392,13 @@ class FormBuilderFactory
                     'button_type' => $buttonType1,
                     'key' => '1_' . $key,
                     'label' => $elem->fields->button1label->value,
+                    'class' => $style1,
                 ],
                 [
                     'button_type' => $buttonType2,
                     'key' => '2_' . $key,
                     'label' => $elem->fields->button2label->value,
+                    'class' => $style2,
                 ]
             ]
         ]);
@@ -409,13 +414,18 @@ class FormBuilderFactory
      * @param $action
      * @param $key
      * @param $value
+     * @param $style
      */
-    private function createButton(SymfonyFormBuilder $form, $action, $key, $value): void
+    private function createButton(SymfonyFormBuilder $form, $action, $key, $value, $style = null): void
     {
         $buttonType = $this->getButtonType($action);
 
         $form->add('button_' . $key, $buttonType, [
             'label' => $value,
+            'attr' => [
+                'class' => $style,
+            ]
+
         ]);
     }
 
