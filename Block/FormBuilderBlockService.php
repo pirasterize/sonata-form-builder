@@ -47,10 +47,10 @@ class FormBuilderBlockService extends AbstractAdminBlockService
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'template' => 'PirastruFormBuilderBundle:Block:block_form_builder.html.twig',
             'formBuilderId' => null,
-        ));
+        ]);
     }
 
     /**
@@ -58,11 +58,11 @@ class FormBuilderBlockService extends AbstractAdminBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array($this->getFieldFormBuilder($formMapper), null, array()),
-            ),
-        ));
+        $formMapper->add('settings', 'sonata_type_immutable_array', [
+            'keys' => [
+                [$this->getFieldFormBuilder($formMapper), null, []],
+            ],
+        ]);
     }
 
     /**
@@ -88,18 +88,18 @@ class FormBuilderBlockService extends AbstractAdminBlockService
         $fieldDescription = $this->getFormBuilderAdmin()->getModelManager()->getNewFieldDescriptionInstance($this->formBuilderAdmin->getClass(), 'form_builder');
         $fieldDescription->setAssociationAdmin($this->getFormBuilderAdmin());
         $fieldDescription->setAdmin($formMapper->getAdmin());
-        $fieldDescription->setAssociationMapping(array(
+        $fieldDescription->setAssociationMapping([
             'fieldName' => 'form_builder',
             'type' => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE,
-        ));
+        ]);
 
-        return $formMapper->create('formBuilderId', ModelListType::class, array(
+        return $formMapper->create('formBuilderId', ModelListType::class, [
             'sonata_field_description' => $fieldDescription,
             'label' => 'Form Builder',
             'class' => $this->getFormBuilderAdmin()->getClass(),
             'model_manager' => $this->getFormBuilderAdmin()->getModelManager(),
             'btn_add' => false,
-        ));
+        ]);
     }
 
     /**
@@ -119,12 +119,12 @@ class FormBuilderBlockService extends AbstractAdminBlockService
         /** @var FormBuilder $formBuilder */
         $formBuilder = $this->container->get('doctrine')
             ->getRepository('PirastruFormBuilderBundle:FormBuilder')
-            ->findOneBy(array('id' => $formBuilderId));
+            ->findOneBy(['id' => $formBuilderId]);
 
         // In case the FormBuilder Object is not defined
         // return a empty Response
         if ($formBuilder === null) {
-            return $this->renderResponse($blockContext->getTemplate(), array(), $response);
+            return $this->renderResponse($blockContext->getTemplate(), [], $response);
         }
 
         $form_pack = $this->container->get('pirastru_form_builder.controller')
@@ -148,15 +148,16 @@ class FormBuilderBlockService extends AbstractAdminBlockService
             $success = true;
         }
 
-        return $this->renderResponse($blockContext->getTemplate(), array(
+        return $this->renderResponse($blockContext->getTemplate(), [
             'formBuilderId' => $formBuilder->getId(),
             'block' => $blockContext->getBlock(),
             'settings' => $blockContext->getSettings(),
             'form' => $form->createView(),
             'formBuilder' => $formBuilder,
             'title_col' => $form_pack['title_col'],
+            'size_col' => $form_pack['size_col'],
             'success' => $success,
-        ), $response);
+        ], $response);
     }
 
     /**
@@ -169,7 +170,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
         if ($formBuilderId) {
             $formBuilderId = $this->container->get('doctrine')
                 ->getRepository('PirastruFormBuilderBundle:FormBuilder')
-                ->findOneBy(array('id' => $formBuilderId));
+                ->findOneBy(['id' => $formBuilderId]);
         }
 
         $block->setSetting('formBuilderId', $formBuilderId);
