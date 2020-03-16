@@ -58,11 +58,12 @@ class FormBuilderController extends AbstractController
                 throw new \RuntimeException('Invalid export range');
         }
 
-        $filename = sprintf('export_%s_%s.%s',
-            $form->getName(),
-            date('Y_m_d_H_i_s'),
-            'csv'
-        );
+
+        $date = date('Y_m_d_H_i_s');
+
+        $formNameSanitized = preg_replace('/[\x00-\x1F\x7F]/u', '', str_replace(' ', '', strip_tags($form->getName())));
+
+        $filename = "export_{$formNameSanitized}_{$date}.csv";
 
 
         $callback = function () use ($submissions, $writer, $form) {
