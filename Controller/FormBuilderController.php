@@ -41,7 +41,7 @@ class FormBuilderController extends AbstractController
     {
         $range = $request->get('range');
 
-        $writer = new CsvWriter('php://output', ';', '"', '', false, true);
+        $writer = new CsvWriter('php://output', ';', '"', '\\', false, true);
         $contentType = 'text/csv';
 
 
