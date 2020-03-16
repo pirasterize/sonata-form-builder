@@ -7,6 +7,7 @@ use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
+use Sonata\Exporter\Exception\InvalidDataFormatException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +42,7 @@ class FormBuilderController extends AbstractController
     {
         $range = $request->get('range');
 
-        $writer = new CsvWriter('php://output', ';', '"', '', false, true);
+        $writer = new CsvWriter('php://output', ';', '"', '\\', false, true);
         $contentType = 'text/csv';
 
 
@@ -58,11 +59,12 @@ class FormBuilderController extends AbstractController
                 throw new \RuntimeException('Invalid export range');
         }
 
-        $filename = sprintf('export_%s_%s.%s',
-            $form->getName(),
-            date('Y_m_d_H_i_s'),
-            'csv'
-        );
+
+        $date = date('Y_m_d_H_i_s');
+
+        $formNameSanitized = preg_replace('/[\x00-\x1F\x7F]/u', '', str_replace(' ', '', strip_tags($form->getName())));
+
+        $filename = "export_{$formNameSanitized}_{$date}.csv";
 
 
         $callback = function () use ($submissions, $writer, $form) {
@@ -301,12 +303,20 @@ class FormBuilderController extends AbstractController
             }
 
             if ($index === 0) {
-                $writer->write($headers);
+                try {
+                    $writer->write($headers);
+                } catch (InvalidDataFormatException $exception) {
+                    $writer->write(["ERROR handling header data from submission id: {$submission->getId()}"]);
+                }
             }
 
             $index++;
 
-            $writer->write($data);
+            try {
+                $writer->write($data);
+            } catch (InvalidDataFormatException $exception) {
+                $writer->write(["ERROR handling data from submission id: {$submission->getId()}"]);
+            }
 
             $submission->export();
         }
