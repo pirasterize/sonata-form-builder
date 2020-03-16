@@ -7,6 +7,7 @@ use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
+use Sonata\Exporter\Exception\InvalidDataFormatException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -302,12 +303,20 @@ class FormBuilderController extends AbstractController
             }
 
             if ($index === 0) {
-                $writer->write($headers);
+                try {
+                    $writer->write($headers);
+                } catch (InvalidDataFormatException $exception) {
+                    $writer->write(["ERROR handling header data from submission id: {$submission->getId()}"]);
+                }
             }
 
             $index++;
 
-            $writer->write($data);
+            try {
+                $writer->write($data);
+            } catch (InvalidDataFormatException $exception) {
+                $writer->write(["ERROR handling data from submission id: {$submission->getId()}"]);
+            }
 
             $submission->export();
         }
