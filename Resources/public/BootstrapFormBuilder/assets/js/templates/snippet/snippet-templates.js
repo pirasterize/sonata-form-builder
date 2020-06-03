@@ -22,7 +22,6 @@ define(function(require) {
       textinput                = require('text!templates/snippet/textinput.html'),
       emailinput               = require('text!templates/snippet/emailinput.html'),
       dateinput                = require('text!templates/snippet/dateinput.html'),
-      postalcodeinput          = require('text!templates/snippet/postalcodeinput.html'),
       telephoneinput           = require('text!templates/snippet/telephoneinput.html'),
       captcha                  = require('text!templates/snippet/captcha.html'),
       privacycheckbox          = require('text!templates/snippet/privacycheckbox.html');
@@ -51,7 +50,6 @@ define(function(require) {
      textinput                : textinput,
      emailinput               : emailinput,
      dateinput                : dateinput,
-     postalcodeinput          : postalcodeinput,
      telephoneinput           : telephoneinput,
      captcha                  : captcha,
      privacycheckbox          : privacycheckbox

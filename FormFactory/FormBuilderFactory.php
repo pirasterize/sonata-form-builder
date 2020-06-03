@@ -117,32 +117,6 @@ class FormBuilderFactory
     }
 
     /**
-     * Postalcode Field.
-     *
-     * @param SymfonyFormBuilder $form
-     * @param $key
-     * @param $elem
-     * @return array
-     */
-    public function setFieldPostalcodeinput($form, $key, $elem): array
-    {
-        $form->add('postalcode_' . $key, 'number', [
-            'required' => $elem->fields->required->value,
-            'label' => $elem->fields->label->value,
-            'attr' => [
-                'class' => 'postalcode ',
-                'placeholder' => $elem->fields->placeholder->value,
-            ],
-            'sonata_help' => $elem->fields->helptext->value,
-        ]);
-
-        return [
-            'name' => 'postalcode_' . $key,
-            'size' => $this->getSelectedValue($elem->fields->inputwidth->value),
-        ];
-    }
-
-    /**
      * Text Field.
      *
      * @param SymfonyFormBuilder $form
