@@ -149,7 +149,15 @@ Check on your Sonata Admin Entities you should see the 'Form Builder' Menu than 
 After that create a page from sonata page or edit an existing one and put from the list of available blocks the block called "Form Builder Drag&Drop".
 On Options choose the Form you just created, and take a look on the page.
 
-
+##Building the bootstrap form builder
+Install RequireJS
+```
+npm install -g requirejs
+```
+And run following command in directory `Resources/public/BootstrapFormBuilder`:
+```
+r.js -o assets/js/lib/build.js
+```
 
 ##Todo
 - Fields in differents sizes
