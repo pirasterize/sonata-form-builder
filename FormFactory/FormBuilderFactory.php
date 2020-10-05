@@ -152,7 +152,7 @@ class FormBuilderFactory
     public function setFieldTextarea($form, $key, $elem): array
     {
         $form->add('textarea_' . $key, 'textarea', [
-            'required' => false,
+            'required' => $elem->fields->required->value ?? false,
             'label' => $elem->fields->label->value,
             'attr' => [
                 'placeholder' => $elem->fields->textarea->value,
