@@ -249,6 +249,11 @@
                 "type": "textarea",
                 "label": "Starting Text",
                 "value": "default text"
+            },
+            "required": {
+                "type": "checkbox",
+                "label": "Required",
+                "value": false
             }
         },
         "title": "Text Area",
