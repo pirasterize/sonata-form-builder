@@ -265,7 +265,7 @@ class FormBuilderFactory
             'required' => $elem->fields->required->value,
             'constraints' => [
                 new Count([
-                    'min' => count($elem->fields->checkboxes->value),
+                    'min' => $elem->fields->required->value ? 1 : 0,
                     'max' => count($elem->fields->checkboxes->value),
                 ])
             ],
