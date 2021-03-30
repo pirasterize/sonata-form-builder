@@ -269,10 +269,6 @@ class FormBuilderFactory
                     'max' => count($elem->fields->checkboxes->value),
                 ])
             ],
-            'choice_attr' => function () use ($elem) {
-                // adds a class like attending_yes, attending_no, etc
-                return ['required' => $elem->fields->required->value];
-            },
         ]);
 
         return [
