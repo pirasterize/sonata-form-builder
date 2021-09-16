@@ -11,9 +11,12 @@ use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Pirastru\FormBuilderBundle\Form\Type\DoubleButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
@@ -34,7 +37,7 @@ class FormBuilderFactory
      */
     public function setFieldEmailinput($form, $key, $elem): array
     {
-        $form->add('email_' . $key, 'email', [
+        $form->add('email_' . $key, EmailType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'attr' => [
@@ -62,7 +65,7 @@ class FormBuilderFactory
      */
     public function setFieldDateinput(SymfonyFormBuilder $form, $key, $elem): array
     {
-        $form->add('date_' . $key, 'text', [
+        $form->add('date_' . $key, TextType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'attr' => [
@@ -126,7 +129,7 @@ class FormBuilderFactory
      */
     public function setFieldTextinput($form, $key, $elem): array
     {
-        $form->add('text_' . $key, 'text', [
+        $form->add('text_' . $key, TextType::class, [
             'required' => $elem->fields->required->value,
             'label' => $elem->fields->label->value,
             'attr' => [
@@ -151,7 +154,7 @@ class FormBuilderFactory
      */
     public function setFieldTextarea($form, $key, $elem): array
     {
-        $form->add('textarea_' . $key, 'textarea', [
+        $form->add('textarea_' . $key, TextareaType::class, [
             'required' => $elem->fields->required->value ?? false,
             'label' => $elem->fields->label->value,
             'attr' => [
@@ -176,7 +179,7 @@ class FormBuilderFactory
      */
     public function setFieldSelectbasic($form, $key, $elem): array
     {
-        $form->add('choice_' . $key, 'choice', [
+        $form->add('choice_' . $key, ChoiceType::class, [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'required' => false,
@@ -199,7 +202,7 @@ class FormBuilderFactory
      */
     public function setFieldSelectmultiple($form, $key, $elem): array
     {
-        $form->add('choice_' . $key, 'choice', [
+        $form->add('choice_' . $key, ChoiceType::class, [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->options->value),
             'multiple' => true,
@@ -231,7 +234,7 @@ class FormBuilderFactory
         if ($elem->fields->required->value) {
             $constraints[] = new NotBlank();
         }
-        $form->add('radio_' . $key, 'choice', [
+        $form->add('radio_' . $key, ChoiceType::class, [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->radios->value),
             'multiple' => false,
@@ -257,7 +260,7 @@ class FormBuilderFactory
      */
     public function setFieldMultiplecheckboxes($form, $key, $elem): array
     {
-        $form->add('checkbox_' . $key, 'choice', [
+        $form->add('checkbox_' . $key, ChoiceType::class, [
             'label' => $elem->fields->label->value,
             'choices' => array_flip($elem->fields->checkboxes->value),
             'multiple' => true,

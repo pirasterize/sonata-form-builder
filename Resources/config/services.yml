@@ -21,5 +21,6 @@ services:
 
     pirastru_form_builder.controller:
         class: Pirastru\FormBuilderBundle\Controller\FormBuilderController
+        public: true
         calls:
             - [setContainer, ["@service_container"]]
