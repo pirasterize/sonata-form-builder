@@ -10,6 +10,12 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormBuilderAdmin extends AbstractAdmin
@@ -59,26 +65,26 @@ class FormBuilderAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('json', 'hidden')
-            ->add('name', 'text')
-            ->add('persistable', 'checkbox', [
+            ->add('json', HiddenType::class)
+            ->add('name', TextType::class)
+            ->add('persistable', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Save to database?'
             ])
-            ->add('mailable', 'checkbox', [
+            ->add('mailable', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Email responses?',
             ])
-            ->add('subject', 'text', [
+            ->add('subject', TextType::class, [
                 'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
                 'required' => false,
             ])
-            ->add('reply_to', 'text', [
+            ->add('reply_to', TextType::class, [
                 'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
                 'required' => false,
             ])
-            ->add('recipient', 'collection', array(
-                    'entry_type' => 'email',
+            ->add('recipient', CollectionType::class, array(
+                    'entry_type' => EmailType::class,
                     'label' => 'Recipient(s)',
                     'allow_add' => true,
                     'allow_delete' => true,
@@ -90,8 +96,8 @@ class FormBuilderAdmin extends AbstractAdmin
                     ),
                 )
             )
-            ->add('recipientCC', 'collection', array(
-                    'entry_type' => 'email',
+            ->add('recipientCC', CollectionType::class, array(
+                    'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
@@ -102,8 +108,8 @@ class FormBuilderAdmin extends AbstractAdmin
                     ),
                 )
             )
-            ->add('recipientBCC', 'collection', array(
-                    'entry_type' => 'email',
+            ->add('recipientBCC', CollectionType::class, array(
+                    'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
@@ -114,12 +120,12 @@ class FormBuilderAdmin extends AbstractAdmin
                     ),
                 )
             )
-            ->add('submissionTitle', 'text', [
+            ->add('submissionTitle', TextType::class, [
                 'required' => false,
                 'label' => 'Custom submit title',
                 'sonata_help' => 'Customize thank you title after successful form submission',
             ])
-            ->add('submissionText', 'textarea', [
+            ->add('submissionText', TextareaType::class, [
                 'required' => false,
                 'label' => 'Custom submit text',
                 'sonata_help' => 'Customize thank you text after successful form submission',
