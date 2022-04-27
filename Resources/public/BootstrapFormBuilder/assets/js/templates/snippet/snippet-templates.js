@@ -24,7 +24,8 @@ define(function(require) {
       dateinput                = require('text!templates/snippet/dateinput.html'),
       telephoneinput           = require('text!templates/snippet/telephoneinput.html'),
       captcha                  = require('text!templates/snippet/captcha.html'),
-      privacycheckbox          = require('text!templates/snippet/privacycheckbox.html');
+      privacycheckbox          = require('text!templates/snippet/privacycheckbox.html'),
+      title                    = require('text!templates/snippet/title.html');
 
   return {
      formname                 : formname,
@@ -52,6 +53,7 @@ define(function(require) {
      dateinput                : dateinput,
      telephoneinput           : telephoneinput,
      captcha                  : captcha,
-     privacycheckbox          : privacycheckbox
+     privacycheckbox          : privacycheckbox,
+     title                    : title
   }
 });

@@ -1,3 +1,32 @@
+{% macro showTitleField(elem) %}
+    {% set heading = 'h3' %}
+    {% for possibleHeading in elem.fields.headingsize %}
+        {% if possibleHeading.selected %}
+            {% set heading = possibleHeading.value %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="form-group">
+    <{{ heading }}>
+    {{ elem.fields.title.value }}
+    </{{ heading }}>
+
+    {% if elem.fields.helptext is defined and elem.fields.helptext.value %}
+        <span class="help-block">{{ elem.fields.helptext.value }}</span>
+    {% endif %}
+    </fieldset>
+{% endmacro %}
+
+{% macro handleExtraHtml(html_prefix_col, form) %}
+    {% if html_prefix_col[form.vars.name] is defined  %}
+        {% for elem in html_prefix_col[form.vars.name] %}
+            {% if elem.typefield == 'title'%}
+                {{ _self.showTitleField(elem) }}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
 {% if success is defined and success %}
     <div class="form-success">
         <h1>{{ formBuilder.getSubmissionTitle|default('success_title'|trans) }}</h1>
@@ -8,12 +37,17 @@
 
         {% if form is defined %}
             {% form_theme form "PirastruFormBuilderBundle:Block:_form_theme.html.twig" %}
-            <form method="POST" class="form-horizontal" {{ form_enctype(form) }}>
+            {{ form_start(form, {'attr': {'method': 'POST', 'class': 'form-horizontal'}}) }}
 
-                {{ form_widget(form) }}
+                <div id="{{ form.vars.id }}">
+                    {% for child in form.children %}
+                        {{ _self.handleExtraHtml(html_prefix_col, child) }}
+                        {{ form_row(child) }}
+                    {% endfor %}
+                </div>
 
                 <input type="hidden" name="formId" class="form-num " value="{{ formBuilderId }}">
-            </form>
+            {{ form_end(form) }}
 
 
             <link rel="stylesheet"
