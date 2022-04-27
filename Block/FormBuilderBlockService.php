@@ -157,6 +157,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
             'formBuilder' => $formBuilder,
             'title_col' => $form_pack['title_col'],
             'size_col' => $form_pack['size_col'],
+            'html_prefix_col' => $form_pack['html_prefix_col'],
             'success' => $success,
         ], $response);
     }

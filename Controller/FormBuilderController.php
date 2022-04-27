@@ -69,7 +69,6 @@ class FormBuilderController extends AbstractController
 
         $callback = function () use ($submissions, $writer, $form) {
             $this->buildContent($submissions, $writer, $form);
-
         };
 
         return new StreamedResponse($callback, 200, [
@@ -210,6 +209,7 @@ class FormBuilderController extends AbstractController
 
         $size_col = [];/* column size */
         $title_col = [];
+        $extra_html_prefix_col = [];
         $formBuilderFactory = new FormBuilderFactory();
 
         /*
@@ -217,6 +217,7 @@ class FormBuilderController extends AbstractController
          * each element is a form field like 'Text Input'
          */
         $obj_form = json_decode($formbuild->getJson(), false);
+        $next_orphan_html_elem = null;
         foreach ($obj_form as $key => $elem) {
             if ($elem->typefield === 'formname') {
                 continue;
@@ -236,6 +237,16 @@ class FormBuilderController extends AbstractController
                     $title_col[$field_detail['name']] = $elem->title;
                 }
                 $size_col[$field_detail['name']] = $field_detail['size'];
+
+                if ($next_orphan_html_elem) {
+                    $extra_html_prefix_col[$field_detail['name']] = $extra_html_prefix_col[$field_detail['name']] ?? [];
+                    $extra_html_prefix_col[$field_detail['name']][] = $next_orphan_html_elem;
+                    $next_orphan_html_elem = null;
+                }
+            }
+
+            if ($elem->typefield === 'title') {
+                $next_orphan_html_elem = $elem;
             }
         }
 
@@ -244,7 +255,7 @@ class FormBuilderController extends AbstractController
          *
          * =>>> [form, $title_col, $size_col] */
         return [
-            'form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col
+            'form' => $formBuilder->getForm(), 'title_col' => $title_col, 'size_col' => $size_col, 'html_prefix_col' => $extra_html_prefix_col
         ];
     }
 

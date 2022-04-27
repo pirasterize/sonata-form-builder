@@ -1,0 +1,49 @@
+[
+  {
+    "fields": {
+      "headingsize": {
+        "type": "select",
+        "label": "Heading size",
+        "value": [
+          {
+            "label": "H1",
+            "value": "h1",
+            "selected": false
+          },
+          {
+            "label": "H2",
+            "value": "h2",
+            "selected": false
+          },
+          {
+            "label": "H3",
+            "value": "h3",
+            "selected": true
+          },
+          {
+            "label": "H4",
+            "value": "h4",
+            "selected": false
+          }
+        ]
+      },
+      "title": {
+        "type": "input",
+        "label": "Title Text",
+        "value": "Title"
+      },
+      "key": {
+        "type": "input",
+        "label": "Internal Key",
+        "value": ""
+      },
+      "helptext": {
+        "type": "input",
+        "label": "Help Text",
+        "value": "Title help text"
+      }
+    },
+    "title": "Title",
+    "typefield": "title"
+  }
+]
