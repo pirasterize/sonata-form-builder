@@ -6,15 +6,15 @@
         {% endif %}
     {% endfor %}
 
-    <div class="form-group">
-    <{{ heading }}>
+    <div class="form-group mb-4">
+    <{{ heading }} class="{% if elem.fields.helptext is defined and elem.fields.helptext.value %}mb-0{%endif%}">
     {{ elem.fields.title.value }}
     </{{ heading }}>
 
     {% if elem.fields.helptext is defined and elem.fields.helptext.value %}
         <span class="help-block">{{ elem.fields.helptext.value }}</span>
     {% endif %}
-    </fieldset>
+    </div>
 {% endmacro %}
 
 {% macro handleExtraHtml(html_prefix_col, form) %}
