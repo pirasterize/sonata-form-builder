@@ -124,24 +124,25 @@ class FormBuilderController extends AbstractController
 
         if (!empty($recipient) && $this->container->getParameter('formbuilder_email_from') !== null) {
             $message = (new \Swift_Message())
-                ->setFrom($this->container->getParameter('formbuilder_email_from'))
-                ->setTo($recipient);
-
-            $emailCc = $form->getRecipientCC();
-            if (!empty($emailCc)) {
-                $message->setCc($emailCc);
-            }
-
-            $emailBcc = $form->getRecipientBCC();
-            if (!empty($emailBcc)) {
-                $message->setBcc($emailBcc);
-            }
+                ->setFrom($this->container->getParameter('formbuilder_email_from'));
 
             $data = $this->buildSingleContent($form, $form_submit);
 
             $patterns = array_map(function ($key) {
                 return '#<' . quotemeta($key) . '>#';
             }, array_values($data['headers']));
+
+            $message->setTo(preg_replace($patterns, array_values($data['data']), $recipient));
+
+            $emailCc = $form->getRecipientCC();
+            if (!empty($emailCc)) {
+                $message->setCc(preg_replace($patterns, array_values($data['data']), $emailCc));
+            }
+
+            $emailBcc = $form->getRecipientBCC();
+            if (!empty($emailBcc)) {
+                $message->setBcc(preg_replace($patterns, array_values($data['data']), $emailBcc));
+            }
 
             foreach ($data['data'] as $item) {
                 quotemeta($item);

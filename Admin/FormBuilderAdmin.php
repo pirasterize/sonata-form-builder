@@ -84,6 +84,7 @@ class FormBuilderAdmin extends AbstractAdmin
                 'required' => false,
             ])
             ->add('recipient', CollectionType::class, array(
+                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient field. Example: &lt;Email&gt;",
                     'entry_type' => EmailType::class,
                     'label' => 'Recipient(s)',
                     'allow_add' => true,
@@ -97,6 +98,7 @@ class FormBuilderAdmin extends AbstractAdmin
                 )
             )
             ->add('recipientCC', CollectionType::class, array(
+                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient CC field. Example: &lt;Email&gt;",
                     'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
@@ -109,6 +111,7 @@ class FormBuilderAdmin extends AbstractAdmin
                 )
             )
             ->add('recipientBCC', CollectionType::class, array(
+                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient BCC field. Example: &lt;Email&gt;",
                     'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
