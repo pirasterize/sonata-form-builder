@@ -56,10 +56,16 @@
                                 {% endif %}
                             {% endif %}
                         </td>
+                    {% elseif submit_line[key] is defined and submit_line[key] is iterable %}
+                        <td>
+                            {{ submit_line[key]|join(', ') }}
+                        </td>
                     {% elseif submit_line[key] is defined %}
                         <td>
                             {{ submit_line[key] }}
                         </td>
+                    {% else %}
+                        <td></td>
                     {% endif %}
                 {% endfor %}
 

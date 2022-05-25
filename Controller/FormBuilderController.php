@@ -5,10 +5,14 @@ namespace Pirastru\FormBuilderBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder as Form;
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission as Submission;
+use Pirastru\FormBuilderBundle\Event\Events;
+use Pirastru\FormBuilderBundle\Event\FormDataEvent;
 use Pirastru\FormBuilderBundle\Event\MailEvent;
+use Pirastru\FormBuilderBundle\Event\SubmissionEvent;
 use Pirastru\FormBuilderBundle\FormFactory\FormBuilderFactory;
 use Sonata\Exporter\Exception\InvalidDataFormatException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Writer\CsvWriter;
@@ -89,11 +93,18 @@ class FormBuilderController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $form_submit = $this->container->get('request_stack')->getCurrentRequest()->request->all();
 
+        $files = $this->container->get('request_stack')->getCurrentRequest()->files->all();
+        $form_submit = array_replace_recursive($form_submit, $files);
+
         $form->setColumns($columns);
 
         if ($form->isPersistable()) {
             $submission = new Submission($form_submit['form'], $form);
-            $form->addSubmission($submission);
+            $submissionEvent = new SubmissionEvent($submission);
+
+            $this->get('event_dispatcher')->dispatch(Events::SUBMISSION_PRE_SAVE, $submissionEvent);
+
+            $form->addSubmission($submissionEvent->getSubmission());
             $em->persist($submission);
         }
 
@@ -185,7 +196,7 @@ class FormBuilderController extends AbstractController
 
             $dispatcher = $this->get('event_dispatcher');
             $event = new MailEvent($message, $data);
-            $dispatcher->dispatch('pirastru.formbuilder.event.mail', $event);
+            $dispatcher->dispatch(Events::PRE_SEND_MAIL, $event);
 
             $this->get('mailer')->send($event->getMessage());
         }
@@ -303,6 +314,10 @@ class FormBuilderController extends AbstractController
                         $value = $submittedValue;
                 }
 
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
+
                 if ($index === 0) {
                     $header = $form->getColumns()[$key];
                     if (isset($formArray[$position]['fields']['key']) && $formArray[$position]['fields']['key']['value'] !== '') {
@@ -346,17 +361,24 @@ class FormBuilderController extends AbstractController
     private function buildSingleContent(Form $form, array $form_submit): array
     {
         $formArray = json_decode($form->getJson(), true);
-        $csvData = [
+        $data = [
             'headers' => [],
-            'data' => []
+            'data' => [],
+            'files' => [],
         ];
 
-        foreach ($form_submit['form'] as $key => $submittedValue) {
+        $originalData = $form_submit['form'];
+        $event = new FormDataEvent($originalData);
+        $dispatcher = $this->get('event_dispatcher')->dispatch(Events::FORM_DATA_PRE_FORMAT, $event);
+
+        foreach ($event->getData() as $key => $submittedValue) {
             if (!$this->validKey($key)) {
                 continue;
             }
 
             [$type, $position] = explode('_', $key);
+
+            $files = null;
 
             switch ($type) {
                 case 'radio':
@@ -368,8 +390,17 @@ class FormBuilderController extends AbstractController
                 case 'checkbox':
                     $value = $this->formatMulti($submittedValue, $formArray[$position], 'checkboxes');
                     break;
+                case 'file':
+                    $value = $submittedValue;
+                    $originalSubmittedValue = $originalData[$key] ?? null;
+                    $files = is_array($originalSubmittedValue) ? $originalSubmittedValue : [$originalSubmittedValue];
+                    break;
                 default:
                     $value = $submittedValue;
+            }
+
+            if (is_array($value)) {
+                $value = implode(', ', $value);
             }
 
             $header = $form->getColumns()[$key];
@@ -377,11 +408,46 @@ class FormBuilderController extends AbstractController
                 $header = $formArray[$position]['fields']['key']['value'];
             }
 
-            $csvData['headers'][] = $header;
-            $csvData['data'][] = $value;
+            $data['headers'][] = $header;
+            $data['data'][] = $value;
+
+            if ($files) {
+                $data['files'][$header] = $files;
+            }
         }
 
-        return $csvData;
+        return $data;
+    }
+
+    private function extractAttachments(Form $form, array $form_submit): array
+    {
+        $formArray = json_decode($form->getJson(), true);
+        $data = [];
+
+        foreach ($form_submit['form'] as $key => $submittedValue) {
+            if (!$this->validKey($key)) {
+                continue;
+            }
+
+            if (!is_array($submittedValue)) {
+                $submittedValue = [$submittedValue];
+            }
+
+            [$type, $position] = explode('_', $key);
+
+            if ($type !== 'file') {
+                continue;
+            }
+
+            $header = $form->getColumns()[$key];
+            if (isset($formArray[$position]['fields']['key']) && $formArray[$position]['fields']['key']['value'] !== '') {
+                $header = $formArray[$position]['fields']['key']['value'];
+            }
+
+            $data[$header] = $submittedValue;
+        }
+
+        return $data;
     }
 
     /**
@@ -418,5 +484,20 @@ class FormBuilderController extends AbstractController
         $value = implode(', ', $value);
 
         return $value;
+    }
+
+    private function formatFiles(array $files)
+    {
+        $value = [];
+
+        foreach ($files as $file) {
+            if (!$file instanceof UploadedFile) {
+                continue;
+            }
+
+            $value[] = $file->getClientOriginalName();
+        }
+
+        return implode(', ', $value);
     }
 }

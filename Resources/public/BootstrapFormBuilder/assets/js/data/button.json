@@ -1,5 +1,26 @@
 [
   {
+    "title": "File Button",
+    "typefield":"filebutton",
+    "fields": {
+      "id": {
+        "label": "ID / Name",
+        "type": "input",
+        "value": "filebutton"
+      },
+      "label": {
+        "label": "Label Text",
+        "type": "input",
+        "value": "File Button"
+      },
+      "multiple": {
+        "label": "Multiple files",
+        "type": "checkbox",
+        "value": false
+      }
+    }
+  },
+  {
     "title": "Single Button",
     "typefield":"singlebutton",
     "fields": {

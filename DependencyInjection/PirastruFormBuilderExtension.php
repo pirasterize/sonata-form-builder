@@ -2,6 +2,7 @@
 
 namespace Pirastru\FormBuilderBundle\DependencyInjection;
 
+use Pirastru\FormBuilderBundle\Handler\FileHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -27,5 +28,6 @@ class PirastruFormBuilderExtension extends Extension
         $loader->load('twig.yml');
 
         $container->setParameter('pirastru_formbuilder.params', $config);
+        $container->setAlias(FileHandlerInterface::class, $config['file_handler']);
     }
 }
