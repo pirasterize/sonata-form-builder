@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -439,6 +440,20 @@ class FormBuilderFactory
         return [
             'name' => 'captcha_' . $key,
             'size' => 'col-sm-6',
+        ];
+    }
+
+    public function setFieldFilebutton($form, $key, $elem): array
+    {
+        $name = 'file_' . $key;
+        $form->add($name, FileType::class, [
+            'multiple' => $elem->fields->multiple->value ?? false,
+            'label' => $elem->fields->label->value,
+        ]);
+
+        return [
+            'name' => $name,
+            'size' => 'col-sm-6'
         ];
     }
 }

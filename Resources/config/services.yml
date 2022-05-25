@@ -24,3 +24,14 @@ services:
         public: true
         calls:
             - [setContainer, ["@service_container"]]
+
+    pirastru_form_builder.event_subscriber.file:
+        class: Pirastru\FormBuilderBundle\EventSubscriber\FileSubscriber
+        arguments:
+            - '@Pirastru\FormBuilderBundle\Handler\FileHandlerInterface'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Pirastru\FormBuilderBundle\Handler\SimpleFileHandler: ~
+
+    Pirastru\FormBuilderBundle\Handler\FileHandlerInterface: '@Pirastru\FormBuilderBundle\Handler\SimpleFileHandler'

@@ -2,6 +2,7 @@
 
 namespace Pirastru\FormBuilderBundle\DependencyInjection;
 
+use Pirastru\FormBuilderBundle\Handler\SimpleFileHandler;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,6 +27,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('email_no_reply')->defaultValue('no-reply@exemple.com')->end()
                 ->scalarNode('formbuilder_email_from')->defaultValue('mail_from@exemple.com')->end()
+                ->scalarNode('file_handler')->defaultValue(SimpleFileHandler::class)->end()
             ->end();
 
         return $treeBuilder;
