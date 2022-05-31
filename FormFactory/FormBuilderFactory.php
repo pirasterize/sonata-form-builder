@@ -19,8 +19,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EqualTo;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -445,10 +448,29 @@ class FormBuilderFactory
 
     public function setFieldFilebutton($form, $key, $elem): array
     {
+        $isRequired = $elem->fields->required->value ?? false;
+        $isMultiple = $elem->fields->multiple->value ?? false;
+
+        $constraints = [];
+
+        if ($isRequired) {
+            $constraints[] = new NotBlank();
+            $constraints[] = new File();
+        }
+
+        if ($isMultiple && $constraints) {
+            $constraints = [
+                new Count(['min' => 1]),
+                new All($constraints),
+            ];
+        }
+
         $name = 'file_' . $key;
         $form->add($name, FileType::class, [
-            'multiple' => $elem->fields->multiple->value ?? false,
+            'required' => $isRequired,
+            'multiple' => $isMultiple,
             'label' => $elem->fields->label->value,
+            'constraints' => $constraints,
         ]);
 
         return [

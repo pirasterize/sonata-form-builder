@@ -411,6 +411,10 @@ class FormBuilderController extends AbstractController
             $data['headers'][] = $header;
             $data['data'][] = $value;
 
+            if (is_array($files)) {
+                $files = array_filter($files);
+            }
+
             if ($files) {
                 $data['files'][$header] = $files;
             }

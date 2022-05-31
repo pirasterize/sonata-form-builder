@@ -17,6 +17,11 @@
         "label": "Multiple files",
         "type": "checkbox",
         "value": false
+      },
+      "required": {
+        "type": "checkbox",
+        "label": "Required",
+        "value": false
       }
     }
   },
