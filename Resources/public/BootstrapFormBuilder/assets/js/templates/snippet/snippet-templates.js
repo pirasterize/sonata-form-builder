@@ -26,7 +26,8 @@ define(function(require) {
       captcha                  = require('text!templates/snippet/captcha.html'),
       privacycheckbox          = require('text!templates/snippet/privacycheckbox.html'),
       title                    = require('text!templates/snippet/title.html'),
-      filebutton                = require('text!templates/snippet/filebutton.html');
+      filebutton                = require('text!templates/snippet/filebutton.html'),
+      linktext                 = require('text!templates/snippet/linktext.html');
 
   return {
      formname                 : formname,
@@ -56,6 +57,7 @@ define(function(require) {
      captcha                  : captcha,
      privacycheckbox          : privacycheckbox,
      title                    : title,
-     filebutton                : filebutton
+     filebutton                : filebutton,
+     linktext                 : linktext,
   }
 });

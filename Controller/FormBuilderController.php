@@ -257,7 +257,7 @@ class FormBuilderController extends AbstractController
                 }
             }
 
-            if ($elem->typefield === 'title') {
+            if ($elem->typefield === 'title' || $elem->typefield === 'linktext') {
                 $next_orphan_html_elem = $elem;
             }
         }

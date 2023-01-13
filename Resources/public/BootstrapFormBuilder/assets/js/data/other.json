@@ -45,5 +45,31 @@
     },
     "title": "Title",
     "typefield": "title"
+  },
+  {
+    "title": "Link text",
+    "typefield":"linktext",
+    "fields": {
+      "textbeforelink": {
+        "label": "Text before link",
+        "type": "textarea",
+        "value": "Visit"
+      },
+      "cta": {
+        "label": "Link text",
+        "type": "input",
+        "value": "google"
+      },
+      "url": {
+        "label": "Link URL",
+        "type": "input",
+        "value": "https://www.google.com/"
+      },
+      "textafterlink": {
+        "label": "Text after link",
+        "type": "textarea",
+        "value": "for more info"
+      }
+    }
   }
 ]
