@@ -50,7 +50,7 @@ class FormBuilderFactory
             'constraints' => [
                 new Email(),
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ]);
 
         return [
@@ -82,7 +82,7 @@ class FormBuilderFactory
                     'message' => 'Invalid format: dd-mm-yyyy'
                 ]),
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ]);
 
         return [
@@ -114,7 +114,7 @@ class FormBuilderFactory
                     'message' => 'Invalid telephone number.',
                 ])
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ]);
 
         return [
@@ -139,7 +139,7 @@ class FormBuilderFactory
             'attr' => [
                 'placeholder' => $elem->fields->placeholder->value,
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ]);
 
         return [
@@ -164,7 +164,7 @@ class FormBuilderFactory
             'attr' => [
                 'placeholder' => $elem->fields->textarea->value,
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ]);
 
         return [
@@ -437,7 +437,7 @@ class FormBuilderFactory
             'label_attr' => [
                 'style' => 'display:none;',
             ],
-            'sonata_help' => $elem->fields->helptext->value,
+            'help' => $elem->fields->helptext->value,
         ));
 
         return [

@@ -4,6 +4,7 @@ namespace Pirastru\FormBuilderBundle\Handler;
 
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Mime\Email;
 
 class SimpleFileHandler implements FileHandlerInterface
 {
@@ -29,13 +30,16 @@ class SimpleFileHandler implements FileHandlerInterface
         return $data;
     }
 
-    public function attachFilesToMail(\Swift_Message $message, array $data): void
+    public function attachFilesToMail(Email $email, array $data): void
     {
         foreach ($data['files'] as $header => $files) {
             foreach ($files as $file) {
-                $attachment = \Swift_Attachment::fromPath($file->getPathname());
-                $attachment->setFilename(sprintf('[%s] %s', $header, $file->getClientOriginalName()));
-                $message->attach($attachment);
+
+                $email->attachFromPath(
+                    $file->getPathname(),
+                    sprintf('[%s] %s', $header, $file->getClientOriginalName()),
+                    'text/csv'
+                );
             }
         }
     }

@@ -1,4 +1,4 @@
-{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+{% extends '@SonataAdmin/CRUD/edit.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -20,7 +20,7 @@
             } );
         });
 
-        {% if sonata_admin.adminPool.getOption('confirm_exit') %}
+        {% if sonata_config.getOption('confirm_exit') %}
         if (typeof Admin !== "undefined") {
             Admin.read_config();
             Admin.config['CONFIRM_EXIT'] = false;
@@ -30,8 +30,7 @@
 {% endblock %}
 
 {% block form %}
-
-    <div class="box box-success">
+   <div class="box box-success">
         <div class="box-header">
             <h4 class="box-title">
                 Form Builder

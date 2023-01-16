@@ -28,10 +28,15 @@ class FormBuilderAdmin extends AbstractAdmin
         parent::__construct($code, $class, $baseControllerName);
     }
 
+    protected function configure(): void
+    {
+        $this->getTemplateRegistry()->setTemplate('edit', '@PirastruFormBuilder/CRUD/formbuilder.html.twig');
+    }
+
     /**
      * @param DatagridMapper $datagridMapper
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('recipient')
@@ -41,7 +46,7 @@ class FormBuilderAdmin extends AbstractAdmin
     /**
      * @param ListMapper $listMapper
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('name')
@@ -51,7 +56,7 @@ class FormBuilderAdmin extends AbstractAdmin
             ->add('mailable', 'boolean', [
                 'label' => 'Email responses?'
             ])
-            ->add('_action', null, [
+            ->add('_actions', null, [
                 'actions' => [
                     'show' => [],
                     'edit' => [],
@@ -62,7 +67,7 @@ class FormBuilderAdmin extends AbstractAdmin
     /**
      * @param FormMapper $formMapper
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->add('json', HiddenType::class)
@@ -76,15 +81,18 @@ class FormBuilderAdmin extends AbstractAdmin
                 'label' => 'Email responses?',
             ])
             ->add('subject', TextType::class, [
-                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
+                'help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
+                'help_html' => true,
                 'required' => false,
             ])
             ->add('reply_to', TextType::class, [
-                'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
+                'help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
+                'help_html' => true,
                 'required' => false,
             ])
             ->add('recipient', CollectionType::class, array(
-                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient field. Example: &lt;Email&gt;",
+                    'help' => "You can use &lt;Internal Key&gt; to add variables to your recipient field. Example: &lt;Email&gt;",
+                    'help_html' => true,
                     'entry_type' => EmailType::class,
                     'label' => 'Recipient(s)',
                     'allow_add' => true,
@@ -98,7 +106,8 @@ class FormBuilderAdmin extends AbstractAdmin
                 )
             )
             ->add('recipientCC', CollectionType::class, array(
-                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient CC field. Example: &lt;Email&gt;",
+                    'help' => "You can use &lt;Internal Key&gt; to add variables to your recipient CC field. Example: &lt;Email&gt;",
+                    'help_html' => true,
                     'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
@@ -111,7 +120,8 @@ class FormBuilderAdmin extends AbstractAdmin
                 )
             )
             ->add('recipientBCC', CollectionType::class, array(
-                    'sonata_help' => "You can use &lt;Internal Key&gt; to add variables to your recipient BCC field. Example: &lt;Email&gt;",
+                    'help' => "You can use &lt;Internal Key&gt; to add variables to your recipient BCC field. Example: &lt;Email&gt;",
+                    'help_html' => true,
                     'entry_type' => EmailType::class,
                     'required' => false,
                     'allow_add' => true,
@@ -126,37 +136,24 @@ class FormBuilderAdmin extends AbstractAdmin
             ->add('submissionTitle', TextType::class, [
                 'required' => false,
                 'label' => 'Custom submit title',
-                'sonata_help' => 'Customize thank you title after successful form submission',
+                'help' => 'Customize thank you title after successful form submission',
             ])
             ->add('submissionText', TextareaType::class, [
                 'required' => false,
                 'label' => 'Custom submit text',
-                'sonata_help' => 'Customize thank you text after successful form submission',
+                'help' => 'Customize thank you text after successful form submission',
             ]);
-    }
-
-    public function getTemplate($name)
-    {
-        switch ($name) {
-            case 'edit':
-                return 'PirastruFormBuilderBundle:CRUD:formbuilder.html.twig';
-                break;
-            default:
-                return parent::getTemplate($name);
-                break;
-        }
     }
 
     /**
      * @param ShowMapper $showMapper
      */
-    protected function configureShowFields(ShowMapper $showMapper)
+    protected function configureShowFields(ShowMapper $showMapper): void
     {
         $showMapper
             ->add('name')
             ->add('recipient')
-            ->add('export', null, ['template' => 'PirastruFormBuilderBundle:CRUD:table_export_form.html.twig'])
-            ->add('submissions', null, array('template' => 'PirastruFormBuilderBundle:CRUD:table_show_field.html.twig'));
+            ->add('submissions', null, array('template' => '@PirastruFormBuilder/CRUD/table_show_field.html.twig'));
     }
 
     /**
@@ -182,12 +179,8 @@ class FormBuilderAdmin extends AbstractAdmin
 
     }
 
-    public function getNewInstance()
+    public function alterNewInstance(object $object): void
     {
-        $instance = parent::getNewInstance();
-
         $instance->setPersistable(true);
-
-        return $instance;
     }
 }
