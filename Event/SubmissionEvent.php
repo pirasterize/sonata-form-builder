@@ -3,7 +3,7 @@
 namespace Pirastru\FormBuilderBundle\Event;
 
 use Pirastru\FormBuilderBundle\Entity\FormBuilderSubmission;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class SubmissionEvent extends Event
 {

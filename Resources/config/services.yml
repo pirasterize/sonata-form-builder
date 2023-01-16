@@ -4,24 +4,26 @@ parameters:
 services:
     pirastru_form_builder.admin:
         class: Pirastru\FormBuilderBundle\Admin\FormBuilderAdmin
-        arguments: [~, Pirastru\FormBuilderBundle\Entity\FormBuilder, PirastruFormBuilderBundle:FormBuilderAdmin, "@service_container"]
-        calls:
-            - [setTemplate, ['edit', 'PirastruFormBuilderBundle:CRUD:formbuilder.html.twig']]
+        arguments: [~, Pirastru\FormBuilderBundle\Entity\FormBuilder, Pirastru\FormBuilderBundle\Controller\FormBuilderAdminController, "@service_container"]
         tags:
-            - {name: sonata.admin, manager_type: orm, group: Form, label: "%pirastru_form_builder.label%" }
+            - { name: sonata.admin, manager_type: orm, group: Form, label: "%pirastru_form_builder.label%" }
 
     pirastru_form_builder.block:
         class: Pirastru\FormBuilderBundle\Block\FormBuilderBlockService
         arguments:
-            - "pirastru_form_builder.block"
-            - "@templating.engine.twig"
-            - "@service_container"
+            - "@twig"
+            - "@request_stack"
+            - "@doctrine.orm.entity_manager"
+            - "@pirastru_form_builder.admin"
+            - "@pirastru_form_builder.controller"
         tags:
             - {name: "sonata.block"}
 
     pirastru_form_builder.controller:
         class: Pirastru\FormBuilderBundle\Controller\FormBuilderController
         public: true
+        arguments:
+            $mailer: '@mailer'
         calls:
             - [setContainer, ["@service_container"]]
 
@@ -35,3 +37,7 @@ services:
     Pirastru\FormBuilderBundle\Handler\SimpleFileHandler: ~
 
     Pirastru\FormBuilderBundle\Handler\FileHandlerInterface: '@Pirastru\FormBuilderBundle\Handler\SimpleFileHandler'
+
+    Pirastru\FormBuilderBundle\Controller\FormBuilderAdminController:
+        autoconfigure: true
+        autowire: true

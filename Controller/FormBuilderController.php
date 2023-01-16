@@ -14,6 +14,8 @@ use Sonata\Exporter\Exception\InvalidDataFormatException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -25,12 +27,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class FormBuilderController extends AbstractController
 {
-    private $blacklist = [
+    private array $blacklist = [
         '_token',
         'button_',
         'privacy_',
         'captcha_'
     ];
+
+    public function __construct(private readonly Mailer $mailer)
+    {}
 
     /**
      * @Route("/export_submit/{form}", name="form_builder_export_submit", methods={"POST"})
@@ -102,7 +107,7 @@ class FormBuilderController extends AbstractController
             $submission = new Submission($form_submit['form'], $form);
             $submissionEvent = new SubmissionEvent($submission);
 
-            $this->get('event_dispatcher')->dispatch(Events::SUBMISSION_PRE_SAVE, $submissionEvent);
+            $this->get('event_dispatcher')->dispatch($submissionEvent, Events::SUBMISSION_PRE_SAVE);
 
             $form->addSubmission($submissionEvent->getSubmission());
             $em->persist($submission);
@@ -134,8 +139,8 @@ class FormBuilderController extends AbstractController
         $recipient = $form->getRecipient();
 
         if (!empty($recipient) && $this->container->getParameter('formbuilder_email_from') !== null) {
-            $message = (new \Swift_Message())
-                ->setFrom($this->container->getParameter('formbuilder_email_from'));
+            $message = (new Email())
+                ->from($this->container->getParameter('formbuilder_email_from'));
 
             $data = $this->buildSingleContent($form, $form_submit);
 
@@ -143,16 +148,16 @@ class FormBuilderController extends AbstractController
                 return '#<' . quotemeta($key) . '>#';
             }, array_values($data['headers']));
 
-            $message->setTo(preg_replace($patterns, array_values($data['data']), $recipient));
+            $message->to(...preg_replace($patterns, array_values($data['data']), $recipient));
 
             $emailCc = $form->getRecipientCC();
             if (!empty($emailCc)) {
-                $message->setCc(preg_replace($patterns, array_values($data['data']), $emailCc));
+                $message->cc(...preg_replace($patterns, array_values($data['data']), $emailCc));
             }
 
             $emailBcc = $form->getRecipientBCC();
             if (!empty($emailBcc)) {
-                $message->setBcc(preg_replace($patterns, array_values($data['data']), $emailBcc));
+                $message->bcc(...preg_replace($patterns, array_values($data['data']), $emailBcc));
             }
 
             foreach ($data['data'] as $item) {
@@ -161,7 +166,7 @@ class FormBuilderController extends AbstractController
 
             $subject = preg_replace($patterns, array_values($data['data']), $form->getSubject());
 
-            $message->setSubject($subject);
+            $message->subject($subject);
 
             if ($form->getReplyTo() !== NULL) {
                 $patterns = array_map(function ($key) {
@@ -183,22 +188,29 @@ class FormBuilderController extends AbstractController
                 );
 
                 if (count($errors) === 0) {
-                    $message->setReplyTo($replyTo);
+                    $message->replyTo($replyTo);
                 }
             }
 
-            $html = $this->renderView('PirastruFormBuilderBundle:Mail:resume.html.twig', [
+            $html = $this->renderView('@PirastruFormBuilder/Mail/resume.html.twig', [
                 'data' => $data,
                 'name' => $form->getName()
             ]);
 
-            $message->setBody($html, 'text/html');
+            $message->html($html);
+
+            $html = $this->renderView('@PirastruFormBuilder/Mail/resume.html.twig', [
+                'data' => $data,
+                'name' => $form->getName()
+            ]);
+
+            $message->html($html);
 
             $dispatcher = $this->get('event_dispatcher');
             $event = new MailEvent($message, $data);
-            $dispatcher->dispatch(Events::PRE_SEND_MAIL, $event);
+            $dispatcher->dispatch($event, Events::PRE_SEND_MAIL);
 
-            $this->get('mailer')->send($event->getMessage());
+            $this->mailer->send($event->getMessage());
         }
     }
 
@@ -369,7 +381,7 @@ class FormBuilderController extends AbstractController
 
         $originalData = $form_submit['form'];
         $event = new FormDataEvent($originalData);
-        $dispatcher = $this->get('event_dispatcher')->dispatch(Events::FORM_DATA_PRE_FORMAT, $event);
+        $dispatcher = $this->get('event_dispatcher')->dispatch($event, Events::FORM_DATA_PRE_FORMAT);
 
         foreach ($event->getData() as $key => $submittedValue) {
             if (!$this->validKey($key)) {

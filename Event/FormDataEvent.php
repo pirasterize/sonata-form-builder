@@ -2,19 +2,12 @@
 
 namespace Pirastru\FormBuilderBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class FormDataEvent extends Event
 {
-    protected array $data;
-
-    /**
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(protected array $data)
+    {}
 
     public function getData(): array
     {

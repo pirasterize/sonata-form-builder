@@ -7,92 +7,64 @@
 
 namespace Pirastru\FormBuilderBundle\Block;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Pirastru\FormBuilderBundle\Admin\FormBuilderAdmin;
+use Pirastru\FormBuilderBundle\Controller\FormBuilderController;
 use Pirastru\FormBuilderBundle\Entity\FormBuilder;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
+use Sonata\BlockBundle\Block\Service\EditableBlockService;
+use Sonata\BlockBundle\Form\Mapper\FormMapper;
+use Sonata\BlockBundle\Meta\Metadata;
+use Sonata\BlockBundle\Meta\MetadataInterface;
 use Sonata\Form\Type\ImmutableArrayType;
+use Sonata\Form\Validator\ErrorElement;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
+use Twig\Environment;
 
 /**
  * @author     Andrea Pirastru
  */
-class FormBuilderBlockService extends AbstractAdminBlockService
+class FormBuilderBlockService extends AbstractBlockService implements EditableBlockService
 {
-    private $container;
-
-    protected $formBuilderAdmin;
-
-    /**
-     * @param string             $name
-     * @param EngineInterface    $templating
-     * @param ContainerInterface $container
-     */
-    public function __construct($name, EngineInterface $templating, ContainerInterface $container)
-    {
-        parent::__construct($name, $templating);
-
-        $this->container = $container;
+    public function __construct(
+        Environment $twig,
+        private readonly RequestStack $requestStack,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FormBuilderAdmin $formBuilderAdmin,
+        private readonly FormBuilderController $formBuilderController,
+    ) {
+        parent::__construct($twig);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureSettings(OptionsResolver $resolver)
+    public function configureSettings(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'template' => 'PirastruFormBuilderBundle:Block:block_form_builder.html.twig',
+            'template' => '@PirastruFormBuilder/Block/block_form_builder.html.twig',
             'formBuilderId' => null,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
+    public function getFormBuilderAdmin(): FormBuilderAdmin
     {
-        $formMapper->add('settings', ImmutableArrayType::class, [
-            'keys' => [
-                [$this->getFieldFormBuilder($formMapper), null, []],
-            ],
-        ]);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormBuilderAdmin()
-    {
-        if (!$this->formBuilderAdmin) {
-            $this->formBuilderAdmin = $this->container->get('pirastru_form_builder.admin');
-        }
-
         return $this->formBuilderAdmin;
     }
 
-    /**
-     * @param FormMapper $formMapper
-     *
-     * @return FormBuilderInterface
-     */
-    protected function getFieldFormBuilder(FormMapper $formMapper)
+    protected function getFieldFormBuilder(FormMapper $formMapper): FormBuilderInterface
     {
         // simulate an association ...
-        $fieldDescription = $this->getFormBuilderAdmin()->getModelManager()->getNewFieldDescriptionInstance($this->formBuilderAdmin->getClass(), 'form_builder');
+        $fieldDescription = $this->getFormBuilderAdmin()->createFieldDescription('form_builder');
         $fieldDescription->setAssociationAdmin($this->getFormBuilderAdmin());
         $fieldDescription->setAdmin($formMapper->getAdmin());
-        $fieldDescription->setAssociationMapping([
-            'fieldName' => 'form_builder',
-            'type' => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE,
-        ]);
 
         return $formMapper->create('formBuilderId', ModelListType::class, [
             'sonata_field_description' => $fieldDescription,
@@ -106,20 +78,13 @@ class FormBuilderBlockService extends AbstractAdminBlockService
     /**
      * {@inheritdoc}
      */
-    public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null): Response
     {
         $formBuilderId = $blockContext->getBlock()->getSetting('formBuilderId');
 
         /** @var FormBuilder $formBuilder */
-        $formBuilder = $this->container->get('doctrine')
-            ->getRepository('PirastruFormBuilderBundle:FormBuilder')
+        $formBuilder = $this->entityManager
+            ->getRepository(FormBuilder::class)
             ->findOneBy(['id' => $formBuilderId]);
 
         // In case the FormBuilder Object is not defined
@@ -128,13 +93,13 @@ class FormBuilderBlockService extends AbstractAdminBlockService
             return $this->renderResponse($blockContext->getTemplate(), [], $response);
         }
 
-        $form_pack = $this->container->get('pirastru_form_builder.controller')
+        $form_pack = $this->formBuilderController
             ->generateFormFromFormBuilder($formBuilder);
 
         /** @var Form $form */
         $form = $form_pack['form'];
         $success = false;
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -143,7 +108,7 @@ class FormBuilderBlockService extends AbstractAdminBlockService
              ***************************************/
             $this->preUpdate($blockContext->getBlock());
 
-            $this->container->get('pirastru_form_builder.controller')
+            $this->formBuilderController
                 ->submitOperations($formBuilder, $form_pack['title_col']);
 
             $success = true;
@@ -165,13 +130,13 @@ class FormBuilderBlockService extends AbstractAdminBlockService
     /**
      * {@inheritdoc}
      */
-    public function load(BlockInterface $block)
+    public function load(BlockInterface $block): void
     {
         $formBuilderId = $block->getSetting('formBuilderId');
 
         if ($formBuilderId) {
-            $formBuilderId = $this->container->get('doctrine')
-                ->getRepository('PirastruFormBuilderBundle:FormBuilder')
+            $formBuilderId = $this->entityManager
+                ->getRepository(FormBuilder::class)
                 ->findOneBy(['id' => $formBuilderId]);
         }
 
@@ -197,8 +162,32 @@ class FormBuilderBlockService extends AbstractAdminBlockService
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Form';
+    }
+
+    public function configureEditForm(FormMapper $form, BlockInterface $block): void
+    {
+        $form->add('settings', ImmutableArrayType::class, [
+            'keys' => [
+                [$this->getFieldFormBuilder($form), null, []],
+            ],
+        ]);
+    }
+
+    public function configureCreateForm(FormMapper $form, BlockInterface $block): void
+    {
+        $this->configureEditForm($form, $block);
+    }
+
+    public function validate(ErrorElement $errorElement, BlockInterface $block): void
+    {
+        // NOOP
+    }
+
+    public function getMetadata(): MetadataInterface
+    {
+        return new Metadata($this->getName());
     }
 }

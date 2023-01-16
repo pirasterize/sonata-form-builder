@@ -13,16 +13,25 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "symfony/symfony": "^3.4 || ^4.4",
-        "sonata-project/block-bundle": "^3.14",
-        "gregwar/captcha-bundle": "^2.0",
-        "sonata-project/admin-bundle": "^3.38.0",
+        "php": "^8.1",
+        "symfony/event-dispatcher": "^5.4",
+        "symfony/http-kernel": "^5.4",
+        "symfony/dependency-injection": "^5.4",
+        "symfony/form": "^5.4",
+        "symfony/options-resolver": "^5.4",
+        "symfony/validator": "^5.4",
+        "symfony/http-foundation": "^5.4",
+        "symfony/framework-bundle": "^5.4",
+        "symfony/config": "^5.4",
+        "symfony/routing": "^5.4",
+        "sonata-project/block-bundle": "^4.0",
+        "gregwar/captcha-bundle": "^2.2",
+        "sonata-project/admin-bundle": "^4.0",
         "doctrine/orm": "^2.5",
-        "sensio/framework-extra-bundle": "^5.1.0",
-        "sonata-project/exporter": "^1.8",
-        "symfony/swiftmailer-bundle": "^2.6.4 || ^3.2",
-      "ext-json": "*"
+        "sonata-project/exporter": "^3.0",
+        "ext-json": "*",
+        "symfony/mailer": "^5.4",
+        "symfony/twig-bundle": "^5.4"
     },
     "autoload": {
         "psr-4": { "Pirastru\\FormBuilderBundle\\": "" }

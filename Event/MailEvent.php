@@ -1,56 +1,30 @@
 <?php
 namespace Pirastru\FormBuilderBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Mime\Email;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class MailEvent extends Event
 {
-    /**
-     * @var \Swift_Message
-     */
-    private $message;
+    public function __construct(private Email $message, private array $formData)
+    {}
 
-    /** @var array */
-    private $formData;
-
-    /**
-     * MailEvent constructor.
-     * @param \Swift_Message $message
-     */
-    public function __construct(\Swift_Message $message, array $formData)
-    {
-        $this->message = $message;
-        $this->formData = $formData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFormData()
+    public function getFormData(): array
     {
         return $this->formData;
     }
 
-    /**
-     * @param array $formData
-     */
-    public function setFormData($formData)
+    public function setFormData(array $formData): void
     {
         $this->formData = $formData;
     }
 
-    /**
-     * @return \Swift_Message
-     */
-    public function getMessage()
+    public function getMessage(): Email
     {
         return $this->message;
     }
 
-    /**
-     * @param \Swift_Message $message
-     */
-    public function setMessage(\Swift_Message $message)
+    public function setMessage(Email $message): void
     {
         $this->message = $message;
     }
