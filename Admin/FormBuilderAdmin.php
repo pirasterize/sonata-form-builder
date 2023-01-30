@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FormBuilderAdmin extends AbstractAdmin
@@ -71,7 +72,11 @@ class FormBuilderAdmin extends AbstractAdmin
     {
         $formMapper
             ->add('json', HiddenType::class)
-            ->add('name', TextType::class)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new NotBlank(groups: ['Default']),
+                ],
+            ])
             ->add('persistable', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Save to database?'
@@ -84,6 +89,9 @@ class FormBuilderAdmin extends AbstractAdmin
                 'help' => "You can use &lt;Internal Key&gt; to add variables to your subject. Example: This email is from &lt;Name&gt;",
                 'help_html' => true,
                 'required' => false,
+                'constraints' => [
+                    new NotBlank(groups: ['Mailable']),
+                ],
             ])
             ->add('reply_to', TextType::class, [
                 'help' => "You can use &lt;Internal Key&gt; to add variables to your reply to field. Example: &lt;Email&gt;",
@@ -103,6 +111,9 @@ class FormBuilderAdmin extends AbstractAdmin
                         'label' => 'Email',
                         'required' => false,
                     ),
+                    'constraints' => [
+                        new NotBlank(groups: ['Mailable']),
+                    ],
                 )
             )
             ->add('recipientCC', CollectionType::class, array(
@@ -156,31 +167,23 @@ class FormBuilderAdmin extends AbstractAdmin
             ->add('submissions', null, array('template' => '@PirastruFormBuilder/CRUD/table_show_field.html.twig'));
     }
 
-    /**
-     * @param ErrorElement $errorElement
-     * @param FormBuilder $object
-     */
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        $errorElement
-            ->with('name')
-            ->addConstraint(new NotBlank())
-            ->end();
-
-        if ($object->isMailable()) {
-            $errorElement
-                ->with('subject')
-                ->addConstraint(new NotBlank())
-                ->end()
-                ->with('recipient')
-                ->addConstraint(new NotBlank())
-                ->end();
-        }
-
-    }
-
     public function alterNewInstance(object $object): void
     {
-        $instance->setPersistable(true);
+        $object->setPersistable(true);
+    }
+
+    protected function configureFormOptions(array &$formOptions): void
+    {
+        $formOptions['validation_groups'] = function (FormInterface $form) {
+            $groups = ['Default'];
+
+            $formBuilder = $form->getData();
+
+            if ($formBuilder instanceof FormBuilder && $formBuilder->isMailable()) {
+                $groups[] = 'Mailable';
+            }
+
+            return $groups;
+        };
     }
 }
