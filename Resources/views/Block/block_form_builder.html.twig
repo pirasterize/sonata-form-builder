@@ -17,11 +17,23 @@
     </div>
 {% endmacro %}
 
+{% macro showTextLinkField(elem) %}
+    <div class="form-group mb-4">
+        <div class="form-group mb-4">
+           <p class="font-weight-bold">
+               {{ elem.fields.textbeforelink.value }} <a href="{{ elem.fields.url.value }}">{{ elem.fields.cta.value }}</a> {{ elem.fields.textafterlink.value }}
+           </p>
+        </div>
+    </div>
+{% endmacro %}
 {% macro handleExtraHtml(html_prefix_col, form) %}
     {% if html_prefix_col[form.vars.name] is defined  %}
         {% for elem in html_prefix_col[form.vars.name] %}
             {% if elem.typefield == 'title'%}
                 {{ _self.showTitleField(elem) }}
+            {% endif %}
+            {% if elem.typefield == 'linktext'%}
+                {{ _self.showTextLinkField(elem) }}
             {% endif %}
         {% endfor %}
     {% endif %}
