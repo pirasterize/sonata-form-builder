@@ -14,10 +14,11 @@
                   <th>{{ value }}</th>
               {% endif %}
             {% endfor %}
+          <th>Actions</th>
         </tr>
 
-        {% for submit_line in object.submissions %}
-            {% set submit_line = submit_line.value %}
+        {% for submission in object.submissions %}
+            {% set submit_line = submission.value %}
             <tr>
                 {% for key,value in object.columns %}
                     {% if key|slice(0, 6) != 'button' %}
@@ -73,6 +74,11 @@
                     {% endif %}
                 {% endfor %}
 
+              <td>
+                <form method="GET" action="{{ path('admin_pirastru_formbuilder_formbuilder_submission_delete', { "id": object.id, "submission_id": submission.id }) }}">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
             </tr>
         {% else %}
             Never submitted!
