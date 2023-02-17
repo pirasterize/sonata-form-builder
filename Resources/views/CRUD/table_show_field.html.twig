@@ -75,9 +75,9 @@
                 {% endfor %}
 
               <td>
-                <form method="GET" action="{{ path('admin_pirastru_formbuilder_formbuilder_submission_delete', { "id": object.id, "submission_id": submission.id }) }}">
-                  <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                <a href="{{ admin.generateUrl('submission_delete', { "id": object.id, "submission_id": submission.id }) }}" class="btn btn-danger">
+                  {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                </a>
               </td>
             </tr>
         {% else %}

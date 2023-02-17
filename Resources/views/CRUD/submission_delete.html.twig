@@ -33,7 +33,7 @@ file that was distributed with this source code.
                 {{ 'message_delete_confirmation'|trans({'%object%': admin.toString(submission)}, 'SonataAdminBundle') }}
             </div>
             <div class="box-footer clearfix">
-              <form method="POST" action="{{ path('admin_pirastru_formbuilder_formbuilder_submission_delete', { "id": form.id, "submission_id": submission.id }) }}">
+              <form method="POST" action="{{ admin.generateUrl('submission_delete', { "id": form.id, "submission_id": submission.id }) }}">
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}">
 
@@ -41,9 +41,9 @@ file that was distributed with this source code.
                     {% if admin.hasRoute('edit') and admin.hasAccess('edit', form) %}
                         {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 
-                        <a class="btn btn-success" href="{{ admin.generateObjectUrl('edit', form) }}">
-                            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                            {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
+                        <a class="btn btn-success" href="{{ admin.generateObjectUrl('show', form) }}">
+                          <i class="fas fa-eye"></i>
+                          {{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}</a>
                     {% endif %}
                 </form>
             </div>

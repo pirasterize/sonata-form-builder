@@ -15,7 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 class FormBuilderAdminController extends CRUDController
 {
-    #[Route(path: "/submissions/{submission_id}/delete", name: "admin_pirastru_formbuilder_formbuilder_submission_delete", methods: "POST")]
     #[Entity("submission", expr: "repository.find(submission_id)")]
     public function submissionDeleteAction(Request $request, FormBuilder $formBuilder, FormBuilderSubmission $submission): Response
     {
