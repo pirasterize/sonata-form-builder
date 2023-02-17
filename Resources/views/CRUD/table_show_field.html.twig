@@ -14,10 +14,11 @@
                   <th>{{ value }}</th>
               {% endif %}
             {% endfor %}
+          <th>Actions</th>
         </tr>
 
-        {% for submit_line in object.submissions %}
-            {% set submit_line = submit_line.value %}
+        {% for submission in object.submissions %}
+            {% set submit_line = submission.value %}
             <tr>
                 {% for key,value in object.columns %}
                     {% if key|slice(0, 6) != 'button' %}
@@ -73,6 +74,11 @@
                     {% endif %}
                 {% endfor %}
 
+              <td>
+                <a href="{{ admin.generateUrl('submission_delete', { "id": object.id, "submission_id": submission.id }) }}" class="btn btn-danger">
+                  {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                </a>
+              </td>
             </tr>
         {% else %}
             Never submitted!

@@ -62,6 +62,15 @@ class FormBuilderSubmission
         $this->form = $form;
     }
 
+    public function __toString(): string
+    {
+        $firstFormColumnValue = (array_values($this->form->getColumns())[0] && array_values($this->getValue())[0])
+            ? array_values($this->form->getColumns())[0] . ": " . array_values($this->getValue())[0]
+            : '';
+
+        return "id: " . $this->id . " - " . $firstFormColumnValue;
+    }
+
     /**
      * @return int
      */
